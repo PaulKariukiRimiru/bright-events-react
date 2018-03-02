@@ -7,3 +7,10 @@ cache:
 script:
   - npm run test #Runs Tests
   - npm run build #Creats a production build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github_token
+  local_dir: build
+  on:
+    branch: master

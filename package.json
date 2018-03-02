@@ -2,7 +2,7 @@
   "name": "drinks",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://PaulKariukiRimiru.github.io/bright-events-react",
+  "homepage" : "http://PaulKariukiRimiru.github.io/bright-events-react/",
   "dependencies": {
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
