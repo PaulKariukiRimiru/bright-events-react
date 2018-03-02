@@ -27,7 +27,7 @@
     "webpack-server": "webpack-dev-server",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "cover": "istanbul cover _mocha",
+    "cover": "istanbul cover _mocha -- -R spec",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {

@@ -7,13 +7,18 @@ cache:
 script:
   - npm run build #Creats a production build
   - npm run test #Runs Tests
-  
+addons:
+    code_climate:
+        repo_token: "c2f07c4d7637d6861c9e90710f084e709440dd7a9f3a886b7dc05521e9a7bb3a" 
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: $github_token
   local_dir: build
   on:
-    branch: master
+    branch: gh-pages
+before_script:
+  - npm install codeclimate-test-reporter istanbul -g
 after_success:
   - npm run coveralls
+  - codeclimate-test-reporter < ./coverage/lcov.info
