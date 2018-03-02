@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha --watch --compilers js:babel-core/register --colors ./src/**/*.test.js || true",
+    "test": "mocha  --compilers js:babel-core/register --colors ./src/**/*.test.js || true",
     "eject": "react-scripts eject",
     "webpack": "webpack",
     "webpack-server": "webpack-dev-server",
