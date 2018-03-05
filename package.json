@@ -30,7 +30,7 @@
     "webpack-server": "webpack-dev-server",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "test": "nyc --reporter=html --reporter=text mocha --watch --compilers js:babel-core/register --no-deprecation --colors ./src/**/*.test.js || true",
+    "test": "nyc --reporter=html --reporter=text mocha --compilers js:babel-core/register --no-deprecation --colors ./src/**/*.test.js || true",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "prod": "NODE_ENV=production node server.js"
   },
