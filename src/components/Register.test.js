@@ -26,8 +26,4 @@ describe("Component : Register", () => {
             expect(mountWrapper.find('form').childAt(3).find('RaisedButton')).is.of.length(1)
         });
     });
-    describe("utility tests for registration component", () => {
-        it("submit button submits the form");
-        it("form details submited are correct");
-    })
 })

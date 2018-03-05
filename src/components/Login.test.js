@@ -31,10 +31,5 @@ describe("Component : Login", () => {
             expect(mountWrapper.find('form').childAt(2).find("RaisedButton")).to.be.lengthOf(1)
         })
     })
-
-    describe("utility tests for the login component", () => {
-        it("submit button submits the form")
-        it("form details submitted are correct")
-    })
     
 })

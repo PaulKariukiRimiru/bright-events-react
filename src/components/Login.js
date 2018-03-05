@@ -9,7 +9,6 @@ export default class Login extends Component {
         var divStyle = {
             margin: 12,
         }  
-        
         return (
             <MuiThemeProvider>
             <div>
