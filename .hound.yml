@@ -1,2 +1,4 @@
 jshint:
+  enabled: true
   esversion: 6
+  linter: eslint
