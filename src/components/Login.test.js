@@ -24,11 +24,11 @@ describe("Component : Login", () => {
         })
         it("comoponent form contains an email and password field", () => {
             expect(mountWrapper.find('form').children()).to.be.lengthOf(3)
-            expect(mountWrapper.find('form').childAt(0).find('TextField')).to.be.lengthOf(1)
-            expect(mountWrapper.find('form').childAt(1).find('TextField')).to.be.lengthOf(1)
+            expect(mountWrapper.find('form').childAt(0).find('TextField').prop('refs')).to.be.equal("emailField")
+            expect(mountWrapper.find('form').childAt(1).find('TextField').prop('refs')).to.be.equal("passwordField")
         })
         it("component form has a submit button", () => {
-            expect(mountWrapper.find('form').childAt(2).find("RaisedButton")).to.be.lengthOf(1)
+            expect(mountWrapper.find('form').childAt(2).find("RaisedButton").prop("name")).to.be.equal("submit")
         })
     })
     
