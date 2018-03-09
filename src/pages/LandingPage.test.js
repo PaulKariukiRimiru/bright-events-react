@@ -3,21 +3,25 @@ import React from 'react';
 import { expect } from 'chai';
 import {configure, shallow, mount} from 'enzyme';
 import  Adapter from 'enzyme-adapter-react-16';
-
+import {spy } from 'sinon';
 import LandingPage from './LandingPage';
 import { Tab } from 'material-ui/Tabs';
+import {ReactTestRenderer} from 'react-test-renderer';
 
 configure({ adapter: new Adapter() });
 
 describe("Component : LandingPage", () => {
     let mountWrapper = null
     let shallowWrapper = null
+    let sinonSpy = null
     beforeEach(() => {
+        
         mountWrapper= mount(<LandingPage />)
         shallowWrapper = shallow(<LandingPage />)
     })
     
     describe("component unit tests", () => {
+
         it("component renders successfully", () => {
             expect(mountWrapper).to.be.not.undefined
         })
@@ -46,8 +50,15 @@ describe("Component : LandingPage", () => {
         it("component has a description section", () => {
             expect(mountWrapper.find("p")).to.be.lengthOf(1)
         })
-        it("component has the correct states", () => {
-            expect(mountWrapper.state("tabValue")).to.equal(0)
+        it("component Tab change changes tabValue", () => {
+            sinonSpy = spy(LandingPage.prototype, 'handleChange')
+            const wrapper = shallow(<LandingPage />)
+
+            expect(wrapper.state("tabValue")).to.equal(0)
+            wrapper.find("Tabs").simulate("change")
+
+            expect(sinonSpy.calledOnce).to.equal(true)
+            expect(wrapper.state("tabValue")).to.equal(1)
         })
     })
 })
