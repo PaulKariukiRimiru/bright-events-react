@@ -8,7 +8,7 @@ export default class ListComponent extends Component {
         return (
             <MuiThemeProvider>
                 
-                <div>
+                <div >
                     <List >
 
                         {this.props.itemList.map((item, index) => {

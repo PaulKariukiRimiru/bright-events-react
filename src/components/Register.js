@@ -7,44 +7,58 @@ import {Row, Col} from 'react-flexgrid';
 export default class Register extends Component {
     
     render() {
-        var divStyle = {
-            margin: 12,
-        }  
+        const mainStyle = {
+            width : '75%'
+        }
+
+        const divStyle = {
+            margin : 12,
+            marginTop : 18
+        } 
         return (
-            <MuiThemeProvider>
-            <div>
-                <form>
-                    <Row>
-                        <Col>
-                            <TextField style={divStyle}
-                                floatingLabelText="Username"
-                                refs="usernameField"
-                                name="Username"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <TextField style={divStyle}
-                                floatingLabelText="Email"
-                                refs="emailField"
-                                name="email"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <TextField style={divStyle}
-                                floatingLabelText="Password"
-                                refs="passwordField"
-                                name="password"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <RaisedButton name="submit" onClick={this.clickHandler} primary={true} style={divStyle} label="Register"/>
-                        </Col>
-                    </Row>
-                </form>
-            </div>
+            <MuiThemeProvider style={mainStyle}>
+                <Row center="xs">
+                    <Col xs="8">
+                        <form>
+                            <Row middle="xs">
+                                <Col xs="6">
+                                    <TextField 
+                                        floatingLabelText="Username"
+                                        refs="usernameField"
+                                        name="username"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
+                            <Row middle="xs">
+                                <Col xs="6">
+                                    <TextField 
+                                        floatingLabelText="Email"
+                                        refs="emailField"
+                                        name="email"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
+                            <Row middle="xs">
+                                <Col xs="6">
+                                    <TextField
+                                        floatingLabelText="Password"
+                                        refs="passwordField"
+                                        name="password"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
+                            <Row center="xs">
+                                <Col xs="4">
+                                    <RaisedButton name="submit" 
+                                        onClick={this.clickHandler} 
+                                        primary={true} 
+                                        label="Register"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
+                        </form>
+                    </Col>
+                </Row>
             </MuiThemeProvider>
         )
     }

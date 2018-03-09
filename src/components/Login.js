@@ -5,41 +5,55 @@ import TextField from 'material-ui/TextField';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export default class Login extends Component {
+    
     render() {
-        var divStyle = {
-            margin: 12,
-        }  
+
+        const mainStyle = {
+            width : '75%'
+        }
+
+        const divStyle = {
+            margin : 12,
+            marginTop : 50
+        }
+
+        
+
         return (
-            <MuiThemeProvider>
-            <div>
-                <Row>
-                    <Col>
+            <MuiThemeProvider style={mainStyle}>
+                <Row center="xs">
+                    <Col xs="6">
                         <form>
-                        <Row>
-                            <Col>
-                                <TextField style={divStyle}
-                                    floatingLabelText="Email"
-                                    refs="emailField"
-                                    name="email"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <TextField style={divStyle}
-                                    floatingLabelText="Password"
-                                    refs="passwordField"
-                                    name="password"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <RaisedButton name="submit" onClick={this.clickHandler} primary={true} style={divStyle} label="Register"/>
-                            </Col>
-                        </Row>
+                            <Row middle="xs">
+                                <Col xs="6">
+                                    <TextField 
+                                        floatingLabelText="Email"
+                                        refs="emailField"
+                                        name="email"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
+                            <Row middle="xs">
+                                <Col xs="6">
+                                    <TextField
+                                        floatingLabelText="Password"
+                                        refs="passwordField"
+                                        name="password"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
+                            <Row center="xs">
+                                <Col xs="4">
+                                    <RaisedButton name="submit" 
+                                        onClick={this.clickHandler} 
+                                        primary={true} 
+                                        label="Login"
+                                        style={divStyle}/>
+                                </Col>
+                            </Row>
                         </form>
                     </Col>
                 </Row>
-            </div>
             </MuiThemeProvider>
         )
     }

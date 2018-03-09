@@ -17,7 +17,6 @@ describe("Component : Login", () => {
     describe("unit tests for the login component", () => {
         it("component renders", () => {
             expect(shallowWrapper).to.not.be.undefined;
-            expect(shallowWrapper.find('div')).to.be.lengthOf(1);
         })
         it("component contains a form", () => {
             expect(shallowWrapper.find('form')).to.be.lengthOf(1);
