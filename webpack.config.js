@@ -21,10 +21,10 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader',
-        include: /flexboxgrid/
-      },
+        test: /.css$/,
+        loader: 'style!css?modules',
+        include: /flexboxgrid2/,
+        },
       {
         test: /\.(png|jp(e*)g|svg)$/,  
         use: [{
@@ -37,4 +37,7 @@ module.exports = {
     }
     ]
   },
+  plugins: [
+    new webpack.DllPlugin({ name: '[name]', path: join(outputPath, '[name].json') }), // eslint-disable-line no-new
+  ],
 };
