@@ -17,7 +17,6 @@ export default class Login extends Component {
             marginTop : 50
         }
 
-        
 
         return (
             <MuiThemeProvider style={mainStyle}>

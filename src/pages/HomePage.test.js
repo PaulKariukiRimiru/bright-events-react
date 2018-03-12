@@ -15,14 +15,16 @@ describe("Component : HomePage", () => {
     const minProps = {
         events : []
     }
-
-    const emptyWrapper = mount(<HomePage {...minProps} />)
-
     it("contains a grid to display information", () => {
-        const eventsSpy = spy(HomePage, 'renderEvents')
+        const eventsSpy = spy(HomePage.prototype, 'renderEvents')
         const eventsWrapper = mount(<HomePage {...minProps} events={["one", "two"]}/>)
         assert.calledOnce(eventsSpy)
         expect(eventsWrapper.find('GridComponent')).to.be.lengthOf(1)
     })
-    it("contains a text view if there s no information")
+    it("contains a text view if there s no information", () => {
+        const emptySpy = spy(HomePage.prototype, 'renderEmpty')
+        const emptyWrapper = mount(<HomePage {...minProps} />)
+        assert.calledOnce(emptySpy)
+        expect(eventsWrapper.find('h4')).to.be.lengthOf(1)
+    })
 })
