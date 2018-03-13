@@ -9,8 +9,8 @@ export default class GridComponent extends Component {
             <MuiThemeProvider>
                 <div>
                     <GridList>
-                        {this.props.itemList.map(() => {
-                            return (<GridTile />)
+                        {this.props.itemList.map((item, i) => {
+                            return (<GridTile key={i}/>)
                         })}
                     </GridList>
                 </div>
