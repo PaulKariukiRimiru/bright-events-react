@@ -12,8 +12,7 @@ export default class DashBoard extends Component {
     renderGrid () {
         const fabstyling = {
             position: 'absolute',
-            bottom:0,
-            right:0,
+            bottom:0,right:0,
             margin:32
         }
         return(
@@ -39,11 +38,8 @@ export default class DashBoard extends Component {
     }
 
     renderEmpty () {
-        const styling = {
-            marginTop : '25%'
-        }
+        const styling = { marginTop : '25%' }
         return(
-            <div>
                 <MuiThemeProvider>
                     <Grid fluid> 
                         <Row center="xs" style={styling}>
@@ -64,7 +60,6 @@ export default class DashBoard extends Component {
                         </Row>
                     </Grid>
                 </MuiThemeProvider>
-            </div>
         )
     }
 
