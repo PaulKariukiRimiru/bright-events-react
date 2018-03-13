@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import List from 'material-ui/List';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-
+import ListItem from './ListItem';
 export default class ListComponent extends Component {
     
     render() {
@@ -12,7 +12,7 @@ export default class ListComponent extends Component {
                     <List >
 
                         {this.props.itemList.map((item, index) => {
-                            return(<li>item</li>);
+                            return(<ListItem key={index}>item</ListItem>);
                         })}
 
                     </List>

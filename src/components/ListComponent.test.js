@@ -28,7 +28,7 @@ describe("Component : ListComponent", () => {
         })
 
         it("renders list items", () => {
-            expect(mountWrapper.find("li")).to.be.lengthOf(1)
+            expect(mountWrapper.find("ListItem")).to.be.lengthOf(1)
         })
     })    
 })
