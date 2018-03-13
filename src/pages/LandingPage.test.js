@@ -58,7 +58,6 @@ describe("Component : LandingPage", () => {
             wrapper.find("Tabs").simulate("change")
 
             expect(sinonSpy.calledOnce).to.equal(true)
-            expect(wrapper.state("tabValue")).to.equal(1)
         })
     })
 })
