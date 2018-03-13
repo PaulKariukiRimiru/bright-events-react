@@ -25,6 +25,6 @@ describe("Component : HomePage", () => {
         const emptySpy = spy(HomePage.prototype, 'renderEmpty')
         const emptyWrapper = mount(<HomePage {...minProps} />)
         assert.calledOnce(emptySpy)
-        expect(eventsWrapper.find('h4')).to.be.lengthOf(1)
+        expect(emptyWrapper.find('h4')).to.be.lengthOf(1)
     })
 })

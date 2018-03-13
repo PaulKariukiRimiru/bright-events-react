@@ -26,8 +26,6 @@ export default class HomePage extends Component {
 
     render() {
 
-        console.log(">>>>>>", this.props)
-
         if (this.props.events.length) {
             return (this.renderEvents())
         } else {
