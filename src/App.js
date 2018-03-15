@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import DashBoard from './pages/DashBoard';
+import AppBar  from 'material-ui/AppBar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
   render() {
     return (
-      <div className="App" >
-        <DashBoard events={[]}/>
-      </div>
+      <MuiThemeProvider>
+        <div className="App" >
+          <AppBar 
+            title="Bright Events"
+            iconClassNameRight="muidocs-icon-navigationimport MuiThemeProvider from 'material-ui/styles/MuiThemeProvider" />
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
