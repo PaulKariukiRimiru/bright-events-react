@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AppBar  from 'material-ui/AppBar';
+import LandingPage from './pages/LandingPage';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
@@ -10,6 +11,7 @@ class App extends Component {
           <AppBar 
             title="Bright Events"
             iconClassNameRight="muidocs-icon-navigationimport MuiThemeProvider from 'material-ui/styles/MuiThemeProvider" />
+          <LandingPage />
         </div>
       </MuiThemeProvider>
     );
