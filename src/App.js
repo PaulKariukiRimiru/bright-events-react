@@ -16,7 +16,6 @@ class App extends Component {
     this.setState({
       open:!this.state.open
     })
-    console.log(this.state)
   }
 
   handleClose(){
@@ -33,7 +32,7 @@ class App extends Component {
             title="Bright Events"
             iconClassNameRight="muidocs-icon-navigationimport MuiThemeProvider from 'material-ui/styles/MuiThemeProvider" 
             onLeftIconButtonClick={this.handleClick.bind(this)} />
-          <NavigationComponent open={this.state.open} handleToggle={this.handleClick.bind(this)} />
+          <NavigationComponent open={this.state.open} handleToggle={this.handleClose.bind(this)} />
           { this.props.children }
         </div>
       </MuiThemeProvider>

@@ -5,12 +5,13 @@ import {configure, shallow, mount} from 'enzyme';
 import  Adapter from 'enzyme-adapter-react-16';
 
 import NavigationComponent from './NavigationComponent';
+import { BrowserRouter } from 'react-router-dom';
 
 configure({ adapter: new Adapter() });
 
 describe("Component : NavigationComponent", () => {
 
-    const mountWrapper = mount(<NavigationComponent />)
+    const mountWrapper = shallow(<NavigationComponent />)
     it('renders a material navigation drawer', () => {
         expect(mountWrapper.find("Drawer")).to.be.lengthOf(1)
     })

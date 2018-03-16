@@ -10,10 +10,10 @@ export default class NavigationComponent extends Component {
         return (
             <div>
                 <MuiThemeProvider>
-                    <Drawer open={ this.props.open }>
-                        <Link to="/"><MenuItem primaryText="Back" onClick={ this.props.handletoggle }></MenuItem></Link>
-                        <Link to="/home"><MenuItem primaryText="Home" onClick={ this.props.handletoggle }></MenuItem></Link>
-                        <Link to="/dashboard" ><MenuItem primaryText="Dashboard" onClick={ this.props.handletoggle }></MenuItem></Link>
+                    <Drawer open={ this.props.open } docked={true} width={200}>
+                        <Link to="/"><MenuItem primaryText="Back" onClick={ this.props.handleToggle } /></Link>
+                        <Link to="/home"><MenuItem primaryText="Home" onClick={ this.props.handleToggle } /></Link>
+                        <Link to="/dashboard" ><MenuItem primaryText="Dashboard" onClick={ this.props.handleToggle } /></Link>
                     </Drawer>
                 </MuiThemeProvider>
             </div>
