@@ -5,6 +5,7 @@ import { FloatingActionButton } from 'material-ui';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { MuiThemeProvider } from 'material-ui/styles';
 import { Grid } from 'react-flexgrid';
+import { checkList } from '../Constants/common-functions';
 
 
 export default class DashBoard extends Component {
@@ -64,11 +65,6 @@ export default class DashBoard extends Component {
     }
 
     render() {
-        
-            if (this.props.events && this.props.events.length) {
-                return this.renderGrid()
-            } else {
-                return this.renderEmpty()
-            }
+        return checkList(this.props.events, this.renderEmpty.bind(this), this.renderGrid.bind(this))
     }
 }
