@@ -1,8 +1,8 @@
-import { comnineReducers } from 'redux';
-import AccounReducer from './AccountReducer';
+import { combineReducers } from 'redux';
+import { AccountReducer } from './AccountReducer';
 
-const rootReducer = comnineReducers({
-  auth : AccounReducer
+const rootReducer = combineReducers({
+  auth : AccountReducer
 });
 
 export default rootReducer;

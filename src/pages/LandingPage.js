@@ -8,9 +8,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import Login from '../components/Login';
 import Register from '../components/Register';
-import CardText from 'material-ui/Card/CardText';
-
-
 export default class LandingPage extends Component {
 
     constructor(){

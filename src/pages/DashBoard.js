@@ -65,7 +65,7 @@ export default class DashBoard extends Component {
 
     render() {
         
-            if (this.props.events.length) {
+            if (this.props.events && this.props.events.length) {
                 return this.renderGrid()
             } else {
                 return this.renderEmpty()

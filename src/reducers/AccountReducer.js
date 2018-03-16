@@ -1,12 +1,12 @@
 import { FETCHING, FETCHED, AUTHENTICATE, REGISTER } from '../Constants/action_type';
 
 const initialState = {
-  fetching,
-  fetched,
+  fetching: false,
+  fetched: false,
   auth : {}
 }
 
-export const accountReducer = (state = initialState, action) => {
+export const AccountReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCHING:
       return

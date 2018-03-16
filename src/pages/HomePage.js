@@ -26,7 +26,7 @@ export default class HomePage extends Component {
 
     render() {
 
-        if (this.props.events.length) {
+        if (this.props.events && this.props.events.length) {
             return (this.renderEvents())
         } else {
             return (this.renderEmpty())
