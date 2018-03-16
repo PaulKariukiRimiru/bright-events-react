@@ -8,9 +8,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import Login from '../components/Login';
 import Register from '../components/Register';
-import CardText from 'material-ui/Card/CardText';
-
-
 export default class LandingPage extends Component {
 
     constructor(){
@@ -28,8 +25,10 @@ export default class LandingPage extends Component {
 
     render() {
         const accountsStyle = {
-            marginTop : '15%'
+            marginTop : '15%',
+            right:0,
         }
+
         return (
             <div >
             <MuiThemeProvider >
@@ -37,9 +36,9 @@ export default class LandingPage extends Component {
                     <Row middle="xs">
                         <Col xs={6}>
                             <Row middle="xs">
-                                <Col xs={10}>
+                                <Col xs={12}>
                                     <Row center="xs">
-                                        <Col xs>
+                                        <Col xs={12}>
                                             
                                             <p>Hey there, we are proud to intoduce the newest event creation and management system. We link the best event creators out there with clients.
                                                 <br />But we dont stop there we make sure that our clients are always up to date with the latest, craziest turnups and events in their location. Advertising with us is the difference between TOTALLY SOLD OUT and Tickets still available</p>
@@ -54,7 +53,7 @@ export default class LandingPage extends Component {
                                 <Col xs>
                                 <div>
                                     <Row middle="xs">
-                                        <Col xs={8}>
+                                        <Col xsOffset={4} xs={8}>
                                         <Card style={accountsStyle}>
                                             <CardHeader
                                                 title="Welcome to bright events"
