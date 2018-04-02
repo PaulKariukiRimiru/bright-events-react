@@ -1,22 +1,17 @@
-import { FETCHING, FETCHED, AUTHENTICATE, REGISTER } from '../Constants/action_type';
+import { LOGIN_SUCCESS, EVENT_POST_SUCCESS, EVENT_GET_SUCCESS } from '../Constants/action_type';
+import { initialState } from '../Constants/initialState';
 
-const initialState = {
-  fetching: false,
-  fetched: false,
-  auth : {}
-}
-
-export const AccountReducer = (state = initialState, action) => {
+const AccountReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCHING:
-      return
-    case FETCHED:
-      return
-    case AUTHENTICATE:
-      return
-    case REGISTER:
-      return 
+    case LOGIN_SUCCESS:
+      return { ...state, user: action.payload };
+    case EVENT_POST_SUCCESS:
+      return {...state, events: [...state.events, action.payload]}
+    case EVENT_GET_SUCCESS:
+      return {...state, events: [...state.events, ...action.payload]}
     default:
       return state
-  }
-}
+  };
+};
+
+export default AccountReducer;

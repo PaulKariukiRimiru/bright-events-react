@@ -11,8 +11,9 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {
-          presets: ['es2015', 'react', 'stage-0'],
+          presets: ['es2015', 'react', 'stage-0', 'stage-2'],
           plugins: ['react-html-attrs', 
+          "transform-es2015-modules-commonjs",
           "transform-decorators-legacy",
           "transform-class-properties",
           "transform-decorators",
@@ -21,23 +22,23 @@ module.exports = {
         }
       },
       {
-        test: /.css$/,
-        loader: 'style!css?modules',
-        include: /flexboxgrid2/,
-        },
-      {
-        test: /\.(png|jp(e*)g|svg)$/,  
-        use: [{
-            loader: 'url-loader',
-            options: { 
-                limit: 8000, // Convert images < 8kb to base64 strings
-                name: 'images/[hash]-[name].[ext]'
-            } 
-        }]
+        test: /\.css$/,
+        use: [
+          'handlebars-loader', // handlebars loader expects raw resource string
+          'extract-loader',
+          'css-loader'
+        ]
+     },
+    {
+      test: /\.(png|jp(e*)g|svg)$/,  
+      use: [{
+          loader: 'url-loader',
+          options: { 
+              limit: 8000, // Convert images < 8kb to base64 strings
+              name: 'images/[hash]-[name].[ext]'
+          } 
+      }]
     }
     ]
-  },
-  plugins: [
-    new webpack.DllPlugin({ name: '[name]', path: join(outputPath, '[name].json') }), // eslint-disable-line no-new
-  ],
+  }
 };

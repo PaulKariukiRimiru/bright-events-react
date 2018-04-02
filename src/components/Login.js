@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {Row, Col} from 'react-flexgrid';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export default class Login extends Component {
     
@@ -19,41 +18,44 @@ export default class Login extends Component {
 
 
         return (
-            <MuiThemeProvider style={mainStyle}>
-                <Row center="xs">
-                    <Col xs="6">
-                        <form>
+                <Row center="xs" style={mainStyle}>
+                    <Col xs={6}>
+                        <form onSubmit={this.props.handleFormSubmition}>
                             <Row middle="xs">
-                                <Col xs="6">
+                                <Col xs={6}>
                                     <TextField 
                                         floatingLabelText="Email"
                                         refs="emailField"
                                         name="email"
-                                        style={divStyle}/>
+                                        style={divStyle}
+                                        onChange={this.props.onChange}/>
                                 </Col>
                             </Row>
                             <Row middle="xs">
-                                <Col xs="6">
+                                <Col xs={6}>
                                     <TextField
                                         floatingLabelText="Password"
                                         refs="passwordField"
                                         name="password"
-                                        style={divStyle}/>
+                                        style={divStyle}
+                                        onChange={this.props.onChange}/>
                                 </Col>
                             </Row>
                             <Row center="xs">
-                                <Col xs="4">
-                                    <RaisedButton name="submit" 
+                                <Col xs={4}>
+                                    <RaisedButton 
+                                        name="submit" 
+                                        type="submit"
                                         onClick={this.clickHandler} 
                                         primary={true} 
                                         label="Login"
-                                        style={divStyle}/>
+                                        style={divStyle}
+                                        />
                                 </Col>
                             </Row>
                         </form>
                     </Col>
                 </Row>
-            </MuiThemeProvider>
         )
     }
 }

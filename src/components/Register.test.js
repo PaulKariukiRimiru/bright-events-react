@@ -6,6 +6,8 @@ import {configure, shallow, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Register from './Register';
 
+import configureStore from 'redux-mock-store';
+
 configure({ adapter: new Adapter() });
 
 describe("Component : Register", () => {

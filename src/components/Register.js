@@ -18,39 +18,44 @@ export default class Register extends Component {
         return (
             <MuiThemeProvider style={mainStyle}>
                 <Row center="xs">
-                    <Col xs="8">
-                        <form>
+                    <Col xs={8}>
+                        <form onSubmit={this.props.handleFormSubmition} >
                             <Row middle="xs">
-                                <Col xs="6">
+                                <Col xs={6}>
                                     <TextField 
                                         floatingLabelText="Username"
                                         refs="usernameField"
                                         name="username"
-                                        style={divStyle}/>
+                                        style={divStyle}
+                                        onChange={this.props.onChange}
+                                        />
                                 </Col>
                             </Row>
                             <Row middle="xs">
-                                <Col xs="6">
+                                <Col xs={6}>
                                     <TextField 
                                         floatingLabelText="Email"
                                         refs="emailField"
                                         name="email"
-                                        style={divStyle}/>
+                                        style={divStyle}
+                                        onChange={this.props.onChange}/>
                                 </Col>
                             </Row>
                             <Row middle="xs">
-                                <Col xs="6">
+                                <Col xs={6}>
                                     <TextField
                                         floatingLabelText="Password"
                                         refs="passwordField"
                                         name="password"
-                                        style={divStyle}/>
+                                        style={divStyle}
+                                        onChange={this.props.onChange}/>
                                 </Col>
                             </Row>
                             <Row center="xs">
-                                <Col xs="4">
-                                    <RaisedButton name="submit" 
-                                        onClick={this.clickHandler} 
+                                <Col xs={4}>
+                                    <RaisedButton 
+                                        name="submit" 
+                                        type="submit"
                                         primary={true} 
                                         label="Register"
                                         style={divStyle}/>
