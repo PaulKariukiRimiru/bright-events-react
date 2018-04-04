@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { fetchingAction , fetchedAction, erroredAction, displayMessageAction } from '../actions/index';
 import { REGISTER_SUCCESS_MESSAGE, LOGIN_SUCCESS_MESSAGE, EVENT_ADDED_SUCCESSFULLY } from '../Constants/messages';
-import { LOGIN_SUCCESS, EVENT_POST_SUCCESS, EVENT_GET_SUCCESS } from '../Constants/action_type';
+import { LOGIN_SUCCESS, EVENT_POST_SUCCESS, EVENT_GET_SUCCESS, RSVP_GET_SUCCESS, RSVP_MANAGE_SUCCESS, DELETE_EVENT_SUCCESS, EDIT_EVENT_SUCCESS } from '../Constants/action_type';
 import { push } from 'react-router-redux';
 
 const loginAction = payload => {
@@ -20,8 +20,47 @@ const eventRsvpAction = payload => {
   return({type: RSVP_GET_SUCCESS, payload: payload});
 };
 
-const eventManageRsvp = payload => {
-  return({type: RSVP_MANAGE_SUCCESS, payload: payload})
+const eventManageRsvpAction = payload => {
+  return({type: RSVP_MANAGE_SUCCESS, payload: payload});
+};
+
+const eventDeleteAction = payload => {
+  return({type: DELETE_EVENT_SUCCESS, payload: payload});
+};
+
+const eventEditAction = payload => {
+  return({type: EDIT_EVENT_SUCCESS, payload: payload});
+};
+
+export const eventEdit = payload => {
+  return function(dispatch){
+    axios({
+      method: 'put',
+      url: 'http://127.0.0.1:5000/api/v2/events/'+payload,
+      data: payload
+    })
+    .then((resp) => {
+      return(dispatch(eventEditAction(resp.data.payload)));
+    })
+    .catch((error) => {
+
+    })
+  }
+}
+
+const eventDelete = payload => {
+  return function(dispatch) {
+    axios({
+      method: 'delete',
+      url: 'http://127.0.0.1:5000/api/v2/events/'+payload
+    })
+    .then((resp) => {
+      return(dispatch(eventDeleteAction(resp.data.payload)));
+    })
+    .catch((error) => {
+
+    })
+  }
 }
 
 export const eventManageRsvp = payload => {
@@ -30,10 +69,10 @@ export const eventManageRsvp = payload => {
     dispatch(fetchingAction(true));
     axios({
       method: 'put',
-      url:'http://127.0.0.1:5000/api/v2/event/'+event+'rsvp'
+      url:'http://127.0.0.1:5000/api/v2/event/'+payload+'/rsvp'
     })
     .then((resp) => {
-      return(dispatch(eventManageRsvp(resp.data.payload)));
+      return(dispatch(eventManageRsvpAction(resp.data.payload)));
     })
     .catch((error) => {
       if(error.message){
@@ -44,7 +83,7 @@ export const eventManageRsvp = payload => {
 };
 
 export const eventRsvp = (event, email) => {
-  
+
   const clientDetails = {
     client_email: email
   };
@@ -52,11 +91,11 @@ export const eventRsvp = (event, email) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'post',
-      url:'http://127.0.0.1:5000/api/v2/event/'+event+'rsvp',
+      url:'http://127.0.0.1:5000/api/v2/event/'+event+'/rsvp',
       data: clientDetails
     })
     .then((resp) => {
-      return(dispatch(eventRsvp(resp.data.payload)));
+      return(dispatch(displayMessageAction({status:true, message:"event reserved successfully"})));
     })
     .catch((error) => {
       if(error.message){
@@ -172,12 +211,14 @@ export const loginUser = (payload, history) => {
       )
     })
     .then(() =>  dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
-    .then(() => dispatch(history.push('/dashboard')))
+    .then(() => history.push('/dashboard'))
     .catch((error) => {
       if(error.response){
         message = error.response.data.message
         return(dispatch(erroredAction(error.response.data.message)));
       }
+      console.log(error);
+      
     });
     
   };

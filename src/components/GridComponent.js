@@ -8,9 +8,12 @@ export default class GridComponent extends Component {
         console.log("grid props comp", this.props);
         return (
             <div>
-                <GridList cols={3} padding = {8} cellHeight={'auto'} >
+                <GridList cols={4} padding = {2} cellHeight={'auto'} >
                     {this.props.itemList.map((item, i) => {
-                        return (<GridItemComponent key={i} event={item} view={this.props.view}/>)
+                        return (<GridItemComponent 
+                                        key={i} event={item} 
+                                        view={this.props.view} 
+                                        handleRsvpClick={this.props.handleRsvpClick}/>)
                     })}
                 </GridList>
             </div>

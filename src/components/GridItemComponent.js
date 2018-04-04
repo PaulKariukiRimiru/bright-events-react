@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle } from 'material-ui/Card'
+import { Card, CardActions, CardHeader, CardMedia, CardTitle , CardText} from 'material-ui/Card'
 import GridTile  from 'material-ui/GridList/GridTile';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { FloatingActionButton, Dialog } from 'material-ui';
@@ -10,7 +10,7 @@ import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import Rsvp from 'material-ui/svg-icons/action/stars';
 import { Row } from 'react-flexgrid';
 import Col from 'react-flexgrid/lib/Col';
-
+import FlatButton from 'material-ui/FlatButton';
 
 export default class GridItemComponent extends Component {
 
@@ -19,10 +19,15 @@ export default class GridItemComponent extends Component {
     }
 
     handleFabClick = () => {
+        
+    }
+
+    handleClick = () => {
         const { selected } = this.state
         this.setState({
             selected : !selected
         })
+        this.props.handleRsvpClick(this.props.event.id)
     }
 
     renderDashboard(){
@@ -34,26 +39,35 @@ export default class GridItemComponent extends Component {
             <Row center="xs">
                 <Col xs={10}>
                 <Card style={{maxHeight:300, maxWidth:280, margin:4}}>
-                <CardHeader title={<h2>{event.name}</h2>} subtitle={event.location}/>
-                    <CardMedia >
-                        {event.time? 
-                            <h4>{event.time}</h4>:
-                            <h4>{event.date.substring(0,10)}</h4>
-                        }
-                    </CardMedia >
+                    <CardMedia>
+                        <div style={{ height:150, backgroundColor: '#2196F3'}} >
+                            <CardTitle titleColor='white' subtitleColor='#FAFAFA' 
+                                    style={{textAlign: 'left', position:'absolute', bottom:'0px'}} 
+                                    title={event.name} subtitle={event.location} />
+                        </div>
+                    </CardMedia>
+                    <CardText >
+                    {event.time? 
+                        <h4>{new Date(event.time).toDateString()}</h4>:
+                        <h4>{new Date(event.date).toDateString()}</h4>
+                    }
+                    </CardText>
                     <CardActions>
-                        <Row center="xs">
-                            <Col xs={12}>
-
-                                <FloatingActionButton style={{margin:2}}  onClick={this.handleFabClick}>
-                                    <Rsvp />
-                                </FloatingActionButton>
-                                <FloatingActionButton style={{margin:2}}  onClick={this.handleFabClick}>
-                                    <Edit />
-                                </FloatingActionButton>
-                                <FloatingActionButton style={{margin:2}}  onClick={this.handleFabClick} secondary={true}>
-                                    <Delete />
-                                </FloatingActionButton>
+                        <Row center="xs" style={{padding:2}}>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.handleFabClick} 
+                                            icon={<Rsvp color="#FFF59"/>}
+                                            />
+                            </Col>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.handleFabClick} 
+                                            icon={<Edit color="#CE93D8"/>} 
+                                            />
+                            </Col>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.handleFabClick} 
+                                            icon={<Delete color="#FFAB91" />} 
+                                            />
                             </Col>
                         </Row>
                     </CardActions>
@@ -68,21 +82,26 @@ export default class GridItemComponent extends Component {
         return(
             <Row center="xs">
                 <Col xs={10}>
-                <Card style={{maxHeight:300, maxWidth:280, margin:12}}>
-                    <CardHeader title={event.name}/>
-                    <CardMedia >
-                        {event.time? 
-                            <h4>{event.time}</h4>:
-                            <h4>{event.date.substring(0,10)}</h4>
-                        }
-                        <h5>{event.location}</h5>
-                    </CardMedia >
+
+                <Card style={{maxHeight:300, maxWidth:280, margin:4}}>
+                    <CardMedia>
+                        <div style={{ height:150, backgroundColor: '#2196F3'}} >
+                            <CardTitle titleColor='white' subtitleColor='#FAFAFA' 
+                                    style={{textAlign: 'left', position:'absolute', bottom:'0px'}} 
+                                    title={event.name} subtitle={event.location} />
+                        </div>
+                    </CardMedia>
+                    <CardText >
+                    {event.time? 
+                        <h4>{new Date(event.time).toDateString()}</h4>:
+                        <h4>{new Date(event.date).toDateString()}</h4>
+                    }
+                    </CardText>
                     <CardActions>
-                        <Row center="xs">
-                            <Col xs={12}>
-                                <FloatingActionButton style={{margin:4}}  onClick={this.handleFabClick}>
-                                    {this.state.selected ? <Favorite /> : <FavBorder /> }
-                                </FloatingActionButton>
+                        <Row center="xs" style={{padding:2}}>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.handleClick} 
+                                            icon={this.state.selected ? <Favorite color="#FF3D00" /> : <FavBorder  color="#FF3D00"/> } />
                             </Col>
                         </Row>
                     </CardActions>

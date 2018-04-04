@@ -16,7 +16,6 @@ export default class Login extends Component {
             marginTop : 50
         }
 
-
         return (
                 <Row center="xs" style={mainStyle}>
                     <Col xs={6}>

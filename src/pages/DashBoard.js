@@ -9,6 +9,8 @@ import { checkList } from '../Constants/common-functions';
 import { connect } from 'react-redux';
 import DialogComponent from '../components/DialogComponent';
 import { eventPost, eventsGet } from '../actions/accountActions';
+import { TOKEN } from '../Constants/action_type';
+import isObjectEmpty from 'is-empty-object';
 
 function mapStateToProps (state, ownProps){
   
@@ -16,7 +18,6 @@ function mapStateToProps (state, ownProps){
       user: state.account.user,
       events: state.account.events,
       fetching: state.transaction.fetching,
-      token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1MjI2OTM5ODMsIm5iZiI6MTUyMjY5Mzk4MywianRpIjoiYjdlNWViNGYtODRjNi00NmRlLWIzNjEtY2EyYjU0YWY5NjgyIiwiZXhwIjoxNTIyNzgwMzgzLCJpZGVudGl0eSI6eyJpZCI6MywiZW1haWwiOiJwYXVsLnJpbWlydUBhbmRlbGEuY29tIn0sImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.M7TkCBMM64PqdWk5RCtd61F6lTV1SRIgRUlYHN3O2Zs"
     })
 }
 export class DashBoard extends Component {
@@ -144,14 +145,10 @@ export class DashBoard extends Component {
     onFinish(){
       this.setState({
         showDialog:false
-      })
-      console.log("id", this.props.user.payload.user_id);
-      
+      })      
       const eventDetails = this.state.form
-      eventDetails.host = this.props.user.payload.user_id
-      eventDetails.token = this.props.token   
-
-      console.log("event details", eventDetails);
+      eventDetails.host = this.props.user.id
+      eventDetails.token = localStorage.getItem(TOKEN)   
       this.props.dispatch(eventPost(eventDetails))
     }
 
