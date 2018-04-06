@@ -8,12 +8,11 @@ import { Grid } from 'react-flexgrid';
 import { checkList } from '../Constants/common-functions';
 import { connect } from 'react-redux';
 import DialogComponent from '../components/DialogComponent';
-import { eventPost, eventsGet } from '../actions/accountActions';
+import { eventPost, eventsGet, eventEdit, eventDelete } from '../actions/accountActions';
 import { TOKEN } from '../Constants/action_type';
 import isObjectEmpty from 'is-empty-object';
 
 function mapStateToProps (state, ownProps){
-  
     return({
       user: state.account.user,
       events: state.account.events,
@@ -22,11 +21,11 @@ function mapStateToProps (state, ownProps){
 }
 export class DashBoard extends Component {
 
-  componentWillMount(){
-    console.log(this.props);
-    
+  componentWillMount(){    
     this.props.dispatch(eventsGet())
   }
+
+  
 
   constructor(){
       super();
@@ -37,7 +36,8 @@ export class DashBoard extends Component {
                 category:'',
                 time:'',
                 host:'' 
-              }
+              },
+        editForm: {}
       };
       this.onChange = this.onChange.bind(this);
       this.onFinish = this.onFinish.bind(this);
@@ -70,7 +70,10 @@ export class DashBoard extends Component {
                   <GridComponent 
                     itemList={this.props.events} 
                     itemClickAction= {this.props.actions}
-                    view= {1}/>
+                    view= {1}
+                    onEditChange = {this.onEditChange}
+                    onEditSubmit = {this.onEditSubmit}
+                    onDeleteSubmit = {this.onDeleteSubmit}/>
                   <Row bottom="xs">
                     <Col xsOffset={11} xs={1}>
                       <FloatingActionButton secondary={true} style={fabstyling} onClick={this.handleFabClick}>
@@ -131,6 +134,28 @@ export class DashBoard extends Component {
       })
     }
 
+    onDeleteSubmit = (eventId) => {
+      this.props.dispatch(eventDelete(eventId))
+    }
+
+    onEditChange = (event, date) => {
+      let myStateCopy = this.state
+      if(event){
+        myStateCopy.editForm[event.target.name] = event.target.value;
+      }else{
+        myStateCopy.editForm.time = date.toISOString().substring(0, 10)
+      }
+     
+      return this.setState(myStateCopy);
+    }
+
+    onEditSubmit = (id) => {
+      this.props.dispatch(eventEdit(id, this.state.editForm))
+      this.setState({
+        editForm: {}
+      })
+    }
+
     onChange(event, date){
       let myStateCopy = this.state
       if(event){
@@ -148,7 +173,7 @@ export class DashBoard extends Component {
       })      
       const eventDetails = this.state.form
       eventDetails.host = this.props.user.id
-      eventDetails.token = localStorage.getItem(TOKEN)   
+      eventDetails.token = localStorage.getItem(TOKEN)  
       this.props.dispatch(eventPost(eventDetails))
     }
 

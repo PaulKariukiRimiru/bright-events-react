@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { fetchingAction , fetchedAction, erroredAction, displayMessageAction } from '../actions/index';
 import { REGISTER_SUCCESS_MESSAGE, LOGIN_SUCCESS_MESSAGE, EVENT_ADDED_SUCCESSFULLY } from '../Constants/messages';
-import { LOGIN_SUCCESS, EVENT_POST_SUCCESS, EVENT_GET_SUCCESS, RSVP_GET_SUCCESS, RSVP_MANAGE_SUCCESS, DELETE_EVENT_SUCCESS, EDIT_EVENT_SUCCESS } from '../Constants/action_type';
+import { LOGIN_SUCCESS, EVENT_POST_SUCCESS, EVENT_GET_SUCCESS, RSVP_GET_SUCCESS, RSVP_MANAGE_SUCCESS, DELETE_EVENT_SUCCESS, EDIT_EVENT_SUCCESS, TOKEN } from '../Constants/action_type';
 import { push } from 'react-router-redux';
 
 const loginAction = payload => {
@@ -32,33 +32,51 @@ const eventEditAction = payload => {
   return({type: EDIT_EVENT_SUCCESS, payload: payload});
 };
 
-export const eventEdit = payload => {
+export const eventEdit = (id, payload) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
+  console.log("edit event", payload)
   return function(dispatch){
+
     axios({
       method: 'put',
-      url: 'http://127.0.0.1:5000/api/v2/events/'+payload,
-      data: payload
+      url: 'http://127.0.0.1:5000/api/v2/events/'+id,
+      data: payload,
+      headers: headers
     })
     .then((resp) => {
       return(dispatch(eventEditAction(resp.data.payload)));
     })
     .catch((error) => {
-
+      if(error.message){
+        return(dispatch(erroredAction(error.response.data.message)));
+      };
     })
   }
 }
 
-const eventDelete = payload => {
+export const eventDelete = (eventId) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
   return function(dispatch) {
     axios({
       method: 'delete',
-      url: 'http://127.0.0.1:5000/api/v2/events/'+payload
+      headers: headers,
+      url: 'http://127.0.0.1:5000/api/v2/events/'+eventId
     })
     .then((resp) => {
-      return(dispatch(eventDeleteAction(resp.data.payload)));
+      return(dispatch(eventDeleteAction(eventId)));
     })
     .catch((error) => {
-
+      if(error.message){
+        return(dispatch(erroredAction(error.response.data.message)));
+      };
     })
   }
 }
@@ -211,7 +229,7 @@ export const loginUser = (payload, history) => {
       )
     })
     .then(() =>  dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
-    .then(() => history.push('/dashboard'))
+    // .then(() => history.push('/dashboard'))
     .catch((error) => {
       if(error.response){
         message = error.response.data.message

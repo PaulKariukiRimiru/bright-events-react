@@ -13,12 +13,12 @@ import { dismissMessageAction } from '../actions/index';
 
 import { connect } from 'react-redux';
 import SnackBarComponent from '../components/SnackBarComponent';
+import isObjectEmpty from 'is-empty-object';
 
 export class LandingPage extends Component {
 
   constructor(){
       super();
-
       this.state = {
           tabValue:0,
           form: { username:'',
@@ -34,6 +34,13 @@ export class LandingPage extends Component {
       this.onChange = this.onChange.bind(this);
       this.handleRequestClose = this.handleRequestClose.bind(this)
   };
+
+  componentWillReceiveProps(nextProps, nextContext){
+    console.log("next props", nextProps);
+    if(!isObjectEmpty(nextProps.user) && !nextProps.displayed){
+      nextProps.history.push('/dashboard')
+    }
+  }
 
   onChange(event){
     let myStateCopy = this.state
@@ -58,7 +65,7 @@ export class LandingPage extends Component {
   }
 
   handleRequestClose(){
-    this.props.dismiss()
+    this.props.dismiss(this.props.history)
   }
 
   render() {
@@ -157,7 +164,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("ownprops", ownProps);
   
   return ({
-  user: state.user,
+  user: state.account.user,
   message: state.transaction.message.message,
   displayed: state.transaction.message.status,
   history: ownProps.history
@@ -172,8 +179,8 @@ function mapDispatchToProps(dispatch){
     loginUser: (userCredentials, history) => {
       dispatch(loginUser(userCredentials, history));
     },
-    dismiss: () => {
-      dispatch(dismissMessageAction());
+    dismiss: (history) => {
+      dispatch(dismissMessageAction(history));
     }
   };
 };

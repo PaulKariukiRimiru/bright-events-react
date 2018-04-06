@@ -5,15 +5,19 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 export default class GridComponent extends Component {
     render() {
-        console.log("grid props comp", this.props);
+        
         return (
             <div>
-                <GridList cols={4} padding = {2} cellHeight={'auto'} >
+                <GridList cols={4} padding = {2} cellHeight={'auto'} cellWidth={'auto'} >
                     {this.props.itemList.map((item, i) => {
                         return (<GridItemComponent 
-                                        key={i} event={item} 
+                                        key={i} 
+                                        event={item} 
                                         view={this.props.view} 
-                                        handleRsvpClick={this.props.handleRsvpClick}/>)
+                                        handleRsvpClick={this.props.handleRsvpClick}
+                                        onEditChange = {this.props.onEditChange}
+                                        onEditSubmit = {this.props.onEditSubmit}
+                                        onDeleteSubmit = {this.props.onDeleteSubmit}/>)
                     })}
                 </GridList>
             </div>

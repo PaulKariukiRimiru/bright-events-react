@@ -8,24 +8,51 @@ import FavBorder from 'material-ui/svg-icons/action/favorite-border';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 import Rsvp from 'material-ui/svg-icons/action/stars';
+import Save from 'material-ui/svg-icons/content/save'
 import { Row } from 'react-flexgrid';
 import Col from 'react-flexgrid/lib/Col';
 import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
 
 export default class GridItemComponent extends Component {
 
     state = {
-        selected : false
+        selected : false,
+        editMode: false
     }
 
     handleFabClick = () => {
         
     }
 
+    handleEventDelete = () => {
+        let id
+        if (this.props.event.id) {
+            id = this.props.event.id
+        }else{
+            id = this.props.event.host
+        }
+        this.props.onDeleteSubmit(id);
+    }
+
+    handleEventEdit = () => {
+        this.setState({
+            editMode: !this.state.editMode
+        })
+    }
+
+    handleEditSubmit = () => {
+        this.setState({
+            editMode: !this.state.editMode
+        })
+        this.props.onEditSubmit( )
+    }
+
     handleClick = () => {
         const { selected } = this.state
         this.setState({
-            selected : !selected
+            selected : true
         })
         this.props.handleRsvpClick(this.props.event.id)
     }
@@ -35,41 +62,87 @@ export default class GridItemComponent extends Component {
         const style = {
             margin: 2,
           };
+
+        const datePickerStyle = {maxWidth:200, color: 'blue'}
         return (
             <Row center="xs">
                 <Col xs={10}>
-                <Card style={{maxHeight:300, maxWidth:280, margin:4}}>
+                <Card style={{maxHeight:350, maxWidth:280, margin:4}}>
                     <CardMedia>
                         <div style={{ height:150, backgroundColor: '#2196F3'}} >
                             <CardTitle titleColor='white' subtitleColor='#FAFAFA' 
                                     style={{textAlign: 'left', position:'absolute', bottom:'0px'}} 
-                                    title={event.name} subtitle={event.location} />
+                                    title={this.state.editMode ?
+                                            <TextField
+                                                floatingLabelText="Edit event name"
+                                                name="name"
+                                                defaultValue={event.name}
+                                                onChange={this.props.onEditChange}
+                                                style={{width:'100%', margin:'12'}}/> :
+                                        event.name } 
+                                    subtitle={this.state.editMode ? 
+                                                <TextField
+                                                    floatingLabelText="Edit event location"
+                                                    name="location"
+                                                    defaultValue={event.location}
+                                                    onChange={this.props.onEditChange}
+                                                    style={{width:'100%', margin:'12'}}/> :
+                                        event.location } />
                         </div>
                     </CardMedia>
                     <CardText >
-                    {event.time? 
-                        <h4>{new Date(event.time).toDateString()}</h4>:
-                        <h4>{new Date(event.date).toDateString()}</h4>
-                    }
+                        
+                            {this.state.editMode ?
+                            <div >
+                                <TextField
+                                    floatingLabelText="Edit event category"
+                                    name="category"
+                                    defaultValue={event.category}
+                                    onChange={this.props.onEditChange}
+                                    style={{width:'100%'}}/> 
+                                <DatePicker 
+                                    name="time" 
+                                    ref={event.name} 
+                                    hintText={new Date(event.date).toDateString()}
+                                    onChange={this.props.onEditChange}
+                                    underlineStyle={{width:200, color: 'blue'}}
+                                    />
+                            </div> 
+                            :
+                                <h4> {event.time ? new Date(event.time).toDateString() : new Date(event.date).toDateString()} </h4>
+                            }
+                        
                     </CardText>
                     <CardActions>
+                        
+                        { this.state.editMode? 
+                        <Row center="xs" style={{padding:2}}>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.handleEditSubmit} 
+                                            icon={<Save color="#CE93D8"/>} 
+                                            />
+                            </Col>
+                        </Row> :
                         <Row center="xs" style={{padding:2}}>
                             <Col xs={4}>
                                 <FlatButton onClick={this.handleFabClick} 
                                             icon={<Rsvp color="#FFF59"/>}
+                                            
                                             />
                             </Col>
                             <Col xs={4}>
-                                <FlatButton onClick={this.handleFabClick} 
+                                <FlatButton onClick={this.handleEventEdit} 
                                             icon={<Edit color="#CE93D8"/>} 
                                             />
                             </Col>
                             <Col xs={4}>
-                                <FlatButton onClick={this.handleFabClick} 
+                                <FlatButton onClick={this.handleEventDelete} 
                                             icon={<Delete color="#FFAB91" />} 
                                             />
                             </Col>
                         </Row>
+                        }
+                        
                     </CardActions>
                 </Card>
                 </Col>

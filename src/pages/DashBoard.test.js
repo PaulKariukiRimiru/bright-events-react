@@ -1,7 +1,7 @@
 import 'jsdom-global/register';
 import React from 'react';
 import chai, {expect} from 'chai';
-import {configure, swallow, mount} from 'enzyme';
+import {configure, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {spy, assert} from 'sinon';
 
