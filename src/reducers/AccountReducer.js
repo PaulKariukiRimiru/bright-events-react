@@ -4,7 +4,8 @@ import { LOGIN_SUCCESS,
          TOKEN, 
          RSVP_GET_SUCCESS, 
          EDIT_EVENT_SUCCESS,
-         DELETE_EVENT_SUCCESS } from '../Constants/action_type';
+         DELETE_EVENT_SUCCESS,
+         RSVP_MANAGE_SUCCESS } from '../Constants/action_type';
 import { initialState } from '../Constants/initialState';
 import jwt_decode from 'jwt-decode';
 
@@ -19,11 +20,14 @@ const AccountReducer = (state = initialState, action) => {
     case EVENT_GET_SUCCESS:
       return {...state, events: [...action.payload]};
     case RSVP_GET_SUCCESS:
-      return {...state, message: {...state.message, status: true, message: "Event reserved successfully"}};
+      const rsvpList = action.payload
+      return {...state, rsvps: [...action.payload]};
     case EDIT_EVENT_SUCCESS:
       return {...state, events: state.events.map((event, i) => event.id === action.payload.id ? {...event, ...action.payload}: event)}
     case DELETE_EVENT_SUCCESS:
       return {...state, events: state.events.filter(event => event.id !== action.payload)}
+    case RSVP_MANAGE_SUCCESS:
+      return {...state, rsvps: state.rsvps.map((rsvp, i) => rsvp.id === action.payload.id ? {...rsvp, accepted:action.payload.status}: rsvp)};
     default:
       return state
   };

@@ -11,7 +11,28 @@ export default class StepperComponent extends Component {
 
   state = {
     step: 0,
-    end: false
+    end: false,
+    form: { name:'',
+            location:'',
+            category:'',
+            time:'',
+            host:'' 
+          }
+  };
+
+  handleSubmit = () => {
+    this.props.handleSubmit(this.state.form);
+  }
+
+  onChange = (event, date) => {
+    let myStateCopy = this.state
+    if(event){
+      myStateCopy.form[event.target.name] = event.target.value;
+    }else{
+      myStateCopy.form.time = date.toISOString().substring(0, 10)
+    }
+   
+    return this.setState(myStateCopy);
   };
 
   handleStepNext = () => {
@@ -70,12 +91,13 @@ export default class StepperComponent extends Component {
                       <Row middle="xs">
                         <Col xs={6}>
                         {item.name == 'time' ? 
-                          <DatePicker name={item.name} ref={item.name} hintText="Date" onChange={this.props.onChange}/> :
+                          <DatePicker name={item.name} ref={item.name} hintText={this.state.form[item.name] ? this.state.form[item.name] : ""} onChange={this.onChange}/> :
                           <TextField 
-                                floatingLabelText={item.name}
+                                floatingLabelText={ this.state.form[item.name] ? this.state.form[item.name] : item.name}
                                 refs={item.name}
                                 name={item.name}
-                                onChange={this.props.onChange}/>
+                                hintText={this.state.form[item.name] ? this.state.form[item.name] : ""}
+                                onChange={this.onChange}/>
                         }
                             
                           </Col>
@@ -93,7 +115,7 @@ export default class StepperComponent extends Component {
             <RaisedButton
                 label="Done"
                 primary={true}
-                onClick={this.props.handleSubmit}
+                onClick={this.handleSubmit}
               />
             </Col>
         </Row>

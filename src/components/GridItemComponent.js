@@ -27,13 +27,8 @@ export default class GridItemComponent extends Component {
     }
 
     handleEventDelete = () => {
-        let id
-        if (this.props.event.id) {
-            id = this.props.event.id
-        }else{
-            id = this.props.event.host
-        }
-        this.props.onDeleteSubmit(id);
+        console.log("event id >>>", this.props.event)
+        this.props.onDeleteSubmit(this.props.event.id);
     }
 
     handleEventEdit = () => {
@@ -46,7 +41,7 @@ export default class GridItemComponent extends Component {
         this.setState({
             editMode: !this.state.editMode
         })
-        this.props.onEditSubmit( )
+        this.props.onEditSubmit( this.props.event.id )
     }
 
     handleClick = () => {
@@ -55,6 +50,10 @@ export default class GridItemComponent extends Component {
             selected : true
         })
         this.props.handleRsvpClick(this.props.event.id)
+    }
+
+    handleRsvpRequest = () => {
+        this.props.onRsvpRequest(this.props.event.id)
     }
 
     renderDashboard(){
@@ -125,7 +124,7 @@ export default class GridItemComponent extends Component {
                         </Row> :
                         <Row center="xs" style={{padding:2}}>
                             <Col xs={4}>
-                                <FlatButton onClick={this.handleFabClick} 
+                                <FlatButton onClick={this.handleRsvpRequest} 
                                             icon={<Rsvp color="#FFF59"/>}
                                             
                                             />

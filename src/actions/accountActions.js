@@ -32,6 +32,32 @@ const eventEditAction = payload => {
   return({type: EDIT_EVENT_SUCCESS, payload: payload});
 };
 
+export const eventRsvpGet = (id) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
+  return function(dispatch){
+    dispatch(fetchingAction(true));
+    axios({
+      method: 'get',
+      url:'http://127.0.0.1:5000/api/v2/event/'+id+'/rsvp',
+      headers: headers
+    })
+    .then((resp) => {
+      return(dispatch(eventRsvpAction(resp.data.payload)));
+    })
+    .catch((error) => {
+      if(!error.message){
+        return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }
+    });
+  }
+}
+
 export const eventEdit = (id, payload) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -51,9 +77,11 @@ export const eventEdit = (id, payload) => {
       return(dispatch(eventEditAction(resp.data.payload)));
     })
     .catch((error) => {
-      if(error.message){
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
-      };
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }
     })
   }
 }
@@ -74,28 +102,41 @@ export const eventDelete = (eventId) => {
       return(dispatch(eventDeleteAction(eventId)));
     })
     .catch((error) => {
-      if(error.message){
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
-      };
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }
+
     })
   }
 }
 
-export const eventManageRsvp = payload => {
+export const eventManageRsvp = (id, details) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
 
+  console.log("details", details)
   return function(dispatch){
     dispatch(fetchingAction(true));
     axios({
       method: 'put',
-      url:'http://127.0.0.1:5000/api/v2/event/'+payload+'/rsvp'
+      headers: headers,
+      url:'http://127.0.0.1:5000/api/v2/event/'+id+'/rsvp',
+      data: details
     })
     .then((resp) => {
       return(dispatch(eventManageRsvpAction(resp.data.payload)));
     })
     .catch((error) => {
-      if(error.message){
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
-      };
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }
     });
   };
 };
@@ -116,8 +157,10 @@ export const eventRsvp = (event, email) => {
       return(dispatch(displayMessageAction({status:true, message:"event reserved successfully"})));
     })
     .catch((error) => {
-      if(error.message){
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
       }
     });
   };
@@ -132,9 +175,10 @@ export const eventsGet = payload => {
       return(dispatch(eventsGetAction(resp.data.payload.event_list)))
     })
     .catch((error) => {
-      if(error.response){
-        message = error.response.data.message
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
       }
     })
   }
@@ -168,15 +212,17 @@ export const eventPost = payload => {
       }
     )
     .then((resp) => {
+      eventDetails.id = resp.data.payload.event_id;
       return(dispatch(eventsPostAction(eventDetails)));
     })
     .then(() => {
       return(dispatch(fetchedAction(true, EVENT_ADDED_SUCCESSFULLY)))
     })
     .catch((error) => {
-      if(error.response){
-        message = error.response.data.message
-        return(dispatch(erroredAction(message)));
+      if(!error.message){
+        return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
       }
     })
 
@@ -199,9 +245,10 @@ export const registerUser = (payload) => {
       return(dispatch(fetchedAction(true, message)));
     })
     .catch((error) => {
-      if(error.response){
-        message = error.response.data.message
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
       }
     })
   };
@@ -231,12 +278,11 @@ export const loginUser = (payload, history) => {
     .then(() =>  dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
     // .then(() => history.push('/dashboard'))
     .catch((error) => {
-      if(error.response){
-        message = error.response.data.message
+      if(!error.message){
         return(dispatch(erroredAction(error.response.data.message)));
-      }
-      console.log(error);
-      
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }      
     });
     
   };

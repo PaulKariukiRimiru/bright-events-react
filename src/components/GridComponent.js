@@ -17,7 +17,8 @@ export default class GridComponent extends Component {
                                         handleRsvpClick={this.props.handleRsvpClick}
                                         onEditChange = {this.props.onEditChange}
                                         onEditSubmit = {this.props.onEditSubmit}
-                                        onDeleteSubmit = {this.props.onDeleteSubmit}/>)
+                                        onDeleteSubmit = {this.props.onDeleteSubmit}
+                                        onRsvpRequest = {this.props.onRsvpRequest}/>)
                     })}
                 </GridList>
             </div>

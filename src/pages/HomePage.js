@@ -38,9 +38,9 @@ export class HomePage extends Component {
 
   handleDialogClose = () => {
     if(this.state.saveEmail){
-      localStorage.setItem("email", this.state.email)
+      localStorage.setItem('email', this.state.email)
     }
-
+    this.props.dispatch(eventRsvp(this.state.eventId, this.state.email))
     this.setState({
       showDialog: false
     })
@@ -59,11 +59,14 @@ export class HomePage extends Component {
   }
 
   handleRsvpClick = (eventId) => {
-    if(this.state.loggedIn || localStorage.getItem('email')){
-      this.props.dispatch(eventRsvp(eventId, localStorage.getItem("email")))
+    if(this.state.loggedIn){
+      this.props.dispatch(eventRsvp(eventId, this.props.user.email))
+    }else if(localStorage.getItem('email')){
+      this.props.dispatch(eventRsvp(eventId, localStorage.getItem('email')))
     }else{
       this.setState({
-        showDialog: true
+        showDialog: true,
+        eventId: eventId
       })
     }
   }

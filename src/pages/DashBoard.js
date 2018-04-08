@@ -8,15 +8,22 @@ import { Grid } from 'react-flexgrid';
 import { checkList } from '../Constants/common-functions';
 import { connect } from 'react-redux';
 import DialogComponent from '../components/DialogComponent';
-import { eventPost, eventsGet, eventEdit, eventDelete } from '../actions/accountActions';
-import { TOKEN } from '../Constants/action_type';
+import { eventPost, eventsGet, eventEdit, eventDelete, eventRsvpGet, eventManageRsvp } from '../actions/accountActions';
 import isObjectEmpty from 'is-empty-object';
+import SnackBarComponent from '../components/SnackBarComponent';
+import { dismissMessageAction } from '../actions/index';
+import jwt_decode from 'jwt-decode';
+import { TOKEN } from '../Constants/action_type';
 
 function mapStateToProps (state, ownProps){
     return({
       user: state.account.user,
       events: state.account.events,
+      rsvps: state.account.rsvps,
       fetching: state.transaction.fetching,
+      message: state.transaction.message.message,
+      displayed: state.transaction.message.status,
+      history: ownProps.history
     })
 }
 export class DashBoard extends Component {
@@ -25,21 +32,18 @@ export class DashBoard extends Component {
     this.props.dispatch(eventsGet())
   }
 
+  handleRequestClose = () => {
+    this.props.dispatch(dismissMessageAction())
+    
+  }
   
-
   constructor(){
       super();
       this.state = {
         showDialog: false,
-        form: { name:'',
-                location:'',
-                category:'',
-                time:'',
-                host:'' 
-              },
-        editForm: {}
+        editForm: {},
+        view: 1
       };
-      this.onChange = this.onChange.bind(this);
       this.onFinish = this.onFinish.bind(this);
       this.handleFabClick = this.handleFabClick.bind(this);
       this.handleClose = this.handleClose.bind(this);
@@ -63,7 +67,7 @@ export class DashBoard extends Component {
       return(
         <div>
           <MuiThemeProvider>
-            <DialogComponent handleSubmit={this.onFinish} eventsFields={fields} onChange={this.onChange} handleClose={this.handleClose} open={this.state.showDialog} view={1}/>
+            <DialogComponent onToggleRsvpStatus = {this.onToggleRsvpStatus} rsvpList = {this.props.rsvps} handleSubmit={this.onFinish} eventsFields={fields} onChange={this.onChange} handleClose={this.handleClose} open={this.state.showDialog} view={this.state.view}/>
             <Grid fluid>
               <Row center="xs">
                 <Col xs={12}>
@@ -73,7 +77,8 @@ export class DashBoard extends Component {
                     view= {1}
                     onEditChange = {this.onEditChange}
                     onEditSubmit = {this.onEditSubmit}
-                    onDeleteSubmit = {this.onDeleteSubmit}/>
+                    onDeleteSubmit = {this.onDeleteSubmit}
+                    onRsvpRequest = {this.onRsvpRequest}/>
                   <Row bottom="xs">
                     <Col xsOffset={11} xs={1}>
                       <FloatingActionButton secondary={true} style={fabstyling} onClick={this.handleFabClick}>
@@ -84,6 +89,11 @@ export class DashBoard extends Component {
                 </Col>
               </Row>
             </Grid>
+            <SnackBarComponent 
+            open = { this.props.displayed } 
+            handleRequestClose = { this.handleRequestClose }
+            message={ this.props.message } 
+            />
           </MuiThemeProvider>
         </div>
       );
@@ -99,7 +109,7 @@ export class DashBoard extends Component {
         ]
         return(
           <MuiThemeProvider>
-            <DialogComponent view={1} eventsFields={fields} onChange={this.onChange} handleClose={this.handleClose} open={this.state.showDialog} handleSubmit={this.onFinish}/>
+            <DialogComponent view={this.state.view} rsvpList = {this.props.rsvps} eventsFields={fields} onChange={this.onChange} handleClose={this.handleClose} open={this.state.showDialog} handleSubmit={this.onFinish}/>
             <Grid fluid> 
               <Row center="xs" style={styling}>
                 <Col xs={10}>
@@ -124,7 +134,8 @@ export class DashBoard extends Component {
 
     handleFabClick(){
       this.setState({
-        showDialog:true
+        showDialog:true,
+        view: 1
       })
     }
 
@@ -135,6 +146,7 @@ export class DashBoard extends Component {
     }
 
     onDeleteSubmit = (eventId) => {
+      console.log("event id", eventId);
       this.props.dispatch(eventDelete(eventId))
     }
 
@@ -150,29 +162,36 @@ export class DashBoard extends Component {
     }
 
     onEditSubmit = (id) => {
-      this.props.dispatch(eventEdit(id, this.state.editForm))
+      if (!isObjectEmpty(this.state.editForm)){
+        this.props.dispatch(eventEdit(id, this.state.editForm))
+        this.setState({
+          editForm: {}
+        })
+      }
+    }
+
+    onRsvpRequest = (id) => {
+      this.props.dispatch(eventRsvpGet(id))
       this.setState({
-        editForm: {}
+        showDialog: true,
+        view: 3
       })
     }
 
-    onChange(event, date){
-      let myStateCopy = this.state
-      if(event){
-        myStateCopy.form[event.target.name] = event.target.value;
-      }else{
-        myStateCopy.form.time = date.toISOString().substring(0, 10)
+    onToggleRsvpStatus = (id, status, email) => {
+      const details = {
+        accept_status: status,
+        client_email: email
       }
-     
-      return this.setState(myStateCopy);
-    };
+      this.props.dispatch(eventManageRsvp(id, details))
+    }
 
-    onFinish(){
+    onFinish = (eventDetails) =>{
       this.setState({
         showDialog:false
-      })      
-      const eventDetails = this.state.form
-      eventDetails.host = this.props.user.id
+      })
+
+      eventDetails.host = this.props.user.id ? this.props.user.id : jwt_decode(localStorage.getItem(TOKEN)).identity.id;
       eventDetails.token = localStorage.getItem(TOKEN)  
       this.props.dispatch(eventPost(eventDetails))
     }

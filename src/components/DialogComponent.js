@@ -5,7 +5,7 @@ import { TextField, Checkbox } from 'material-ui';
 import { Row, Col } from 'react-flexgrid';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import Center from 'react-center';
-
+import ListComponent from '../components/ListComponent';
 export default class DialogComponent extends Component {
 
   state = {
@@ -33,6 +33,22 @@ export default class DialogComponent extends Component {
       </Center>
     );
   };
+
+  renderRsvpList(){
+    return(
+        <Dialog
+            style={{maxWidth: 500, margin: 'auto'}}
+            modal={false}
+            open={this.props.open}
+            onRequestClose={this.props.handleClose}>
+            <ListComponent 
+              rsvpList = {this.props.rsvpList}
+              onToggleRsvpStatus = {this.props.onToggleRsvpStatus}
+            />
+        </Dialog>
+    );
+  };
+
   renderEmailRequest(){
 
     const divStyle = {
@@ -80,8 +96,11 @@ export default class DialogComponent extends Component {
         return this.renderEventform(this.props.eventsFields);
       case 2:
         return this.renderEmailRequest();
+      case 3:
+        return this.renderRsvpList();
       default:
         return;
+        
     }
   }
 }

@@ -10,6 +10,7 @@
     "classnames": "^2.2.5",
     "express": "^4.16.2",
     "extract-loader": "^1.0.2",
+    "filter-object": "^3.0.0",
     "flexgrid.css": "^1.2.0",
     "handlebars-loader": "^1.7.0",
     "is-empty-object": "^1.1.1",

@@ -32,7 +32,6 @@ export class LandingPage extends Component {
       this.handleRegistrationFormSubmit = this.handleRegistrationFormSubmit.bind(this);
       this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
       this.onChange = this.onChange.bind(this);
-      this.handleRequestClose = this.handleRequestClose.bind(this)
   };
 
   componentWillReceiveProps(nextProps, nextContext){
@@ -64,7 +63,7 @@ export class LandingPage extends Component {
     this.props.loginUser(this.state.form, this.props.history)
   }
 
-  handleRequestClose(){
+  handleRequestClose = () => {
     this.props.dismiss(this.props.history)
   }
 
