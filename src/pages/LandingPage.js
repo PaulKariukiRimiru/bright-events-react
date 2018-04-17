@@ -14,6 +14,7 @@ import { dismissMessageAction } from '../actions/index';
 import { connect } from 'react-redux';
 import SnackBarComponent from '../components/SnackBarComponent';
 import isObjectEmpty from 'is-empty-object';
+import { myTheme, landingPageStyle } from '../styles/presentationalStyles';
 
 export class LandingPage extends Component {
 
@@ -35,7 +36,7 @@ export class LandingPage extends Component {
   };
 
   componentWillReceiveProps(nextProps, nextContext){
-    console.log("next props", nextProps);
+    console.log("next props",nextProps);
     if(!isObjectEmpty(nextProps.user) && !nextProps.displayed){
       nextProps.history.push('/dashboard')
     }
@@ -59,7 +60,6 @@ export class LandingPage extends Component {
   };
 
   handleLoginFormSubmit(event){
-    event.preventDefault()
     this.props.loginUser(this.state.form, this.props.history)
   }
 
@@ -75,20 +75,16 @@ export class LandingPage extends Component {
 
     return (
       <div >
-        <MuiThemeProvider >
+        <MuiThemeProvider muiTheme={myTheme}>
             <Grid fluid>
-              <Row middle="xs">
+              <Row center="xs">
                 <Col xs={6}>
-                  <Row middle="xs">
-                    <Col xs={12}>
-                      <Row center="xs">
-                        <Col xs={12}>
-                          <p>Hey there, we are proud to intoduce the newest event creation and management system. We link the best event creators out there with clients.
-                            <br />But we dont stop there we make sure that our clients are always up to date with the latest, craziest turnups and events in their location. Advertising with us is the difference between TOTALLY SOLD OUT and Tickets still available
-                          </p>
-                        </Col>
-                      </Row>
-                    </Col>
+                    <Row middle="xs">
+                      <Col xs={12}>
+                        <p style={{marginTop:'25%',fontFamily:'Roboto', wordSpacing: 4, lineHeight: 2, fontSize:24}}>Hey there, we are proud to introduce the newest event creation and management system. We link the best event creators out there with clients.
+                          <br />But we dont stop there we make sure that our clients are always up to date with the latest, craziest turnups and events in their location. Advertising with us is the difference between TOTALLY SOLD OUT and Tickets still available
+                        </p>
+                      </Col>
                   </Row>
                 </Col>
                 <Col xs={6}>
@@ -96,11 +92,12 @@ export class LandingPage extends Component {
                     <Col xs={12}>
                       <div>
                         <Row middle="xs">
-                          <Col xsOffset={4} xs={8}>
+                          <Col xsOffset={3} xs={8}>
                             <Card style={accountsStyle}>
                               <CardHeader
                                   title="Welcome to bright events"
                                   subtitle="Sign up or Create an account"
+                                  textStyle={{fontFamily:'Roboto', fontSize:18}}
                               />
                               <CardMedia>
                                 <Tabs
@@ -120,8 +117,8 @@ export class LandingPage extends Component {
                                 <SwipeableViews
                                   index={this.state.tabValue}>
                                   <Grid fluid>
-                                    <Row>
-                                      <Col>
+                                    <Row center="xs">
+                                      <Col xs={10}>
                                         <Login onChange={this.onChange} handleFormSubmition = {this.handleLoginFormSubmit}/> 
                                       </Col>
                                     </Row>
@@ -150,6 +147,7 @@ export class LandingPage extends Component {
             open = { this.props.displayed } 
             handleRequestClose = { this.handleRequestClose }
             message={ this.props.message } 
+            style = {{fontFamily:'Roboto'}}
             />
         </MuiThemeProvider>
       </div>
@@ -160,7 +158,6 @@ export class LandingPage extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("ownprops", ownProps);
   
   return ({
   user: state.account.user,

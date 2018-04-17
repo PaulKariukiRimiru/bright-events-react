@@ -1,12 +1,28 @@
 import axios from 'axios';
 import { fetchingAction , fetchedAction, erroredAction, displayMessageAction } from '../actions/index';
-import { REGISTER_SUCCESS_MESSAGE, LOGIN_SUCCESS_MESSAGE, EVENT_ADDED_SUCCESSFULLY } from '../Constants/messages';
-import { LOGIN_SUCCESS, EVENT_POST_SUCCESS, EVENT_GET_SUCCESS, RSVP_GET_SUCCESS, RSVP_MANAGE_SUCCESS, DELETE_EVENT_SUCCESS, EDIT_EVENT_SUCCESS, TOKEN } from '../Constants/action_type';
+import { REGISTER_SUCCESS_MESSAGE, 
+        LOGIN_SUCCESS_MESSAGE, 
+        EVENT_ADDED_SUCCESSFULLY } from '../Constants/messages';
+import { LOGIN_SUCCESS, 
+        LOGOUT_SUCCESS, 
+        EVENT_POST_SUCCESS, 
+        EVENT_GET_SUCCESS, 
+        RSVP_GET_SUCCESS, 
+        RSVP_MANAGE_FAILED,
+        RSVP_MANAGE_SUCCESS, 
+        DELETE_EVENT_SUCCESS, 
+        EDIT_EVENT_SUCCESS, 
+        EVENT_SEARCH,
+        TOKEN } from '../Constants/action_type';
 import { push } from 'react-router-redux';
 
 const loginAction = payload => {
   return({type: LOGIN_SUCCESS, payload: payload});
 };
+
+const logoutAction = payload => {
+  return({type: LOGOUT_SUCCESS, payload: payload})
+}
 
 const eventsPostAction = payload => {
   return({type: EVENT_POST_SUCCESS, payload: payload})
@@ -32,6 +48,41 @@ const eventEditAction = payload => {
   return({type: EDIT_EVENT_SUCCESS, payload: payload});
 };
 
+const rsvpGetFailed = payload => {
+  return ({type: RSVP_MANAGE_FAILED});
+};
+
+const eventSearchAction = payload => {
+  return ({type: EVENT_SEARCH, payload: payload});
+};
+
+export const eventSearch = (payload) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
+  return function(dispatch){
+    dispatch(fetchingAction(true));
+    axios({
+      method: 'get',
+      url: 'http://127.0.0.1:5000/api/v2/events/search',
+      headers: headers,
+      params: payload
+    })
+    .then((resp) => {
+      return(dispatch(eventSearchAction(resp.data.payload.event_list)))
+    })
+    .catch((error) => {
+      if(error.response){
+        return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }
+    })
+  }
+}
+
 export const eventRsvpGet = (id) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -50,9 +101,9 @@ export const eventRsvpGet = (id) => {
     })
     .catch((error) => {
       if(!error.message){
-        return(dispatch(erroredAction(error.response.data.message)));
+        return(dispatch(rsvpGetFailed(error.response.data.message)));
       }else{
-        return(dispatch(erroredAction(error.message)));
+        return(dispatch(rsvpGetFailed(error.message)));
       }
     });
   }
@@ -64,7 +115,6 @@ export const eventEdit = (id, payload) => {
     'Accept': 'application/json',
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
-  console.log("edit event", payload)
   return function(dispatch){
 
     axios({
@@ -78,7 +128,9 @@ export const eventEdit = (id, payload) => {
     })
     .catch((error) => {
       if(!error.message){
-        return(dispatch(erroredAction(error.response.data.message)));
+        return(
+          dispatch(erroredAction(error.response.data.message))
+        );
       }else{
         return(dispatch(erroredAction(error.message)));
       }
@@ -119,7 +171,6 @@ export const eventManageRsvp = (id, details) => {
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
 
-  console.log("details", details)
   return function(dispatch){
     dispatch(fetchingAction(true));
     axios({
@@ -168,14 +219,23 @@ export const eventRsvp = (event, email) => {
 
 export const eventsGet = payload => {
   let message = '';
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: localStorage.getItem(TOKEN) ? 'Bearer '+localStorage.getItem(TOKEN): '',
+  }
   return function(dispatch){
     dispatch(fetchingAction(true));
-    axios.get("http://127.0.0.1:5000/api/v2/events")
+    axios({
+      url: "http://127.0.0.1:5000/api/v2/events",
+      method: 'get',
+      headers: headers
+    })
     .then((resp) => {
-      return(dispatch(eventsGetAction(resp.data.payload.event_list)))
+      return(dispatch(eventsGetAction(resp.data.payload)))
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(erroredAction(error.response.data.message)));
       }else{
         return(dispatch(erroredAction(error.message)));
@@ -245,14 +305,47 @@ export const registerUser = (payload) => {
       return(dispatch(fetchedAction(true, message)));
     })
     .catch((error) => {
-      if(!error.message){
-        return(dispatch(erroredAction(error.response.data.message)));
-      }else{
+      if(!error.response.data.message){
         return(dispatch(erroredAction(error.message)));
+      }else{
+        return(dispatch(erroredAction(error.response.data.message)));
       }
     })
   };
 };
+
+export const logoutUser = (payload, history) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
+  const data = {
+    id: payload
+  }
+  return function(dispatch) {
+    dispatch(fetchingAction(true))
+    axios({
+      method:'post',
+      url: 'http://127.0.0.1:5000/api/v2/auth/logout',
+      headers: headers,
+      data: data
+    })
+    .then((resp) => {
+      localStorage.removeItem(TOKEN);
+      return(
+        dispatch(logoutAction(resp.data.payload))
+      );
+    })
+    .catch((error) => {
+      if(!error.response){
+        return(dispatch(erroredAction(error.message)));
+      }else{
+        return(dispatch(erroredAction(error.response.data.message)));
+      }
+    })
+  }
+}
 
 export const loginUser = (payload, history) => {
   let message = '';

@@ -90,7 +90,7 @@ export default class StepperComponent extends Component {
                       return(
                       <Row middle="xs">
                         <Col xs={6}>
-                        {item.name == 'time' ? 
+                        {item.name === 'time' ? 
                           <DatePicker name={item.name} ref={item.name} hintText={this.state.form[item.name] ? this.state.form[item.name] : ""} onChange={this.onChange}/> :
                           <TextField 
                                 floatingLabelText={ this.state.form[item.name] ? this.state.form[item.name] : item.name}

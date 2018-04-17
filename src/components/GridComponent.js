@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import GridList from 'material-ui/GridList'
 import GridItemComponent from './GridItemComponent';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 export default class GridComponent extends Component {
     render() {

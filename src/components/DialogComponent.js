@@ -51,9 +51,6 @@ export default class DialogComponent extends Component {
 
   renderEmailRequest(){
 
-    const divStyle = {
-      margin : 12
-    }
     const actions =[
       <FlatButton 
         label="submit"

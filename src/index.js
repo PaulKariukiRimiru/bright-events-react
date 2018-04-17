@@ -15,7 +15,7 @@ import DashBoard from './pages/DashBoard';
 ReactDOM.render(
   <Provider store={ store }>
     <BrowserRouter>
-      <div>
+      <div >
         <Route path="/" component={ App } />
         <Route exact path="/" component={ LandingPage } />
         <Route path="/home" component={ HomePage } />

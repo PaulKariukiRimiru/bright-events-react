@@ -1,10 +1,7 @@
-import React, { Component } from 'react'
-import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import Divider from 'material-ui/Divider';
+import React, { Component } from 'react';
 import Avatar from 'material-ui/Avatar';
 import {white, blue400} from 'material-ui/styles/colors';
-import { Subheader, FlatButton, Toggle } from 'material-ui';
+import { Toggle } from 'material-ui';
 import { ListItem }from 'material-ui/List';
 
 export default class ListItemComponent extends Component {
@@ -27,8 +24,6 @@ export default class ListItemComponent extends Component {
     }
 
     render() {
-        console.log("list props", this.props);
-        
         return (
             <ListItem 
                 primaryText={this.props.rsvp.email}

@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle , CardText} from 'material-ui/Card'
-import GridTile  from 'material-ui/GridList/GridTile';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import { FloatingActionButton, Dialog } from 'material-ui';
-import Favorite from 'material-ui/svg-icons/action/favorite'
+import { Card, CardActions, CardMedia, CardTitle , CardText} from 'material-ui/Card';
+import Favorite from 'material-ui/svg-icons/action/favorite';
 import FavBorder from 'material-ui/svg-icons/action/favorite-border';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
@@ -14,7 +11,7 @@ import Col from 'react-flexgrid/lib/Col';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
-
+import { white } from 'material-ui/styles/colors';
 export default class GridItemComponent extends Component {
 
     state = {
@@ -45,7 +42,6 @@ export default class GridItemComponent extends Component {
     }
 
     handleClick = () => {
-        const { selected } = this.state
         this.setState({
             selected : true
         })
@@ -58,17 +54,13 @@ export default class GridItemComponent extends Component {
 
     renderDashboard(){
         const event = this.props.event
-        const style = {
-            margin: 2,
-          };
-
-        const datePickerStyle = {maxWidth:200, color: 'blue'}
+        
         return (
             <Row center="xs">
                 <Col xs={10}>
                 <Card style={{maxHeight:350, maxWidth:280, margin:4}}>
                     <CardMedia>
-                        <div style={{ height:150, backgroundColor: '#2196F3'}} >
+                        <div style={{ height:150, backgroundImage: 'url('+require('../images/guitar.jpg')+')', backgroundSize:'cover'}} >
                             <CardTitle titleColor='white' subtitleColor='#FAFAFA' 
                                     style={{textAlign: 'left', position:'absolute', bottom:'0px'}} 
                                     title={this.state.editMode ?
@@ -89,7 +81,7 @@ export default class GridItemComponent extends Component {
                                         event.location } />
                         </div>
                     </CardMedia>
-                    <CardText >
+                    <CardText style={{backgroundColor:white}}>
                         
                             {this.state.editMode ?
                             <div >
@@ -112,7 +104,7 @@ export default class GridItemComponent extends Component {
                             }
                         
                     </CardText>
-                    <CardActions>
+                    <CardActions style={{backgroundColor:white}}>
                         
                         { this.state.editMode? 
                         <Row center="xs" style={{padding:2}}>
@@ -157,7 +149,7 @@ export default class GridItemComponent extends Component {
 
                 <Card style={{maxHeight:300, maxWidth:280, margin:4}}>
                     <CardMedia>
-                        <div style={{ height:150, backgroundColor: '#2196F3'}} >
+                        <div style={{ height:150 , backgroundImage: 'url('+require('../images/guitar.jpg')+')', backgroundSize:'cover'}} >
                             <CardTitle titleColor='white' subtitleColor='#FAFAFA' 
                                     style={{textAlign: 'left', position:'absolute', bottom:'0px'}} 
                                     title={event.name} subtitle={event.location} />

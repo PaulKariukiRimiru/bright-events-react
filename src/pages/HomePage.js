@@ -10,7 +10,8 @@ import SnackBarComponent from '../components/SnackBarComponent';
 import isObjectEmpty from 'is-empty-object';
 import Dialog from '../components/DialogComponent';
 import centerComponent from 'react-center-component';
-
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {  } from 'material-ui/styles/colors';
 const mapStateToProps = (state, ownProps) => ({
   events: state.account.events,
   user: state.account.user,
@@ -86,9 +87,21 @@ export class HomePage extends Component {
     this.props.dispatch(eventsGet())
   }
 
+
   renderEmpty () {
+    
+    const myTheme = getMuiTheme({
+      palette: {
+        primary1Color: '#607D8B',
+        primary2Color: '#455A64',
+        accent1Color: '#FF5722',
+        textColor: '#212121',
+        alternateTextColor: '#757575'
+      },
+    })
+
     return(
-      <MuiThemeProvider>
+      <MuiThemeProvider >
         <div>
           <Row center="xs">
             <Col xs>

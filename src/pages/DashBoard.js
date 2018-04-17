@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import GridComponent from '../components/GridComponent';
 import { Row, Col } from 'react-flexbox-grid';
-import { FloatingActionButton, Dialog } from 'material-ui';
+import { FloatingActionButton } from 'material-ui';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { MuiThemeProvider } from 'material-ui/styles';
 import { Grid } from 'react-flexgrid';
@@ -14,11 +14,12 @@ import SnackBarComponent from '../components/SnackBarComponent';
 import { dismissMessageAction } from '../actions/index';
 import jwt_decode from 'jwt-decode';
 import { TOKEN } from '../Constants/action_type';
+import { myTheme, dashboardStyles } from '../styles/presentationalStyles';
 
 function mapStateToProps (state, ownProps){
     return({
       user: state.account.user,
-      events: state.account.events,
+      events: state.account.userEvents,
       rsvps: state.account.rsvps,
       fetching: state.transaction.fetching,
       message: state.transaction.message.message,
@@ -65,8 +66,7 @@ export class DashBoard extends Component {
       ]
 
       return(
-        <div>
-          <MuiThemeProvider>
+        <div >
             <DialogComponent onToggleRsvpStatus = {this.onToggleRsvpStatus} rsvpList = {this.props.rsvps} handleSubmit={this.onFinish} eventsFields={fields} onChange={this.onChange} handleClose={this.handleClose} open={this.state.showDialog} view={this.state.view}/>
             <Grid fluid>
               <Row center="xs">
@@ -79,22 +79,21 @@ export class DashBoard extends Component {
                     onEditSubmit = {this.onEditSubmit}
                     onDeleteSubmit = {this.onDeleteSubmit}
                     onRsvpRequest = {this.onRsvpRequest}/>
-                  <Row bottom="xs">
-                    <Col xsOffset={11} xs={1}>
-                      <FloatingActionButton secondary={true} style={fabstyling} onClick={this.handleFabClick}>
-                        <ContentAdd />
-                      </FloatingActionButton>
-                    </Col>
-                  </Row>
                 </Col>
               </Row>
             </Grid>
+            <FloatingActionButton 
+              secondary={true} 
+              style={fabstyling} 
+              onClick={this.handleFabClick}
+              style={{position:'fixed', bottom:'45px', right:'24px'}}>
+                        <ContentAdd />
+                      </FloatingActionButton>
             <SnackBarComponent 
             open = { this.props.displayed } 
             handleRequestClose = { this.handleRequestClose }
             message={ this.props.message } 
             />
-          </MuiThemeProvider>
         </div>
       );
     };
@@ -108,7 +107,7 @@ export class DashBoard extends Component {
           {description:"When will this be?", fields:[{name:"time"}]},
         ]
         return(
-          <MuiThemeProvider>
+          <div>
             <DialogComponent view={this.state.view} rsvpList = {this.props.rsvps} eventsFields={fields} onChange={this.onChange} handleClose={this.handleClose} open={this.state.showDialog} handleSubmit={this.onFinish}/>
             <Grid fluid> 
               <Row center="xs" style={styling}>
@@ -128,7 +127,7 @@ export class DashBoard extends Component {
                 </Col>
                 </Row>
             </Grid>
-          </MuiThemeProvider>
+          </div>
         );
     };
 
@@ -197,7 +196,11 @@ export class DashBoard extends Component {
     }
 
     render() {
-      return checkList(this.props.events, this.renderEmpty.bind(this), this.renderGrid.bind(this));
+      return (
+        <MuiThemeProvider muiTheme={myTheme} >
+          {checkList(this.props.events, this.renderEmpty.bind(this), this.renderGrid.bind(this))}
+        </MuiThemeProvider>
+      );
     };
 };
 
