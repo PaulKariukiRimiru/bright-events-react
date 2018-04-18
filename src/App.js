@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import AppBar  from 'material-ui/AppBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Toolbar, ToolbarGroup, ToolbarSeparator} from 'material-ui/Toolbar';
-import {transparent, white} from 'material-ui/styles/colors';
+import { transparent, white } from 'material-ui/styles/colors';
 import FlatButton from 'material-ui/FlatButton';
 import { connect } from 'react-redux';
 import isObjectEmpty from 'is-empty-object';
 import { Link } from 'react-router-dom';
 import { myTheme } from './styles/presentationalStyles';
-import { TextField, IconButton } from 'material-ui';
+import { TextField, IconButton, Dialog } from 'material-ui';
 import SearchIcon from 'material-ui/svg-icons/action/search';
+import FilterIcon from 'material-ui/svg-icons/content/filter-list';
 import { Row, Col } from 'react-flexbox-grid';
 import { TOKEN } from './Constants/action_type';
 import { logoutUser, eventSearch } from './actions/accountActions';
@@ -20,6 +21,7 @@ class App extends Component {
     super();
     this.state = {
       open : false,
+      filterOpen: false,
       search: ''
     }
   }
@@ -46,12 +48,8 @@ class App extends Component {
 
   logoutUser = (event) => {
     this.props.dispatch(
-      logoutUser(
-        this.props.user ? 
-        this.props.user.id : 
-        jwt_decode(localStorage.getItem(TOKEN)).identity.id), 
-      this.props.history
-      )
+      logoutUser(jwt_decode(localStorage.getItem(TOKEN)).identity.id, this.props.history)
+    )
   }
 
   render() {
@@ -62,6 +60,14 @@ class App extends Component {
     return (
       
       <MuiThemeProvider muiTheme={myTheme}>
+        <Dialog
+          style={{maxWidth: 500, margin: 'auto'}}
+          title="Add event"
+          modal={false}
+          open={this.state.filterOpen}
+          onRequestClose={this.handleFilter}>
+
+        </Dialog>
         <div className="App">
           <AppBar 
             title="Bright Events"
@@ -69,7 +75,7 @@ class App extends Component {
               <Toolbar style={{backgroundColor:transparent}} >
                 <ToolbarGroup>
                   {
-                    isObjectEmpty(user)&&!localStorage.getItem(TOKEN) ? 
+                    !localStorage.getItem(TOKEN) ? 
                     <div>
                       <Link to="/home">
                         <FlatButton
@@ -92,6 +98,9 @@ class App extends Component {
                         />
                       <IconButton onClick={this.handleSubmit}>
                         <SearchIcon color="#ff6e40"/>
+                      </IconButton>
+                      <IconButton onClick={this.handleSubmit}>
+                        <FilterIcon style={{ marginRight:'auto' , marginLeft: 'auto'}} color="#ff6e40"/>
                       </IconButton>
                       <ToolbarSeparator />
                       <div>

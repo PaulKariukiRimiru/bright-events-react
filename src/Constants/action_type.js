@@ -14,3 +14,4 @@ export const DELETE_EVENT_SUCCESS = "DELETE_EVENT_SUCCESS";
 export const EDIT_EVENT_SUCCESS = "EDIT_EVENT_SUCCESS";
 export const EVENT_SEARCH = "EVENT_SEARCH";
 export const TOKEN = "TOKEN";
+export const BASE_URL = 'https://paul-bright-events.herokuapp.com'

@@ -19,6 +19,17 @@ export default class DialogComponent extends Component {
     this.props.checkChange(!this.state.checked)
   }
 
+  renderFilter = () => {
+    <Dialog
+      style={{maxWidth: 500, margin: 'auto'}}
+      title="Add event"
+      modal={false}
+      open={this.props.open}
+      onRequestClose={this.props.handleClose}>
+      
+    </Dialog>
+  }
+
   renderEventform(eventForm){
     return(
       <Center>

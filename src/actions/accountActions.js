@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import { fetchingAction , fetchedAction, erroredAction, displayMessageAction } from '../actions/index';
 import { REGISTER_SUCCESS_MESSAGE, 
@@ -13,9 +14,10 @@ import { LOGIN_SUCCESS,
         DELETE_EVENT_SUCCESS, 
         EDIT_EVENT_SUCCESS, 
         EVENT_SEARCH,
-        TOKEN } from '../Constants/action_type';
+        TOKEN,
+        BASE_URL } from '../Constants/action_type';
 import { push } from 'react-router-redux';
-
+import { Redirect } from 'react-router-dom';
 const loginAction = payload => {
   return({type: LOGIN_SUCCESS, payload: payload});
 };
@@ -56,7 +58,7 @@ const eventSearchAction = payload => {
   return ({type: EVENT_SEARCH, payload: payload});
 };
 
-export const eventSearch = (payload) => {
+export const eventSearch = (params, body={}) => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -66,9 +68,10 @@ export const eventSearch = (payload) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'get',
-      url: 'http://127.0.0.1:5000/api/v2/events/search',
+      url: BASE_URL+'/api/v2/events/search',
       headers: headers,
-      params: payload
+      params: params,
+      body: body
     })
     .then((resp) => {
       return(dispatch(eventSearchAction(resp.data.payload.event_list)))
@@ -93,14 +96,14 @@ export const eventRsvpGet = (id) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'get',
-      url:'http://127.0.0.1:5000/api/v2/event/'+id+'/rsvp',
+      url: BASE_URL+'/api/v2/event/'+id+'/rsvp',
       headers: headers
     })
     .then((resp) => {
       return(dispatch(eventRsvpAction(resp.data.payload)));
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(rsvpGetFailed(error.response.data.message)));
       }else{
         return(dispatch(rsvpGetFailed(error.message)));
@@ -119,7 +122,7 @@ export const eventEdit = (id, payload) => {
 
     axios({
       method: 'put',
-      url: 'http://127.0.0.1:5000/api/v2/events/'+id,
+      url: BASE_URL+'/api/v2/events/'+id,
       data: payload,
       headers: headers
     })
@@ -127,7 +130,7 @@ export const eventEdit = (id, payload) => {
       return(dispatch(eventEditAction(resp.data.payload)));
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(
           dispatch(erroredAction(error.response.data.message))
         );
@@ -148,13 +151,13 @@ export const eventDelete = (eventId) => {
     axios({
       method: 'delete',
       headers: headers,
-      url: 'http://127.0.0.1:5000/api/v2/events/'+eventId
+      url: BASE_URL+'/api/v2/events/'+eventId
     })
     .then((resp) => {
       return(dispatch(eventDeleteAction(eventId)));
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(erroredAction(error.response.data.message)));
       }else{
         return(dispatch(erroredAction(error.message)));
@@ -176,14 +179,14 @@ export const eventManageRsvp = (id, details) => {
     axios({
       method: 'put',
       headers: headers,
-      url:'http://127.0.0.1:5000/api/v2/event/'+id+'/rsvp',
+      url: BASE_URL+'/api/v2/event/'+id+'/rsvp',
       data: details
     })
     .then((resp) => {
       return(dispatch(eventManageRsvpAction(resp.data.payload)));
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(erroredAction(error.response.data.message)));
       }else{
         return(dispatch(erroredAction(error.message)));
@@ -201,14 +204,14 @@ export const eventRsvp = (event, email) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'post',
-      url:'http://127.0.0.1:5000/api/v2/event/'+event+'/rsvp',
+      url:BASE_URL+'/api/v2/event/'+event+'/rsvp',
       data: clientDetails
     })
     .then((resp) => {
       return(dispatch(displayMessageAction({status:true, message:"event reserved successfully"})));
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(erroredAction(error.response.data.message)));
       }else{
         return(dispatch(erroredAction(error.message)));
@@ -227,7 +230,7 @@ export const eventsGet = payload => {
   return function(dispatch){
     dispatch(fetchingAction(true));
     axios({
-      url: "http://127.0.0.1:5000/api/v2/events",
+      url: BASE_URL+'/api/v2/events',
       method: 'get',
       headers: headers
     })
@@ -266,7 +269,7 @@ export const eventPost = payload => {
     axios(
       {
         method:'post',
-        url:'http://127.0.0.1:5000/api/v2/events',
+        url: BASE_URL+'/api/v2/events',
         headers: headers,
         data: eventDetails
       }
@@ -279,7 +282,7 @@ export const eventPost = payload => {
       return(dispatch(fetchedAction(true, EVENT_ADDED_SUCCESSFULLY)))
     })
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(erroredAction(error.response.data.message)));
       }else{
         return(dispatch(erroredAction(error.message)));
@@ -299,13 +302,13 @@ export const registerUser = (payload) => {
   
   return function(dispatch) {
     dispatch(fetchingAction(true))
-    axios({method: 'post', url: "http://127.0.0.1:5000/api/v2/auth/register",data: userDetails})
+    axios({method: 'post', url: BASE_URL+'/api/v2/auth/register',data: userDetails})
     .then((resp) => {
       message = REGISTER_SUCCESS_MESSAGE;
       return(dispatch(fetchedAction(true, message)));
     })
     .catch((error) => {
-      if(!error.response.data.message){
+      if(!error.response){
         return(dispatch(erroredAction(error.message)));
       }else{
         return(dispatch(erroredAction(error.response.data.message)));
@@ -327,12 +330,13 @@ export const logoutUser = (payload, history) => {
     dispatch(fetchingAction(true))
     axios({
       method:'post',
-      url: 'http://127.0.0.1:5000/api/v2/auth/logout',
+      url: BASE_URL+'/api/v2/auth/logout',
       headers: headers,
       data: data
     })
     .then((resp) => {
-      localStorage.removeItem(TOKEN);
+      localStorage.clear()
+      history.push('/')
       return(
         dispatch(logoutAction(resp.data.payload))
       );
@@ -361,7 +365,7 @@ export const loginUser = (payload, history) => {
 
   return function(dispatch) {
     dispatch(fetchingAction(true))
-    axios({method: 'post', url: "http://127.0.0.1:5000/api/v2/auth/login", header:headers, data: userDetails})
+    axios({method: 'post', url: BASE_URL+'/api/v2/auth/login', header:headers, data: userDetails})
     .then((resp) =>{ 
       message = LOGIN_SUCCESS_MESSAGE;
       return(
@@ -369,9 +373,8 @@ export const loginUser = (payload, history) => {
       )
     })
     .then(() =>  dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
-    // .then(() => history.push('/dashboard'))
     .catch((error) => {
-      if(!error.message){
+      if(error.response){
         return(dispatch(erroredAction(error.response.data.message)));
       }else{
         return(dispatch(erroredAction(error.message)));
