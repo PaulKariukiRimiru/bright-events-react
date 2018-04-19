@@ -12,6 +12,7 @@ import Dialog from '../components/DialogComponent';
 import centerComponent from 'react-center-component';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {  } from 'material-ui/styles/colors';
+
 const mapStateToProps = (state, ownProps) => ({
   events: state.account.events,
   user: state.account.user,

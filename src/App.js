@@ -8,13 +8,16 @@ import { connect } from 'react-redux';
 import isObjectEmpty from 'is-empty-object';
 import { Link } from 'react-router-dom';
 import { myTheme } from './styles/presentationalStyles';
-import { TextField, IconButton, Dialog } from 'material-ui';
+import { TextField, IconButton, Dialog, RaisedButton } from 'material-ui';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import FilterIcon from 'material-ui/svg-icons/content/filter-list';
 import { Row, Col } from 'react-flexbox-grid';
 import { TOKEN } from './Constants/action_type';
-import { logoutUser, eventSearch } from './actions/accountActions';
+import { logoutUser, eventSearch, eventFilter } from './actions/accountActions';
 import jwt_decode from 'jwt-decode';
+import AutoComplete from 'material-ui/AutoComplete';
+import DialogComponent from './components/DialogComponent';
+
 class App extends Component {
 
   constructor(){
@@ -22,7 +25,10 @@ class App extends Component {
     this.state = {
       open : false,
       filterOpen: false,
-      search: ''
+      search: '',
+      locations: [],
+      category: [],
+      searchform: {}
     }
   }
 
@@ -33,9 +39,21 @@ class App extends Component {
     })
   }
 
+  handleFilter = () => {
+    this.setState({
+      filterOpen: true
+    })
+  }
+
   handleChange = (event) => {
     let myStateCopy = this.state
     myStateCopy.search = event.target.value;
+    return this.setState(myStateCopy);
+  }
+
+  onChange = (event) => {
+    let myStateCopy = this.state
+    myStateCopy.searchform[event.target.name] = event.target.value;
     return this.setState(myStateCopy);
   }
 
@@ -44,6 +62,11 @@ class App extends Component {
       'q':this.state.search
     }
     this.props.dispatch(eventSearch(params))
+  }
+
+  onFilterSubmit = () => {
+    console.log("filters", this.state.searchform)
+    this.props.dispatch(eventFilter(this.state.searchform))
   }
 
   logoutUser = (event) => {
@@ -55,19 +78,17 @@ class App extends Component {
   render() {
 
     const { user } = this.props;
-    const { search } = this.state;
+    const { search, locations, category } = this.state;
 
     return (
       
       <MuiThemeProvider muiTheme={myTheme}>
-        <Dialog
-          style={{maxWidth: 500, margin: 'auto'}}
-          title="Add event"
-          modal={false}
+        <DialogComponent
           open={this.state.filterOpen}
-          onRequestClose={this.handleFilter}>
-
-        </Dialog>
+          events={this.props.events}
+          userEvents={this.props.userEvents}
+          handleClose={this.onFilterSubmit}
+          view={4} />
         <div className="App">
           <AppBar 
             title="Bright Events"
@@ -99,7 +120,7 @@ class App extends Component {
                       <IconButton onClick={this.handleSubmit}>
                         <SearchIcon color="#ff6e40"/>
                       </IconButton>
-                      <IconButton onClick={this.handleSubmit}>
+                      <IconButton onClick={this.handleFilter}>
                         <FilterIcon style={{ marginRight:'auto' , marginLeft: 'auto'}} color="#ff6e40"/>
                       </IconButton>
                       <ToolbarSeparator />
@@ -138,7 +159,9 @@ class App extends Component {
 function mapStateToProps (state, ownProps){
   return({
     user: state.account.user,
-    history: ownProps.history
+    history: ownProps.history,
+    events: state.account.events,
+    userEvents: state.account.userEvents
   })
 }
 

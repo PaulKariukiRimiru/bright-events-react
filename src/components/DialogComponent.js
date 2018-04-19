@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
 import StepperComponent from '../components/StepperComponent';
-import { TextField, Checkbox } from 'material-ui';
+import { TextField, Checkbox, AutoComplete, RaisedButton } from 'material-ui';
 import { Row, Col } from 'react-flexgrid';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import Center from 'react-center';
@@ -20,14 +20,53 @@ export default class DialogComponent extends Component {
   }
 
   renderFilter = () => {
-    <Dialog
-      style={{maxWidth: 500, margin: 'auto'}}
-      title="Add event"
-      modal={false}
-      open={this.props.open}
-      onRequestClose={this.props.handleClose}>
-      
-    </Dialog>
+    const locations = []
+    const category = []
+
+    const { events, userEvents } = this.props
+
+    if(events){
+      events.forEach(event => {
+        locations.push(event.location)
+        category.push(event.category)
+      });
+    }
+
+    if(userEvents){
+      userEvents.forEach(event => {
+        locations.push(event.location)
+        category.push(event.category)
+      });
+    }
+
+    return(
+      <Dialog
+        style={{maxWidth: 500, margin: 'auto'}}
+        title="Filter events"
+        modal={false}
+        open={this.props.open}>
+        <Row center="xs">
+          <Col xs={12}>
+            <AutoComplete
+              floatingLabelText="Location"
+              name="location"
+              dataSource={locations}
+              filter={AutoComplete.noFilter}
+              openOnFocus={true}/>
+            <AutoComplete
+              floatingLabelText="Category"
+              name="category"
+              dataSource={category}
+              filter={AutoComplete.noFilter}
+              openOnFocus={true}/>
+            <RaisedButton
+              label="Search"
+              onClick={this.props.handleClose} 
+              style={{ margin:12}}/>
+          </Col>
+        </Row>
+      </Dialog>
+    )
   }
 
   renderEventform(eventForm){
@@ -106,6 +145,8 @@ export default class DialogComponent extends Component {
         return this.renderEmailRequest();
       case 3:
         return this.renderRsvpList();
+      case 4:
+        return this.renderFilter();
       default:
         return;
         

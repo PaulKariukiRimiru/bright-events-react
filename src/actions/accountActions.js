@@ -58,10 +58,11 @@ const eventSearchAction = payload => {
   return ({type: EVENT_SEARCH, payload: payload});
 };
 
-export const eventSearch = (params, body={}) => {
+export const eventSearch = (params={}, body={}) => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
   return function(dispatch){
@@ -86,10 +87,39 @@ export const eventSearch = (params, body={}) => {
   }
 }
 
+export const eventFilter = (body) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
+    Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+  }
+  return function(dispatch){
+    dispatch(fetchingAction(true));
+    axios({
+      method: 'get',
+      url: BASE_URL+'/api/v2/events/search',
+      headers: headers,
+      body: body
+    })
+    .then((resp) => {
+      return(dispatch(eventSearchAction(resp.data.payload.event_list)))
+    })
+    .catch((error) => {
+      if(error.response){
+        return(dispatch(erroredAction(error.response.data.message)));
+      }else{
+        return(dispatch(erroredAction(error.message)));
+      }
+    })
+  }
+}
+
 export const eventRsvpGet = (id) => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
   return function(dispatch){
@@ -116,6 +146,7 @@ export const eventEdit = (id, payload) => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
   return function(dispatch){
@@ -145,6 +176,7 @@ export const eventDelete = (eventId) => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
   return function(dispatch) {
@@ -171,6 +203,7 @@ export const eventManageRsvp = (id, details) => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
   }
 
@@ -200,12 +233,20 @@ export const eventRsvp = (event, email) => {
   const clientDetails = {
     client_email: email
   };
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL
+  }
+
   return function(dispatch){
     dispatch(fetchingAction(true));
     axios({
       method: 'post',
       url:BASE_URL+'/api/v2/event/'+event+'/rsvp',
-      data: clientDetails
+      data: clientDetails,
+      headers: headers
     })
     .then((resp) => {
       return(dispatch(displayMessageAction({status:true, message:"event reserved successfully"})));
@@ -225,6 +266,7 @@ export const eventsGet = payload => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: localStorage.getItem(TOKEN) ? 'Bearer '+localStorage.getItem(TOKEN): '',
   }
   return function(dispatch){
@@ -260,6 +302,7 @@ export const eventPost = payload => {
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL,
     Authorization: 'Bearer '+payload.token,
   }
 
@@ -299,10 +342,16 @@ export const registerUser = (payload) => {
     email: payload.email,
     password: payload.password
   };
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL
+  }
   
   return function(dispatch) {
     dispatch(fetchingAction(true))
-    axios({method: 'post', url: BASE_URL+'/api/v2/auth/register',data: userDetails})
+    axios({method: 'post', url: BASE_URL+'/api/v2/auth/register',data: userDetails, headers: headers})
     .then((resp) => {
       message = REGISTER_SUCCESS_MESSAGE;
       return(dispatch(fetchedAction(true, message)));
@@ -322,6 +371,7 @@ export const logoutUser = (payload, history) => {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     Authorization: 'Bearer '+localStorage.getItem(TOKEN),
+    'Access-Control-Allow-Origin': BASE_URL
   }
   const data = {
     id: payload
@@ -359,8 +409,9 @@ export const loginUser = (payload, history) => {
   };
 
   const headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json'
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': BASE_URL
   }
 
   return function(dispatch) {
