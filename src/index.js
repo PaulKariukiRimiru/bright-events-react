@@ -14,7 +14,7 @@ import DashBoard from './pages/DashBoard';
 
 ReactDOM.render(
   <Provider store={ store }>
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <div >
         <Route path="/" component={ App } />
         <Route exact path="/" component={ LandingPage } />
