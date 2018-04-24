@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 import GridComponent from '../components/GridComponent';
 import { checkList } from '../Constants/common-functions';
@@ -11,18 +11,14 @@ import isObjectEmpty from 'is-empty-object';
 import Dialog from '../components/DialogComponent';
 import centerComponent from 'react-center-component';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {  } from 'material-ui/styles/colors';
+import {} from 'material-ui/styles/colors';
+import { TOKEN } from '../Constants/action_type';
 
 const mapStateToProps = (state, ownProps) => ({
-  events: state.account.events,
-  user: state.account.user,
-  message: state.transaction.message.message,
-  displayed: state.transaction.message.status,
-  history: ownProps.history
+ events: state.account.events, user: state.account.user, message: state.transaction.message.message, displayed: state.transaction.message.status, history: ownProps.history
 });
 
 export class HomePage extends Component {
-
   state = {
     loggedIn: false,
     saveEmail: false,
@@ -30,67 +26,65 @@ export class HomePage extends Component {
     showDialog: false
   }
   handleRequestClose = () => {
-    this.props.dispatch(dismissMessageAction())
+    this
+      .props
+      .dispatch(dismissMessageAction());
   }
 
   handleActionClick = () => {
-    this.handleRequestClose()
-    this.props.history.push('/');
+    this.handleRequestClose();
+    this
+      .props
+      .history
+      .push('/');
   }
 
   handleDialogClose = () => {
-    if(this.state.saveEmail){
-      localStorage.setItem('email', this.state.email)
+    if (this.state.saveEmail) {
+      localStorage.setItem('email', this.state.email);
     }
-    this.props.dispatch(eventRsvp(this.state.eventId, this.state.email))
-    this.setState({
-      showDialog: false
-    })
+    this
+      .props
+      .dispatch(eventRsvp(this.state.eventId, this.state.email));
+    this.setState({ showDialog: false });
   }
 
   onCheckChange = (checked) => {
-    this.setState({
-      saveEmail: checked
-    })
+    this.setState({ saveEmail: checked });
   }
 
-  onChange = event => {
-    let myStateCopy = this.state
+  onChange = (event) => {
+    const myStateCopy = this.state;
     myStateCopy.email = event.target.value;
     return this.setState(myStateCopy);
   }
 
   handleRsvpClick = (eventId) => {
-    if(this.state.loggedIn){
-      this.props.dispatch(eventRsvp(eventId, this.props.user.email))
-    }else if(localStorage.getItem('email')){
-      this.props.dispatch(eventRsvp(eventId, localStorage.getItem('email')))
-    }else{
-      this.setState({
-        showDialog: true,
-        eventId: eventId
-      })
-    }
+    this
+      .props
+      .dispatch(eventRsvp(eventId, this.props.user.email));
   }
 
-  componentWillMount(){
-    if(isObjectEmpty(this.props.user)){
-      if(localStorage.getItem('email')){
-        localStorage.removeItem('email')
-      }
-      this.props.dispatch(displayMessageAction({message:"ensure you are logged in for smoother experience"}))
-    }else{
-      localStorage.removeItem('email')
-      this.setState({
-        loggedIn: true
-      })
-    }
-    this.props.dispatch(eventsGet())
+  handleDisplayMessage = (message) => {
+    this
+      .props
+      .dispatch(displayMessageAction({ message }));
   }
 
+  componentWillMount() {
+    if (!localStorage.getItem(TOKEN)) {
+      this
+        .props
+        .dispatch(displayMessageAction({ message: 'ensure you are logged in for smoother experience' }));
+    } else {
+      this.setState({ loggedIn: true });
+    }
+    this
+      .props
+      .dispatch(eventsGet());
+  }
 
-  renderEmpty () {
-    
+  renderEmpty() {
     const myTheme = getMuiTheme({
       palette: {
         primary1Color: '#607D8B',
@@ -98,10 +92,10 @@ export class HomePage extends Component {
         accent1Color: '#FF5722',
         textColor: '#212121',
         alternateTextColor: '#757575'
-      },
-    })
+      }
+    });
 
-    return(
+    return (
       <MuiThemeProvider >
         <div>
           <Row center="xs">
@@ -109,58 +103,64 @@ export class HomePage extends Component {
               <h4>Hey there are no events at the momment</h4>
             </Col>
           </Row>
-          <SnackBarComponent 
-            open = { this.props.displayed } 
-            handleRequestClose = { this.handleRequestClose }
-            message={ this.props.message } 
-            action={this.state.loggedIn ? "" : "Login"}
-            onActionClick={ this.handleActionClick }
-            />
+          <SnackBarComponent
+            open={this.props.displayed}
+            handleRequestClose={this.handleRequestClose}
+            message={this.props.message}
+            action={this.state.loggedIn
+            ? ''
+            : 'Login'}
+            onActionClick={this.handleActionClick}/>
           <Dialog
-            open = {this.state.showDialog}
-            handleClose = {this.handleDialogClose}
-            onChange = {this.onChange}
-            checkChange = {this.onCheckChange}
-            view = {2}
-            />
+            open={this.state.showDialog}
+            handleClose={this.handleDialogClose}
+            onChange={this.onChange}
+            checkChange={this.onCheckChange}
+            view={2}/>
         </div>
       </MuiThemeProvider>
     );
-  };
+  }
 
-  renderEvents () {
-    return(
+  renderEvents() {
+    return (
       <MuiThemeProvider>
         <div>
-        <Row center="xs">
-          <Col xs>
-            <GridComponent view= {2} itemList={this.props.events} handleRsvpClick= { this.handleRsvpClick }/>
-          </Col>
-        </Row>
-        
-        <Dialog
-              open = {this.state.showDialog}
-              handleClose = {this.handleDialogClose}
-              onChange = {this.onChange}
-              checkChange = {this.onCheckChange}
-              view = {2}/>
+          <Row center="xs">
+            <Col xs>
+              <GridComponent
+                view={2}
+                itemList={this.props.events}
+                handleRsvpClick={this.handleRsvpClick}
+                handleMessage={this.handleDisplayMessage}
+                col={4}/>
+            </Col>
+          </Row>
 
-        <SnackBarComponent 
-            open = { this.props.displayed } 
-            handleRequestClose = { this.handleRequestClose }
-            message={ this.props.message } 
-            action={this.state.loggedIn ? "" : "Login"}
-            onActionClick={ this.handleActionClick }
-            />
-        
+          <Dialog
+            open={this.state.showDialog}
+            handleClose={this.handleDialogClose}
+            onChange={this.onChange}
+            checkChange={this.onCheckChange}
+            view={2}/>
+
+          <SnackBarComponent
+            open={this.props.displayed}
+            handleRequestClose={this.handleRequestClose}
+            message={this.props.message}
+            action={this.state.loggedIn
+            ? ''
+            : 'Login'}
+            onActionClick={this.handleActionClick}/>
+
         </div>
       </MuiThemeProvider>
     );
-  };
+  }
 
   render() {
     return checkList(this.props.events, this.renderEmpty.bind(this), this.renderEvents.bind(this));
-  };
-};
+  }
+}
 
 export default connect(mapStateToProps)(HomePage);

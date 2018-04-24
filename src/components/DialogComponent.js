@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Dialog from 'material-ui/Dialog';
 import StepperComponent from '../components/StepperComponent';
-import { TextField, Checkbox, AutoComplete, RaisedButton } from 'material-ui';
-import { Row, Col } from 'react-flexgrid';
+import {TextField, Checkbox, AutoComplete, RaisedButton} from 'material-ui';
+import {Row, Col} from 'react-flexgrid';
 import FlatButton from 'material-ui/FlatButton/FlatButton';
 import Center from 'react-center';
 import ListComponent from '../components/ListComponent';
@@ -16,32 +16,37 @@ export default class DialogComponent extends Component {
     this.setState({
       checked: !this.state.checked
     })
-    this.props.checkChange(!this.state.checked)
+    this
+      .props
+      .checkChange(!this.state.checked)
   }
 
   renderFilter = () => {
     const locations = []
     const category = []
 
-    const { events, userEvents } = this.props
+    const {events, userEvents} = this.props
 
-    if(events){
+    if (events) {
       events.forEach(event => {
         locations.push(event.location)
         category.push(event.category)
       });
     }
 
-    if(userEvents){
+    if (userEvents) {
       userEvents.forEach(event => {
         locations.push(event.location)
         category.push(event.category)
       });
     }
 
-    return(
+    return (
       <Dialog
-        style={{maxWidth: 500, margin: 'auto'}}
+        style={{
+        maxWidth: 500,
+        margin: 'auto'
+      }}
         title="Filter events"
         modal={false}
         open={this.props.open}>
@@ -61,83 +66,98 @@ export default class DialogComponent extends Component {
               openOnFocus={true}/>
             <RaisedButton
               label="Search"
-              onClick={this.props.handleClose} 
-              style={{ margin:12}}/>
+              onClick={this.props.handleClose}
+              style={{
+              margin: 12
+            }}/>
           </Col>
         </Row>
       </Dialog>
     )
   }
 
-  renderEventform(eventForm){
-    return(
+  renderEventform(eventForm) {
+    return (
       <Center>
         <Dialog
-            style={{maxWidth: 500, margin: 'auto'}}
-            title="Add event"
-            modal={false}
-            open={this.props.open}
-            onRequestClose={this.props.handleClose}>
-            <StepperComponent stepList={eventForm} onChange={this.props.onChange} steps={eventForm.length} handleSubmit={this.props.handleSubmit}/>
+          style={{
+          maxWidth: 500,
+          margin: 'auto'
+        }}
+          title="Add event"
+          modal={false}
+          open={this.props.open}
+          onRequestClose={this.props.handleClose}>
+          <StepperComponent
+            stepList={eventForm}
+            onChange={this.props.onChange}
+            steps={eventForm.length}
+            handleSubmit={this.props.handleSubmit}/>
         </Dialog>
       </Center>
     );
   };
 
-  renderRsvpList(){
-    return(
-        <Dialog
-            style={{maxWidth: 500, margin: 'auto'}}
-            modal={false}
-            open={this.props.open}
-            onRequestClose={this.props.handleClose}>
-            <ListComponent 
-              rsvpList = {this.props.rsvpList}
-              onToggleRsvpStatus = {this.props.onToggleRsvpStatus}
-            />
-        </Dialog>
+  renderRsvpList() {
+    return (
+      <Dialog
+        style={{
+        maxWidth: 500,
+        margin: 'auto'
+      }}
+        modal={false}
+        open={this.props.open}
+        onRequestClose={this.props.handleClose}>
+        <ListComponent
+          rsvpList={this.props.rsvpList}
+          onToggleRsvpStatus={this.props.onToggleRsvpStatus}/>
+      </Dialog>
     );
   };
 
-  renderEmailRequest(){
+  renderEmailRequest() {
 
-    const actions =[
-      <FlatButton 
-        label="submit"
-        onClick={this.props.handleClose}
-        primary={true}/>
-    ]
-    return(
+    const actions = [< FlatButton label = "submit" onClick = {
+        this.props.handleClose
+      }
+      primary = {
+        true
+      } />]
+    return (
       <Dialog
-          style={{maxWidth: 700}}
-          title="RSVP Request"
-          modal={false}
-          open={this.props.open} 
-          onRequestClose={this.props.handleClose}
-          actions={actions} >
-          <Row center="xs">
-            <Col xs={12}>
-              <TextField
-                floatingLabelText="Enter an email address to reserve this email"
-                refs="emailField"
-                name="email"
-                onChange={this.props.onChange}
-                style={{width:'100%', margin:'12'}}/>
-            </Col>
-            <Col xs={8}>
-              <Checkbox
-                label="use this email throughout"
-                checked={this.state.checked}
-                onCheck={this.onCheck}
-              />
-            </Col>
-          </Row>
+        style={{
+        maxWidth: 700
+      }}
+        title="RSVP Request"
+        modal={false}
+        open={this.props.open}
+        onRequestClose={this.props.handleClose}
+        actions={actions}>
+        <Row center="xs">
+          <Col xs={12}>
+            <TextField
+              floatingLabelText="Enter an email address to reserve this email"
+              refs="emailField"
+              name="email"
+              onChange={this.props.onChange}
+              style={{
+              width: '100%',
+              margin: '12'
+            }}/>
+          </Col>
+          <Col xs={8}>
+            <Checkbox
+              label="use this email throughout"
+              checked={this.state.checked}
+              onCheck={this.onCheck}/>
+          </Col>
+        </Row>
       </Dialog>
     )
   }
 
   render() {
-    
+
     switch (this.props.view) {
       case 1:
         return this.renderEventform(this.props.eventsFields);
@@ -149,7 +169,7 @@ export default class DialogComponent extends Component {
         return this.renderFilter();
       default:
         return;
-        
+
     }
   }
 }
