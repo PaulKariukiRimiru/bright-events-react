@@ -22,20 +22,15 @@ export default class DialogComponent extends Component {
   }
 
   renderFilter = () => {
-    const locations = []
-    const category = []
+    const locations = [];
+    const category = [];
+    const names = [];
 
-    const {events, userEvents} = this.props
+    const { events, handleChange } = this.props;
 
     if (events) {
       events.forEach(event => {
-        locations.push(event.location)
-        category.push(event.category)
-      });
-    }
-
-    if (userEvents) {
-      userEvents.forEach(event => {
+        names.push(event.name)
         locations.push(event.location)
         category.push(event.category)
       });
@@ -52,6 +47,12 @@ export default class DialogComponent extends Component {
         open={this.props.open}>
         <Row center="xs">
           <Col xs={12}>
+          <AutoComplete
+              floatingLabelText="Name"
+              name="q"
+              dataSource={names}
+              filter={AutoComplete.noFilter}
+              openOnFocus={true}/>
             <AutoComplete
               floatingLabelText="Location"
               name="location"
@@ -63,6 +64,8 @@ export default class DialogComponent extends Component {
               name="category"
               dataSource={category}
               filter={AutoComplete.noFilter}
+              onUpdateInput={handleChange}
+              onNewRequest={handleChange}
               openOnFocus={true}/>
             <RaisedButton
               label="Search"
@@ -73,7 +76,7 @@ export default class DialogComponent extends Component {
           </Col>
         </Row>
       </Dialog>
-    )
+    );
   }
 
   renderEventform(eventForm) {
@@ -157,7 +160,6 @@ export default class DialogComponent extends Component {
   }
 
   render() {
-
     switch (this.props.view) {
       case 1:
         return this.renderEventform(this.props.eventsFields);

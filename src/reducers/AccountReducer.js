@@ -10,7 +10,8 @@ import {
   RSVP_MANAGE_FAILED,
   EVENT_SEARCH,
   USER_RSVPS_GET_SUCCESS,
-  USER_RSVP_ATTENDANCE_CHANGE
+  USER_RSVP_ATTENDANCE_CHANGE,
+  USER_DELETE_RSVP
 } from '../Constants/action_type';
 import initialState from '../Constants/initialState';
 import jwt_decode from 'jwt-decode';
@@ -123,6 +124,13 @@ const AccountReducer = (state = initialState, action) => {
               attendance: action.payload.attendance
             }
             : event))
+      };
+    case USER_DELETE_RSVP:
+      return {
+        ...state,
+        userRsvps: state
+          .userRsvps
+          .filter(event => event.id !== action.payload.event_id)
       };
     default:
       return state;

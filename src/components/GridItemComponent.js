@@ -13,7 +13,7 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import {white} from 'material-ui/styles/colors';
 import {TOKEN} from '../Constants/action_type';
-import { Toggle, Checkbox } from 'material-ui';
+import { Toggle, Checkbox, IconButton } from 'material-ui';
 
 export default class GridItemComponent extends Component {
   state = {
@@ -27,6 +27,10 @@ export default class GridItemComponent extends Component {
     this
       .props
       .onDeleteSubmit(this.props.event.id);
+  }
+
+  handleRsvpDelete = () => {
+    this.props.onRsvpDelete(this.props.event.id);
   }
 
   handleEventEdit = () => {
@@ -147,7 +151,7 @@ export default class GridItemComponent extends Component {
                     ? new Date(event.time).toDateString()
                     : new Date(event.date).toDateString()}
                 </h4>
-}
+              }
 
             </CardText>
             <CardActions style={{
@@ -177,7 +181,7 @@ export default class GridItemComponent extends Component {
                       icon={< Delete color = "#FFAB91" />}/>
                   </Col>
                 </Row>
-}
+              }
 
             </CardActions>
           </Card>
@@ -330,8 +334,20 @@ export default class GridItemComponent extends Component {
             }}>
               <Row>
                 <Col xs={12}>
-                  <Checkbox labelStyle={{ color: '#ff6e40' }} iconStyle={{ borderColor: '#ff6e40' }} label={event.accepted ? 'Accepted' : 'Declined'} disabled={true} labelPosition='right'/>
-                  <Toggle label={event.attendance ? 'Coming' : 'Not Going'} labelPosition='right' defaultToggled={event.attendance} onToggle={this.onToggleAttendance}/>
+                  <Checkbox labelStyle={{ color: '#ff6e40', fontSize: 14 }} iconStyle={{ borderColor: '#ff6e40' }} label={event.accepted ? 'Reservation Accepted' : 'Reservation Declined'} disabled={true} labelPosition='right'/>
+                </ Col>
+              </ Row>
+              <Row middle="xs">
+                <Col xs={8}>
+                  <Toggle labelStyle={{ fontSize: 14 }} label={event.attendance ? 'Coming' : 'Not Going'} labelPosition='right' defaultToggled={event.attendance} onToggle={this.onToggleAttendance}/>
+                </Col>
+                <Col xs={4}>
+                  <IconButton
+                    onClick={this.handleRsvpDelete}
+                    tooltip='Delete rsvp'
+                    >
+                      < Delete color = "#FFAB91" />
+                  </IconButton>
                 </Col>
               </Row>
             </CardActions>

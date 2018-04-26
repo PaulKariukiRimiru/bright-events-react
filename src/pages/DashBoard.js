@@ -31,19 +31,22 @@ import {
   eventRsvpGet,
   eventManageRsvp,
   userRsvpsGet,
-  userAttendanceChange
+  userAttendanceChange,
+  userDeleteRsvp
 } from '../actions/accountActions';
 import isObjectEmpty from 'is-empty-object';
 import SnackBarComponent from '../components/SnackBarComponent';
-import {dismissMessageAction} from '../actions/index';
+import { dismissMessageAction } from '../actions/index';
 import jwt_decode from 'jwt-decode';
-import {TOKEN} from '../Constants/action_type';
-import {myTheme, dashboardStyles} from '../styles/presentationalStyles';
+import { TOKEN } from '../Constants/action_type';
+import { myTheme, dashboardStyles } from '../styles/presentationalStyles';
 import FavoriteIcon from 'material-ui/svg-icons/action/favorite';
 import HomeIcon from 'material-ui/svg-icons/action/home';
 import FontIcon from 'material-ui/FontIcon/FontIcon';
-import {white} from 'material-ui/styles/colors';
+import { white } from 'material-ui/styles/colors';
 import Overlay from 'material-ui/internal/Overlay';
+import RaisedButton from 'material-ui/RaisedButton/RaisedButton';
+import { Link } from 'react-router-dom';
 
 function mapStateToProps(state, ownProps) {
   return ({
@@ -106,6 +109,12 @@ const fields = [
     ]
   }
 ];
+
+const fabstyling = {
+  position: 'fixed',
+  bottom: '45px',
+  right: '24px'
+};
 export class DashBoard extends Component {
   constructor() {
     super();
@@ -119,45 +128,51 @@ export class DashBoard extends Component {
   }
 
   renderGrid = () => {
-    const fabstyling = {
-      position: 'relative',
-      bottom: 0,
-      right: 0,
-      margin: 32
-    };
+    const {
+      rsvps,
+      actions,
+      events
+    } = this.props;
+    const { showDialog, view } = this.state;
     return (
       <div >
         <DialogComponent
           onToggleRsvpStatus={this.onToggleRsvpStatus}
-          rsvpList={this.props.rsvps}
+          rsvpList={rsvps}
           handleSubmit={this.onFinish}
           eventsFields={fields}
           onChange={this.onChange}
           handleClose={this.handleClose}
-          open={this.state.showDialog}
-          view={this.state.view}/>
+          open={showDialog}
+          view={view}/>
         <Grid fluid>
           <Row center="xs">
-            <Col xs={12}></Col>
+            <Col xs={12}>
+            <GridComponent
+              itemList={events}
+              itemClickAction={actions}
+              view={1}
+              col={4}
+              handleAttendanceToggle={this.handleAttendanceToggle}
+              onEditChange={this.onEditChange}
+              onEditSubmit={this.onEditSubmit}
+              onDeleteSubmit={this.onDeleteSubmit}
+              onRsvpDelete={this.onRsvpDelete}
+              onRsvpRequest={this.onRsvpRequest}/>
+            </Col>
           </Row>
         </Grid>
-
-        <SnackBarComponent
-          open={this.props.displayed}
-          handleRequestClose={this.handleRequestClose}
-          message={this.props.message}/>
       </div>
     );
   }
 
   renderEmpty = () => {
     const styling = {
-      marginTop: '25%'
+      marginTop: '15%'
     };
     return (
       <div>
-
-        <Grid fluid>
+        <Grid >
           <Row center="xs" style={styling}>
             <Col xs={10}>
               <Row center="xs">
@@ -185,6 +200,9 @@ export class DashBoard extends Component {
     this
       .props
       .dispatch(userRsvpsGet());
+    this
+      .props
+      .dispatch(eventsGet());
   }
 
   handleRequestClose = () => {
@@ -205,6 +223,12 @@ export class DashBoard extends Component {
     this
       .props
       .dispatch(eventDelete(eventId));
+  }
+
+  onRsvpDelete = (eventId) => {
+    this
+      .props
+      .dispatch(userDeleteRsvp({ event_id: eventId }));
   }
 
   onEditChange = (event, date) => {
@@ -268,25 +292,16 @@ export class DashBoard extends Component {
 
   render() {
     const {
-      rsvps,
-      user,
       events,
       actions,
       displayed,
       message,
       userRsvps
     } = this.props;
-    const { tabValue, showDialog, view } = this.state;
+    const { tabValue } = this.state;
+    const activeUser = jwt_decode(localStorage.getItem(TOKEN)).identity;
     return (
       <MuiThemeProvider muiTheme={myTheme}>
-        <DialogComponent
-          view={view}
-          rsvpList={this.props.rsvps}
-          eventsFields={fields}
-          onChange={this.onChange}
-          handleClose={this.handleClose}
-          open={this.state.showDialog}
-          handleSubmit={this.onFinish}/>
         <Tabs value={tabValue} onChange={this.handleTabChange}>
           <Tab
             icon={< FontIcon className = "material-icons" > person </FontIcon >}
@@ -299,23 +314,23 @@ export class DashBoard extends Component {
         </ Tabs>
 
         <SwipeableViews index={this.state.tabValue}>
-          < Grid fluid>
+          < Grid>
             <Row>
-              <Col xs={4}>
+              <Col xs={3}>
                 <Row center='xs'>
                   <Col xs={12}>
                     <Card >
                       <CardMedia
                         overlay=
-                        { < CardTitle title = { user.username ? user.username : 'username' } subtitle = { user.email ? user.email : 'email' } /> } >
+                        { < CardTitle title = { activeUser.username } subtitle = { activeUser.email } /> } >
                         <div style={cardMediaStyle}/>
                       </CardMedia>
                     </Card>
                   </ Col>
                 </ Row>
               </ Col>
-              <Col xs={8}>
-                {userRsvps
+              <Col xs={9}>
+                {userRsvps && userRsvps.length
                   ? <GridComponent
                       itemList={userRsvps}
                       itemClickAction={actions}
@@ -325,21 +340,33 @@ export class DashBoard extends Component {
                       onEditChange={this.onEditChange}
                       onEditSubmit={this.onEditSubmit}
                       onDeleteSubmit={this.onDeleteSubmit}
+                      onRsvpDelete={this.onRsvpDelete}
                       onRsvpRequest={this.onRsvpRequest}/>
-                  : this.renderEmpty
+                  :
+                    <Row center='xs' style={{ marginTop: '30%' }}>
+                      <Col>
+                        <span style={{
+                          marginBottom: '15%',
+                          fontFamily: 'Roboto',
+                          wordSpacing: 2,
+                          lineHeight: 2,
+                          fontSize: 16
+                        }}>Sorry, you haven't reserved any events yet, head over to the home page to check out some.</span>
+                      </ Col>
+                      <Col xs={6}>
+                        <Link to='/home'> <RaisedButton primary={true} label="Home"/></ Link>
+                      </Col>
+                    </ Row>
                 }
               </ Col>
             </Row>
           </ Grid>
+          {checkList(events, this.renderEmpty, this.renderGrid)}
         </SwipeableViews >
         <FloatingActionButton
           secondary={true}
           onClick={this.handleFabClick}
-          style={{
-          position: 'fixed',
-          bottom: '45px',
-          right: '24px'
-        }}>
+          style={fabstyling}>
           <ContentAdd/>
         </FloatingActionButton>
         <SnackBarComponent

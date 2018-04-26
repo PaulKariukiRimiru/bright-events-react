@@ -2,7 +2,7 @@ import { Card, CardHeader, CardActions, CardMedia } from 'material-ui/Card';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { white, transparent } from 'material-ui/styles/colors';
+import { white } from 'material-ui/styles/colors';
 import FontIcon from 'material-ui/FontIcon';
 import isObjectEmpty from 'is-empty-object';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -193,7 +193,11 @@ export class LandingPage extends Component {
   }
 };
 
-const mapStateToProps = (state, ownProps) => ({user: state.account.user, message: state.transaction.message.message, displayed: state.transaction.message.status, history: ownProps.history});
+const mapStateToProps = (state, ownProps) => ({
+  user: state.account.user,
+  message: state.transaction.message.message,
+  displayed: state.transaction.message.status,
+  history: ownProps.history });
 
 function mapDispatchToProps(dispatch) {
   return {

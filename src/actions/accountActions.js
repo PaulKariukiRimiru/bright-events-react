@@ -18,6 +18,7 @@ import {
   USER_RSVPS_GET_SUCCESS,
   USER_RSVP_ATTENDANCE_CHANGE,
   TOKEN,
+  USER_DELETE_RSVP,
   BASE_URL
 } from '../Constants/action_type';
 import { push } from 'react-router-redux';
@@ -54,6 +55,24 @@ const eventSearchAction = payload => ({ type: EVENT_SEARCH, payload });
 const userRsvpsGetAction = payload => ({ type: USER_RSVPS_GET_SUCCESS, payload });
 
 const userRsvpAttendanceAction = payload => ({ type: USER_RSVP_ATTENDANCE_CHANGE, payload });
+
+const userDeleteRsvpAction = payload => ({ type: USER_DELETE_RSVP, payload });
+
+export const userDeleteRsvp = payload => function (dispatch) {
+  dispatch(fetchingAction(true));
+  axios({
+    method: 'delete', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload
+  })
+    .then((resp) => {
+      dispatch(userDeleteRsvpAction(resp.data.payload));
+    })
+    .catch((error) => {
+      if (error.response) {
+        return (dispatch(erroredAction(error.response.data.message)));
+      }
+      return (dispatch(erroredAction(error.message)));
+    });
+};
 
 export const userAttendanceChange = payload => function (dispatch) {
   dispatch(fetchingAction(true));
@@ -104,7 +123,7 @@ export const eventSearch = (params = {}, body = {}) => function (dispatch) {
 export const eventFilter = body => function (dispatch) {
   dispatch(fetchingAction(true));
   axios({
-    method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers, body
+    method: 'get', url: `${BASE_URL}/api/v2/events/search`, params: { q: body.q }, headers, body
   })
     .then(resp => (dispatch(eventSearchAction(resp.data.payload.event_list))))
     .catch((error) => {
@@ -212,7 +231,7 @@ export const eventPost = (payload) => {
     time: payload.time,
     host: payload.host
   };
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'post', url: `${BASE_URL}/api/v2/events`, headers, data: eventDetails
@@ -235,7 +254,7 @@ export const registerUser = (payload) => {
     email: payload.email,
     password: payload.password
   };
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'post', url: `${BASE_URL}/api/v2/auth/register`, data: userDetails, headers
