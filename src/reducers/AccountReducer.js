@@ -15,6 +15,7 @@ import {
 } from '../Constants/action_type';
 import initialState from '../Constants/initialState';
 import jwt_decode from 'jwt-decode';
+
 let myUser = {};
 const AccountReducer = (state = initialState, action) => {
   switch (action.type) {

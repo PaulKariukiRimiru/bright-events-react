@@ -5,23 +5,23 @@ import registerServiceWorker from './registerServiceWorker';
 
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import store from './store';
-
-import LandingPage from './pages/LandingPage';
-import HomePage from './pages/HomePage';
-import DashBoard from './pages/DashBoard';
+import { persistor, store } from './store';
+import newHome from './pages/NewHome';
 
 ReactDOM.render(
   <Provider store={ store }>
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <div >
-        <Route path="/" component={ App } />
-        <Route exact path="/" component={ LandingPage } />
-        <Route path="/home" component={ HomePage } />
-        <Route path="/dashboard" component={ DashBoard } />
-      </div>
-    </BrowserRouter>
+    <PersistGate loading={null} persistor={persistor}>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <div>
+          <Route path="/" component={ App } />
+          <Route exact path="/" component={ newHome } />
+        </div>
+      </BrowserRouter>
+    </PersistGate>
   </Provider>
-  , document.getElementById('root'));
+  , document.getElementById('root')
+);
+
 registerServiceWorker();

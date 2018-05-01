@@ -1,24 +1,35 @@
-import React, {Component} from 'react';
-import {Card, CardActions, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import Favorite from 'material-ui/svg-icons/action/favorite';
-import FavBorder from 'material-ui/svg-icons/action/favorite-border';
-import Delete from 'material-ui/svg-icons/action/delete';
-import Edit from 'material-ui/svg-icons/editor/mode-edit';
-import Rsvp from 'material-ui/svg-icons/action/stars';
-import Save from 'material-ui/svg-icons/content/save';
-import {Row} from 'react-flexgrid';
-import Col from 'react-flexgrid/lib/Col';
-import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
-import {white} from 'material-ui/styles/colors';
-import {TOKEN} from '../Constants/action_type';
-import { Toggle, Checkbox, IconButton } from 'material-ui';
+import React, { Component } from 'react';
+import { TOKEN } from '../Constants/action_type';
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Typography,
+  IconButton,
+  TextField,
+  Checkbox,
+  Switch,
+  FormControlLabel
+} from 'material-ui';
+import Save from '@material-ui/icons/Save';
+import Ticket from '@material-ui/icons/PlusOne';
+import RsvpList from '@material-ui/icons/Group';
+import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
+import { Row, Col, Grid } from 'react-flexbox-grid';
+import { blue } from 'material-ui/colors';
 
 export default class GridItemComponent extends Component {
   state = {
     selected: false,
     editMode: false
+  }
+
+  cardStyle = {
+    maxWidth: 260,
+    marginLeft: 'auto',
+    marginRight: 'auto'
   }
 
   handleFabClick = () => {}
@@ -30,7 +41,9 @@ export default class GridItemComponent extends Component {
   }
 
   handleRsvpDelete = () => {
-    this.props.onRsvpDelete(this.props.event.id);
+    this
+      .props
+      .onRsvpDelete(this.props.event.id);
   }
 
   handleEventEdit = () => {
@@ -50,7 +63,7 @@ export default class GridItemComponent extends Component {
 
   handleClick = () => {
     if (localStorage.getItem(TOKEN)) {
-      this.setState({selected: true});
+      this.setState({ selected: true });
       this
         .props
         .handleRsvpClick(this.props.event.id);
@@ -68,292 +81,228 @@ export default class GridItemComponent extends Component {
   }
 
   onToggleAttendance = () => {
-    this.props.handleAttendanceToggle(this.props.event.id, !this.props.event.attendance);
+    this
+      .props
+      .handleAttendanceToggle(this.props.event.id, !this.props.event.attendance);
   }
 
   renderDashboard() {
     const { event } = this.props;
-
     return (
-      <Row center="xs">
-        <Col xs={10}>
-          <Card
+      <Card style={this.cardStyle}>
+        <CardMedia>
+          <div
             style={{
-            maxHeight: 350,
-            maxWidth: 280,
-            margin: 4
-          }}>
-            <CardMedia>
-              <div
-                style={{
-                height: 150,
-                backgroundImage: `url(${require('../images/guitar.jpg')})`,
-                backgroundSize: 'cover'
-              }}>
-                <CardTitle
-                  titleColor='white'
-                  subtitleColor='#FAFAFA'
+            height: 150,
+            backgroundImage: `url(${require('../images/guitar.jpg')})`,
+            backgroundSize: 'cover'
+          }}></div>
+        </CardMedia>
+
+        <CardContent >
+          {this.state.editMode
+            ? <div>
+                <TextField
+                  floatingLabelText="Edit event name"
+                  name="name"
+                  defaultValue={event.name}
+                  onChange={this.props.onEditChange}
                   style={{
-                  textAlign: 'left',
-                  position: 'absolute',
-                  bottom: '0px'
-                }}
-                  title={this.state.editMode
-                  ? <TextField
-                      floatingLabelText="Edit event name"
-                      name="name"
-                      defaultValue={event.name}
-                      onChange={this.props.onEditChange}
-                      style={{
-                      width: '100%',
-                      margin: '12'
-                    }}/>
-                  : event.name}
-                  subtitle={this.state.editMode
-                  ? <TextField
-                      floatingLabelText="Edit event location"
-                      name="location"
-                      defaultValue={event.location}
-                      onChange={this.props.onEditChange}
-                      style={{
-                      width: '100%',
-                      margin: '12'
-                    }}/>
-                  : event.location}/>
+                  width: '100%',
+                  margin: '12'
+                }}/>
+                <TextField
+                  floatingLabelText="Edit event location"
+                  name="location"
+                  defaultValue={event.location}
+                  onChange={this.props.onEditChange}
+                  style={{
+                  width: '100%',
+                  margin: '12'
+                }}/>
+                <TextField
+                  floatingLabelText="Edit event category"
+                  name="location"
+                  defaultValue={event.category}
+                  onChange={this.props.onEditChange}
+                  style={{
+                  width: '100%',
+                  margin: '12'
+                }}/>
+                <TextField
+                  id="time"
+                  label="Date"
+                  type="date"
+                  defaultValue="2017-05-24"
+                  InputLabelProps={{
+                  shrink: true
+                }}/>
               </div>
-            </CardMedia>
-            <CardText style={{
-              backgroundColor: white
+            : <div>
+              <Typography gutterBottom variant="display1" component="h2" noWrap={true}>
+                {event.name}
+              </Typography>
+              <Typography component='subheading'>
+                {event.location}
+              </Typography>
+              <Typography component='subheading'>
+                {event.category}
+              </Typography>
+              <Typography component="body1">
+                {event.time
+                  ? new Date(event.time).toDateString()
+                  : new Date(event.date).toDateString()
+}
+              </Typography>
+            </div>
+}
+        </CardContent>
+        <CardActions>
+
+          {this.state.editMode
+            ? <Row center="xs" style={{
+                padding: 2
+              }}>
+                <Col xs={4}>
+                  <IconButton color='#CE93D8' aria-label='save' onClick={this.handleEditSubmit}>
+                    <Save/>
+                  </IconButton>
+                </Col>
+              </Row>
+            : <Row center="xs" style={{
+              padding: 2
             }}>
-
-              {this.state.editMode
-                ? <div >
-                    <TextField
-                      floatingLabelText="Edit event category"
-                      name="category"
-                      defaultValue={event.category}
-                      onChange={this.props.onEditChange}
-                      style={{
-                      width: '100%'
-                    }}/>
-                    <DatePicker
-                      name="time"
-                      ref={event.name}
-                      hintText={new Date(event.date).toDateString()}
-                      onChange={this.props.onEditChange}
-                      underlineStyle={{
-                      width: 200,
-                      color: 'blue'
-                    }}/>
-                  </div>
-                : <h4>
-                  {event.time
-                    ? new Date(event.time).toDateString()
-                    : new Date(event.date).toDateString()}
-                </h4>
-              }
-
-            </CardText>
-            <CardActions style={{
-              backgroundColor: white
-            }}>
-
-              {this.state.editMode
-                ? <Row center="xs" style={{
-                    padding: 2
-                  }}>
-                    <Col xs={4}>
-                      <FlatButton onClick={this.handleEditSubmit} icon={< Save color = "#CE93D8" />}/>
-                    </Col>
-                  </Row>
-                : <Row center="xs" style={{
-                  padding: 2
-                }}>
-                  <Col xs={4}>
-                    <FlatButton onClick={this.handleRsvpRequest} icon={< Rsvp color = "#FFF59" />}/>
-                  </Col>
-                  <Col xs={4}>
-                    <FlatButton onClick={this.handleEventEdit} icon={< Edit color = "#CE93D8" />}/>
-                  </Col>
-                  <Col xs={4}>
-                    <FlatButton
-                      onClick={this.handleEventDelete}
-                      icon={< Delete color = "#FFAB91" />}/>
-                  </Col>
-                </Row>
-              }
-
-            </CardActions>
-          </Card>
-        </Col>
-      </Row>
+              <Col xs={4}>
+                <IconButton
+                  onClick={this.handleRsvpRequest}
+                  color="#FFF59"
+                  aria-label='Reservation list'>
+                  <RsvpList/>
+                </IconButton>
+              </Col>
+              <Col xs={4}>
+                <IconButton
+                  onClick={this.handleEventEdit}
+                  color="#CE93D8"
+                  aria-label='Edit Event'>
+                  <Edit/>
+                </IconButton>
+              </Col>
+              <Col xs={4}>
+                <IconButton
+                  onClick={this.handleEventDelete}
+                  color="#FFAB91"
+                  aria-label='Delete Event'>
+                  <Delete/>
+                </IconButton>
+              </Col>
+            </Row>
+}
+        </CardActions>
+      </Card>
     );
   }
 
   renderHome() {
-    const {event} = this.props;
+    const { event } = this.props;
     return (
-      <Row center="xs">
-        <Col xs={10}>
-
-          <Card
+      <Card style={this.cardStyle}>
+        <CardMedia>
+          <div
             style={{
-            maxHeight: 300,
-            maxWidth: 280,
-            margin: 4
-          }}>
-            <CardMedia>
-              <div
-                style={{
-                height: 150,
-                backgroundImage: `url(${require('../images/guitar.jpg')})`,
-                backgroundSize: 'cover'
-              }}>
-                <CardTitle
-                  titleColor='white'
-                  subtitleColor='#FAFAFA'
-                  style={{
-                  textAlign: 'left',
-                  position: 'absolute',
-                  bottom: '0px'
-                }}
-                  title={event.name}
-                  subtitle={event.location}/>
-              </div>
-            </CardMedia>
-            <CardText >
-              {event.time
-                ? <h4>{new Date(event.time).toDateString()}</h4>
-                : <h4>{new Date(event.date).toDateString()}</h4>
-              }
-            </CardText>
-            <CardActions>
-              <Row center="xs" style={{
-                padding: 2
-              }}>
-                <Col xs={4}>
-                  <FlatButton
-                    onClick={this.handleClick}
-                    icon={this.state.selected
-                    ? <Favorite color="#FF3D00"/>
-                    : <FavBorder color="#FF3D00"/>}/>
-                </Col>
-              </Row>
-            </CardActions>
-          </Card>
-        </Col>
-      </Row>
+            height: 100,
+            backgroundColor: blue[400]
+          }}/>
+        </CardMedia>
+        <CardContent >
+
+          <Typography gutterBottom variant="headline" component="h2" noWrap={true}>
+            {event.name}
+          </Typography>
+          <Typography component="p">
+            Happening at {event.location} On {event.time
+              ? new Date(event.time).toDateString()
+              : new Date(event.date).toDateString()}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <IconButton
+            onClick={this.handleClick}
+            style={{
+            marginLeft: 'auto',
+            marginRight: 'auto'
+          }}
+            color='#FF3D00'
+            aria-label='Reserve event'>
+            <Ticket/>
+          </IconButton>
+        </CardActions>
+      </Card>
     );
   }
 
   renderUserRsvps() {
-    const { event, handleAttendanceToggle, onEditChange } = this.props;
-    const { editMode } = this.state;
+    const { event } = this.props;
 
     return (
-      <Row center="xs">
-        <Col xs={10}>
-          <Card
+      <Card style={this.cardStyle}>
+        <CardMedia>
+          <div
             style={{
-            maxHeight: 350,
-            maxWidth: 280,
-            margin: 4
-          }}>
-            <CardMedia>
-              <div
-                style={{
-                height: 150,
-                backgroundImage: `url(${require('../images/guitar.jpg')})`,
-                backgroundSize: 'cover'
-              }}>
-                <CardTitle
-                  titleColor='white'
-                  subtitleColor='#FAFAFA'
-                  style={{
-                  textAlign: 'left',
-                  position: 'absolute',
-                  bottom: '0px'
-                }}
-                  title={editMode
-                  ? <TextField
-                      floatingLabelText="Edit event name"
-                      name="name"
-                      defaultValue={event.name}
-                      onChange={onEditChange}
-                      style={{
-                      width: '100%',
-                      margin: '12'
-                    }}/>
-                  : event.name}
-                  subtitle={this.state.editMode
-                  ? <TextField
-                      floatingLabelText="Edit event location"
-                      name="location"
-                      defaultValue={event.location}
-                      onChange={onEditChange}
-                      style={{
-                      width: '100%',
-                      margin: '12'
-                    }}/>
-                  : event.location}/>
-              </div>
-            </CardMedia>
-            <CardText style={{
-              backgroundColor: white
-            }}>
-
-              {editMode
-                ? <div >
-                    <TextField
-                      floatingLabelText="Edit event category"
-                      name="category"
-                      defaultValue={event.category}
-                      onChange={onEditChange}
-                      style={{
-                      width: '100%'
-                    }}/>
-                    <DatePicker
-                      name="time"
-                      ref={event.name}
-                      hintText={new Date(event.date).toDateString()}
-                      onChange={onEditChange}
-                      underlineStyle={{
-                      width: 200,
-                      color: 'blue'
-                    }}/>
-                  </div>
-                : <h4>
-                  {event.time
-                    ? new Date(event.time).toDateString()
-                    : new Date(event.date).toDateString()}
-                </h4>
+            height: 150,
+            backgroundImage: `url(${require('../images/guitar.jpg')})`,
+            backgroundSize: 'cover'
+          }}></div>
+        </CardMedia>
+        <CardContent >
+          <Typography gutterBottom variant="headline" component="h2" noWrap={true}>
+            {event.name}
+          </Typography>
+          <Typography component='h5'>
+            {event.location}
+          </Typography>
+          <Typography component='h5'>
+            {event.category}
+          </Typography>
+          <Typography component="h6">
+            {event.time
+              ? new Date(event.time).toDateString()
+              : new Date(event.date).toDateString()
+}
+          </Typography>
+        </CardContent>
+        <CardActions >
+          <Row>
+            <Col xs={12}>
+              <Checkbox
+                label={event.accepted
+                ? 'Reservation Accepted'
+                : 'Reservation Declined'}
+                disabled={true}/>
+            </ Col>
+          </ Row>
+          <Row middle="xs">
+            <Col xs={8}>
+              <FormControlLabel
+                control={< Switch checked = {
+                event.attendance
               }
-            </CardText>
-            <CardActions style={{
-              backgroundColor: white
-            }}>
-              <Row>
-                <Col xs={12}>
-                  <Checkbox labelStyle={{ color: '#ff6e40', fontSize: 14 }} iconStyle={{ borderColor: '#ff6e40' }} label={event.accepted ? 'Reservation Accepted' : 'Reservation Declined'} disabled={true} labelPosition='right'/>
-                </ Col>
-              </ Row>
-              <Row middle="xs">
-                <Col xs={8}>
-                  <Toggle labelStyle={{ fontSize: 14 }} label={event.attendance ? 'Coming' : 'Not Going'} labelPosition='right' defaultToggled={event.attendance} onToggle={this.onToggleAttendance}/>
-                </Col>
-                <Col xs={4}>
-                  <IconButton
-                    onClick={this.handleRsvpDelete}
-                    tooltip='Delete rsvp'
-                    >
-                      < Delete color = "#FFAB91" />
-                  </IconButton>
-                </Col>
-              </Row>
-            </CardActions>
-          </Card>
-        </Col>
-      </Row>
+              onChange = {
+                this.onToggleAttendance
+              }
+              value = "attendance" />}
+                label={event.attendance
+                ? 'Coming'
+                : 'Not Going'}/>
+            </Col>
+            <Col xs={4}>
+              <IconButton onClick={this.handleRsvpDelete} aria-label='Delete rsvp'>
+                < Delete color="#FFAB91"/>
+              </IconButton>
+            </Col>
+          </Row>
+        </CardActions>
+      </Card>
     );
   }
 
@@ -367,7 +316,7 @@ export default class GridItemComponent extends Component {
         return this.renderUserRsvps();
       default:
         return (
-          <div></div>
+          <Grid fluid/>
         );
     }
   }

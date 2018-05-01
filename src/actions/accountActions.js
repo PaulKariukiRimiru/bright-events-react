@@ -209,7 +209,7 @@ export const eventRsvp = (event, email) => {
 
 export const eventsGet = (payload) => {
   const message = '';
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({ url: `${BASE_URL}/api/v2/events`, method: 'get', headers })
       .then(resp => (dispatch(eventsGetAction(resp.data.payload))))
