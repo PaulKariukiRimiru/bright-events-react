@@ -46,11 +46,19 @@ export class NewHome extends Component {
       email: '',
       password: ''
     },
-    filterSelection: []
+    filterSelection: [],
+    view: 'account',
+    title: ''
   }
-  showDialog = () => {
-    this.setState({ showDialog: true });
+
+  showAccountDialog = () => {
+    this.setState({ showDialog: true, view: 'account', title: '"Login or create an account"' });
   }
+
+  showCreateEventDialog = () => {
+    this.setState({ showDialog: true, view: 'createEvent', title: 'create event' });
+  }
+
   toggleDrawer = () => {
     this.setState({
       drawerOpen: !this.state.drawerOpen
@@ -124,7 +132,7 @@ export class NewHome extends Component {
 
   onFinish = (eventDetails) => {
     this.setState({ showDialog: false });
-
+    
     eventDetails.host = this.props.user.id
       ? this.props.user.id
       : jwt_decode(localStorage.getItem(TOKEN)).identity.id;
@@ -175,13 +183,49 @@ export class NewHome extends Component {
   }
 
   render() {
-    const { events, user, fetching, message } = this.props;
-    const { filterSelection, showDialog } = this.state;
+    const {
+      events, user, fetching, message
+    } = this.props;
+    const {
+      filterSelection, showDialog, view, title
+    } = this.state;
     const fabStyle = {
       position: 'fixed',
       bottom: '24px',
       right: '16px'
     };
+
+    const fields = [
+      {
+        description: 'Give the event a name',
+        fields: [
+          {
+            name: 'name'
+          }
+        ]
+      }, {
+        description: 'Where will it be?',
+        fields: [
+          {
+            name: 'location'
+          }
+        ]
+      }, {
+        description: 'what category is the event',
+        fields: [
+          {
+            name: 'category'
+          }
+        ]
+      }, {
+        description: 'When will this be?',
+        fields: [
+          {
+            name: 'time'
+          }
+        ]
+      }
+    ];
 
     let totalEvents = [];
     if (events && events.length) {
@@ -195,7 +239,7 @@ export class NewHome extends Component {
         padding: 0,
         margin: 0
       }}>
-        <MyAppBar openDrawer={this.toggleDrawer} showAccountDialog={this.showDialog}/>
+        <MyAppBar openDrawer={this.toggleDrawer} showAccountDialog={this.showAccountDialog}/>
         <SwipeableDrawer
           open={this.state.drawerOpen}
           onOpen={this.toggleDrawer}
@@ -226,12 +270,12 @@ export class NewHome extends Component {
                   }}>
                     {filterSelection && filterSelection.length
                       ? filterSelection.map((selection, index) => {
-                        < Chip label = {
+                      < Chip label = {
                           selection.name
                         } />;
                       })
                       : <div/>
-                  }
+}
                   </div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
@@ -249,7 +293,7 @@ export class NewHome extends Component {
               marginTop: 8
             }}>
               {totalEvents.map((event, i) => (
-                <GridComponent key={i}item xs={12} sm={6} md={4} lg={3}>
+                <GridComponent item key={i} xs={12} sm={6} md={4} lg={3}>
                   <GridCard
                     handleAttendanceToggle={this.handleAttendanceToggle}
                     onEditChange={this.onEditChange}
@@ -259,30 +303,36 @@ export class NewHome extends Component {
                     onRsvpRequest={this.onRsvpRequest}
                     handleRsvpClick={this.handleRsvpClick}
                     event={event}
-                    view={event.host === user.id.toString()
+                    view={!isObjectEmpty(user) && event.host === user.id.toString()
                     ? 1
                     : 2}/>
                 </GridComponent>
               ))
-              }
+            }
             </GridComponent>
           </GridComponent>
-          {
-          message.status &&
-            <NotificationComponent
-              handleDialogClose={this.handleDialogClose}
-              message={message.message}
-               />
-          }
+          {message.status && <NotificationComponent
+            handleDialogClose={this.handleDialogClose}
+            message={message.message}/>
+        }
         </GridComponent>
         <NewDialog
           open={showDialog}
-          title="Login or create an account"
+          view={view}
+          title={title}
+          eventForm={fields}
           loading={fetching}
           onChange={this.onChange}
           handleLogin={this.handleLoginFormSubmit}
+          handleSubmit={this.onFinish}
           handleRegister={this.handleRegistrationFormSubmit}/>
-        <Button style={fabStyle} variant="fab" color="primary" aria-label="add">
+        <Button
+          style={fabStyle}
+          variant="fab"
+          color="primary"
+          aria-label="add"
+          onClick={this.showCreateEventDialog}
+          >
           <AddIcon/>
         </Button>
       </ Grid>

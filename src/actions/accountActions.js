@@ -21,15 +21,11 @@ import {
   USER_DELETE_RSVP,
   BASE_URL
 } from '../Constants/action_type';
-import { push } from 'react-router-redux';
-import { Redirect } from 'react-router-dom';
 
 const headers = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
-  Authorization: localStorage.getItem(TOKEN)
-    ? `Bearer ${localStorage.getItem(TOKEN)}`
-    : ''
+  Authorization: localStorage.getItem(TOKEN) && `Bearer ${localStorage.getItem(TOKEN)}`
 };
 
 const loginAction = payload => ({ type: LOGIN_SUCCESS, payload });
@@ -218,7 +214,6 @@ export const eventsGet = (payload) => {
 };
 
 export const eventPost = (payload) => {
-  const message = '';
   const eventDetails = {
     name: payload.name,
     location: payload.location,
