@@ -1,67 +1,63 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {Row, Col} from 'react-flexgrid';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 
-
 export default class Login extends Component {
-    
-    render() {
+  render() {
+    const { onChange, handleLogin } = this.props;
+    const divStyle = {
+      margin: 12,
+      marginTop: 24
+    };
 
-        const divStyle = {
-            margin : 12,
-            marginTop : 50
-        }
-
-        return (
-                <Row center="xs">
-                    <Col xs={10}>
-                        <Row >
-                            <Col >
-                                <TextField 
-                                    floatingLabelText="Email"
-                                    refs="emailField"
-                                    name="email"
-                                    style={divStyle}
-                                    onChange={this.props.onChange}
-                                    type='email'
-                                    autoComplete='email'
-                                    />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col >
-                                <TextField
-                                    floatingLabelText="Password"
-                                    refs="passwordField"
-                                    name="password"
-                                    style={divStyle}
-                                    onChange={this.props.onChange}
-                                    type='password'/>
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col>
-                                <span style={{marginLeft: 20}}>forgot your password?</span>
-                            </Col>
-                        </Row>
-
-                        <Row center="xs">
-                            <Col xs={4}>
-                                <RaisedButton 
-                                    name="submit" 
-                                    type="submit"
-                                    onClick={this.props.handleFormSubmition} 
-                                    primary={true} 
-                                    label="Login"
-                                    style={{marginTop:40}}
-                                    />
-                            </Col>
-                        </Row>
-
-                    </Col>
-                </Row>
-        )
-    }
+    return (
+      <Row center="xs">
+        <Col xs={12}>
+          <div>
+            <Row middle="xs">
+              <Col xs={10}>
+                <TextField
+                  required
+                  id="email"
+                  label="email"
+                  type="email"
+                  name='email'
+                  autoComplete="current-email"
+                  margin="normal"
+                  style={divStyle}
+                  onChange={onChange}/>
+              </Col>
+            </Row>
+            <Row middle="xs">
+              <Col xs={10}>
+                <TextField
+                  required
+                  id="password"
+                  label="password"
+                  type="password"
+                  name='password'
+                  margin="normal"
+                  style={divStyle}
+                  onChange={onChange}/>
+              </Col>
+            </Row>
+            <Row center='xs'>
+              <Col xs={8}>
+                <Button
+                  name="submit"
+                  type="submit"
+                  variant="raised"
+                  color="secondary"
+                  onClick={handleLogin}
+                  style={{
+                  marginTop: 40
+                }}>Login</Button>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
+    );
+  }
 }

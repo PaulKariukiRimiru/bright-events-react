@@ -30,7 +30,7 @@ const TransacionReducer = (state = initialState, action) => {
         fetched: {
           ...state.fetched,
           status: true,
-          message: action.payload.message
+          message: action.payload
         },
         errored: {
           ...state.errored,
@@ -50,7 +50,7 @@ const TransacionReducer = (state = initialState, action) => {
         errored: {
           ...state.errored,
           status: true,
-          message: action.payload.message
+          message: action.payload
         }
       };
     case MESSAGE:

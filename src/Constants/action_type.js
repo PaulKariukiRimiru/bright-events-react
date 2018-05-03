@@ -1,7 +1,7 @@
 export const FETCHING = 'FETCHING';
 export const FETCHED = 'FETCHED';
 export const ERRORED = 'ERRORED';
-export const LOGIN_SUCCESS = 'LOGIIN_SUCCESSFUL';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const MESSAGE = 'MESSAGE';
 export const DISPLAYED = 'DISPLAYED';
@@ -18,3 +18,4 @@ export const BASE_URL = 'http://127.0.0.1:5000';
 export const USER_RSVPS_GET_SUCCESS = 'USER_RSVPS_GET_SUCCESS';
 export const USER_RSVP_ATTENDANCE_CHANGE = 'USER_RSVP_ATTENDANCE_CHANGE';
 export const USER_DELETE_RSVP = 'USER_DELETE_RSVP';
+export const CALLS_REDUCER = 'CALLS_REDUCER';

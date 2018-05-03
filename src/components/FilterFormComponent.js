@@ -5,6 +5,7 @@ import { FormGroup } from 'material-ui';
 import { FormHelperText } from 'material-ui';
 import { FormLabel } from 'material-ui';
 import React, { Component } from 'react';
+import { Grid } from 'material-ui';
 
 export default class FilterformComponent extends Component {
   render() {
@@ -13,9 +14,9 @@ export default class FilterformComponent extends Component {
       <FormControl style={{
         padding: 12
       }}>
-        <FormLabel>Filter events</FormLabel>
+      <Grid container direction='row'>
         <FormGroup>
-          <FormHelperText>User Options</FormHelperText>
+          <FormLabel>User Options</FormLabel>
           <FormControlLabel
             control={< Checkbox checked = {
             true
@@ -30,7 +31,7 @@ export default class FilterformComponent extends Component {
             label='My Reservations'/>
         </FormGroup>
         <FormGroup>
-          <FormHelperText>Events Options</ FormHelperText>
+        < FormLabel > Events Options </ FormLabel>
           <FormControlLabel
             control={< Checkbox checked = {
             true
@@ -43,6 +44,9 @@ export default class FilterformComponent extends Component {
           }
           value = 'Events not attending' />}
             label='Reservations not attending'/>
+          </FormGroup>
+          <FormGroup >
+            < FormLabel style={{ marginTop: 16 }}></ FormLabel>
           <FormControlLabel
             control={< Checkbox checked = {
             true
@@ -56,6 +60,7 @@ export default class FilterformComponent extends Component {
           value = 'Reservations canceled' />}
             label='Reservations canceled'/>
         </FormGroup>
+        </Grid>
       </FormControl>
     );
   }

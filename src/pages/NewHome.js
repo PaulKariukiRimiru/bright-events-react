@@ -1,14 +1,9 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import {
-  Typography,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Paper,
-  SwipeableDrawer
-} from 'material-ui';
+import { Typography, SwipeableDrawer, Chip } from 'material-ui';
+import ExpansionPanel, { ExpansionPanelSummary, ExpansionPanelDetails } from 'material-ui/ExpansionPanel';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GridComponent from 'material-ui/Grid';
 import Account from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -17,6 +12,8 @@ import Hidden from 'material-ui/Hidden';
 import FilterForm from '../components/FilterFormComponent';
 import GridCard from '../components/GridItemComponent';
 import {
+  loginUser,
+  registerUser,
   eventPost,
   eventsGet,
   eventEdit,
@@ -33,14 +30,27 @@ import isObjectEmpty from 'is-empty-object';
 import jwt_decode from 'jwt-decode';
 import { TOKEN } from '../Constants/action_type';
 import MyAppBar from '../components/AppBar';
+import { Button } from 'material-ui';
+import { blue } from 'material-ui/colors';
+import AddIcon from '@material-ui/icons/Add';
+import NewDialog from '../components/NewDialog';
+import NotificationComponent from '../components/NotificationComponent';
 
 export class NewHome extends Component {
   state = {
     drawerOpen: false,
     showDialog: false,
-    editForm: {}
+    editForm: {},
+    form: {
+      username: '',
+      email: '',
+      password: ''
+    },
+    filterSelection: []
   }
-
+  showDialog = () => {
+    this.setState({ showDialog: true });
+  }
   toggleDrawer = () => {
     this.setState({
       drawerOpen: !this.state.drawerOpen
@@ -124,10 +134,6 @@ export class NewHome extends Component {
       .createEvent(eventDetails);
   }
 
-  handleTabChange = (value) => {
-    this.setState({ tabValue: value });
-  }
-
   handleAttendanceToggle = (eventId, attendance) => {
     this
       .props
@@ -140,6 +146,28 @@ export class NewHome extends Component {
       .rsvpEvent(eventId);
   }
 
+  onChange = (event) => {
+    const myStateCopy = this.state;
+    myStateCopy.form[event.target.name] = event.target.value;
+    return this.setState(myStateCopy);
+  }
+
+  handleRegistrationFormSubmit = (event) => {
+    this
+      .props
+      .registerUser(this.state.form);
+  }
+
+  handleLoginFormSubmit = (event) => {
+    this
+      .props
+      .loginUser(this.state.form);
+  }
+
+  handleDialogClose = () => {
+    this.setState({ showDialog: false });
+  }
+
   componentWillMount() {
     this
       .props
@@ -147,48 +175,72 @@ export class NewHome extends Component {
   }
 
   render() {
-    const { events, userEvents, user } = this.props;
+    const { events, user, fetching, message } = this.props;
+    const { filterSelection, showDialog } = this.state;
+    const fabStyle = {
+      position: 'fixed',
+      bottom: '24px',
+      right: '16px'
+    };
+
     let totalEvents = [];
     if (events && events.length) {
-      totalEvents = [...totalEvents, ...events];
+      totalEvents = [
+        ...totalEvents,
+        ...events
+      ];
     }
-    if (userEvents && userEvents.length) {
-      totalEvents = [...totalEvents, ...userEvents];
-    }
-    console.log('events', totalEvents);
     return (
-      <Grid fluid style={{ padding: 0 }}>
-        <AppBar position='static'>
-          <Toolbar>
-            <Hidden lgUp>
-              <IconButton color="inherit" aria-label="Menu" onClick={this.toggleDrawer}>
-                <MenuIcon/>
-              </IconButton>
-            </Hidden>
-            <Typography variant="title" color="inherit">
-              Bright Events
-            </Typography>
-          </Toolbar>
-        </AppBar>
+      <Grid fluid style={{
+        padding: 0,
+        margin: 0
+      }}>
+        <MyAppBar openDrawer={this.toggleDrawer} showAccountDialog={this.showDialog}/>
         <SwipeableDrawer
           open={this.state.drawerOpen}
           onOpen={this.toggleDrawer}
           onClose={this.toggleDrawer}>
-          <FilterForm/>
+          <div>
+            <GridComponent container direction='row' justify='flex-start'>
+              <div
+                style={{
+                backgroundColor: blue[400],
+                height: 150
+              }}/>
+              <FilterForm/>
+            </GridComponent>
+          </div>
         </SwipeableDrawer>
-        < GridComponent container direction='row' >
+        < GridComponent container direction='column'>
           <Hidden mdDown>
-            <GridComponent item xs={0} sm={0} md={0} lg={3}>
-              <Paper
+            <GridComponent item xs={0} sm={0} md={0} lg={12}>
+              <ExpansionPanel
                 style={{
                 margin: 8,
                 padding: 12
               }}>
-                <FilterForm/>
-              </Paper>
+                <ExpansionPanelSummary expandIcon={< ExpandMoreIcon />}>
+                  <Typography variant="title" gutterBottom>Filters</Typography>
+                  <div style={{
+                    marginLeft: 16
+                  }}>
+                    {filterSelection && filterSelection.length
+                      ? filterSelection.map((selection, index) => {
+                        < Chip label = {
+                          selection.name
+                        } />;
+                      })
+                      : <div/>
+                  }
+                  </div>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <FilterForm/>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
             </GridComponent>
           </Hidden>
-          <GridComponent item xs={12} sm={12} md={12} lg={9}>
+          <GridComponent item xs={12} sm={12} md={12} lg={12}>
             <GridComponent
               container
               spacing={24}
@@ -197,7 +249,7 @@ export class NewHome extends Component {
               marginTop: 8
             }}>
               {totalEvents.map((event, i) => (
-                <GridComponent item xs={12} sm={6} md={4} lg={3}>
+                <GridComponent key={i}item xs={12} sm={6} md={4} lg={3}>
                   <GridCard
                     handleAttendanceToggle={this.handleAttendanceToggle}
                     onEditChange={this.onEditChange}
@@ -207,8 +259,7 @@ export class NewHome extends Component {
                     onRsvpRequest={this.onRsvpRequest}
                     handleRsvpClick={this.handleRsvpClick}
                     event={event}
-                    key={i}
-                    view={event.host === user.id
+                    view={event.host === user.id.toString()
                     ? 1
                     : 2}/>
                 </GridComponent>
@@ -216,7 +267,24 @@ export class NewHome extends Component {
               }
             </GridComponent>
           </GridComponent>
+          {
+          message.status &&
+            <NotificationComponent
+              handleDialogClose={this.handleDialogClose}
+              message={message.message}
+               />
+          }
         </GridComponent>
+        <NewDialog
+          open={showDialog}
+          title="Login or create an account"
+          loading={fetching}
+          onChange={this.onChange}
+          handleLogin={this.handleLoginFormSubmit}
+          handleRegister={this.handleRegistrationFormSubmit}/>
+        <Button style={fabStyle} variant="fab" color="primary" aria-label="add">
+          <AddIcon/>
+        </Button>
       </ Grid>
     );
   }
@@ -227,8 +295,8 @@ const mapStateToProps = (state, ownProps) => ({
   events: state.account.events,
   userRsvps: state.account.userRsvps,
   rsvps: state.account.rsvps,
-  fetching: state.transaction.fetching,
-  message: state.transaction.message.message,
+  fetching: state.transaction.activeCalls > 0,
+  message: state.transaction.message,
   displayed: state.transaction.message.status,
   history: ownProps.history
 });
@@ -265,7 +333,13 @@ const mapDispatchToProps = dispatch => ({
     dispatch(userAttendanceChange(attendanceDetails));
   },
   rsvpEvent: (eventId) => {
-    eventRsvp(eventId, this.props.user.email);
+    dispatch(eventRsvp(eventId, this.props.user.email));
+  },
+  loginUser: (userDetails) => {
+    dispatch(loginUser(userDetails));
+  },
+  registerUser: (userDetails) => {
+    dispatch(registerUser(userDetails));
   }
 
 });

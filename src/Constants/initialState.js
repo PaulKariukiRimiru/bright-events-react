@@ -5,6 +5,16 @@ const initialState = {
   userEvents: [],
   rsvps: [],
   userRsvps: [],
-  loggedin: false
+  loggedin: false,
+  fetched: {
+    status: false,
+    message: ''
+  },
+  fetching: false,
+  errored: {
+    status: false,
+    message: ''
+  },
+  messages: []
 };
 export default initialState;

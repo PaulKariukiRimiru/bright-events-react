@@ -1,67 +1,77 @@
 import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
-import {Row, Col} from 'react-flexgrid';
+import { Row, Col } from 'react-flexgrid';
 
 export default class Register extends Component {
-    
-    render() {
+  render() {
+    const { onChange, handleRegister } = this.props;
+    const divStyle = {
+      margin: 12,
+      marginTop: 18
+    };
 
-        const divStyle = {
-            margin : 12,
-            marginTop : 18
-        }
-
-        return (
+    return (
             <Row center="xs">
                 <Col xs={8}>
-                    <form onSubmit={this.props.handleFormSubmition} >
+                    <div >
                         <Row middle="xs">
                             <Col xs={6}>
-                                <TextField 
-                                    floatingLabelText="Username"
-                                    refs="usernameField"
-                                    name="username"
+                                <TextField
+                                    required
+                                    id="username"
+                                    label="username"
+                                    type="name"
+                                    name='username'
+                                    autoComplete="current-email"
+                                    margin="normal"
                                     style={divStyle}
-                                    onChange={this.props.onChange}
-                                    />
-                            </Col>
-                        </Row>
-                        <Row middle="xs">
-                            <Col xs={6}>
-                                <TextField 
-                                    floatingLabelText="Email"
-                                    refs="emailField"
-                                    name="email"
-                                    style={divStyle}
-                                    onChange={this.props.onChange}
-                                    autoComplete='email'/>
+                                    onChange={onChange}/>
                             </Col>
                         </Row>
                         <Row middle="xs">
                             <Col xs={6}>
                                 <TextField
-                                    floatingLabelText="Password"
-                                    refs="passwordField"
-                                    name="password"
+                                    required
+                                    id="email"
+                                    label="email"
+                                    type="email"
+                                    name='email'
+                                    autoComplete="current-email"
+                                    margin="normal"
                                     style={divStyle}
-                                    onChange={this.props.onChange} 
-                                    type='password'/>
+                                    onChange={onChange}/>
+                            </Col>
+                        </Row>
+                        <Row middle="xs">
+                            <Col xs={6}>
+                                <TextField
+                                    required
+                                    id="password"
+                                    label="password"
+                                    type="password"
+                                    name='password'
+                                    margin="normal"
+                                    style={divStyle}
+                                    onChange={onChange}/>
                             </Col>
                         </Row>
                         <Row center="xs">
-                            <Col xs={4}>
-                                <RaisedButton 
-                                    name="submit" 
+                            <Col xs={6}>
+                                <Button
+                                    name="submit"
                                     type="submit"
-                                    primary={true} 
-                                    label="Register"
-                                    style={divStyle}/>
+                                    onClick={handleRegister}
+                                    variant="raised"
+                                    color="secondary"
+                                    style={{
+                                    marginTop: 40
+                                }}>Register</Button>
                             </Col>
                         </Row>
-                    </form>
+                    </div>
                 </Col>
             </Row>
-        )
-    }
+    );
+  }
 }

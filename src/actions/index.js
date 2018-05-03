@@ -4,38 +4,38 @@ export function fetch(payload) {
   return ({ type: FETCHING, payload });
 }
 
-export const fetching = (payload) => ({type: FETCHING, payload: payload});
+export const fetching = payload => ({ type: FETCHING, payload });
 
 export const fetched = (status, message) => ({
-    type: FETCHED,
-    payload: {
-      status: status,
-      message: message
-    }
-  });
+  type: FETCHED,
+  payload: {
+    status,
+    message
+  }
+});
 
 export const errored = (status, message) => ({
-    type: ERRORED,
-    payload: {
-      status: status,
-      message: message
-    }
-  });
+  type: ERRORED,
+  payload: {
+    status,
+    message
+  }
+});
 
-const dismissMessage = (payload) => ({type: DISPLAYED});
+const dismissMessage = payload => ({ type: DISPLAYED });
 
-export const dismissMessageAction = () => function (dispatch) {
-    dispatch(dismissMessage());
-  };
+export const dismissMessageAction = () => (dispatch) => {
+  dispatch(dismissMessage());
+};
 
-const displayMessage = (payload) => ({type: MESSAGE, payload: payload});
+const displayMessage = payload => ({ type: MESSAGE, payload });
 
-export const displayMessageAction = (message) => function (dispatch) {
-    dispatch(displayMessage(message))
-  };
+export const displayMessageAction = message => (dispatch) => {
+  dispatch(displayMessage(message));
+};
 
 export function fetchingAction(status) {
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(fetching(status));
   };
 }
@@ -50,5 +50,6 @@ export function fetchedAction(status, message) {
 export function erroredAction(payload) {
   return (dispatch) => {
     dispatch(displayMessage({ status: true, message: payload }));
+    dispatch(errored(true, payload));
   };
 }
