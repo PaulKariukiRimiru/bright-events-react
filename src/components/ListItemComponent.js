@@ -1,10 +1,21 @@
-import { ListItem } from 'material-ui/List';
-import { Toggle } from 'material-ui';
-import { white, blue400 } from 'material-ui/styles/colors';
+import { blue } from 'material-ui/colors';
+import { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader } from 'material-ui/List';
+import { withStyles } from 'material-ui/styles';
 import Avatar from 'material-ui/Avatar';
-import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import Switch from 'material-ui/Switch';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
-export default class ListItemComponent extends Component {
+const styles = theme => ({
+  avatar: {
+    margin: 10,
+    backgroundColor: blue[200]
+  }
+});
+
+
+class ListItemComponent extends Component {
   state = {
     status: true
   }
@@ -14,41 +25,48 @@ export default class ListItemComponent extends Component {
   }
 
   handleToggle = () => {
+    const { rsvp, onToggleRsvpStatus } = this.props;
     this.setState({
       status: !this.state.status
     });
-    this
-      .props
-      .onToggleRsvpStatus(this.props.rsvp.event_id, !this.state.status, this.props.rsvp.email);
-  }
+    onToggleRsvpStatus(rsvp.event_id, !this.state.status, rsvp.email);
+  };
 
   render() {
+    const { rsvp, classes } = this.props;
     return (
-      <ListItem
-        primaryText={this.props.rsvp.email}
-        secondaryText={this.state.status
-        ? 'Accepted'
-        : 'Rejected'}
-        leftAvatar={< Avatar color = {
-        white
-      }
-      backgroundColor = {
-        blue400
-      }
-      style = {{ left: 8 }} > {
-        this
-          .props
-          .rsvp
-          .email
-          .substring(0, 1)
-          .toUpperCase()
-      } </ Avatar>}
-        rightToggle={< Toggle defaultToggled = {
-        this.state.status
-      }
-      onToggle = {
-        this.handleToggle
-      } />}/>
+      <ListItem >
+        <Grid fluid>
+          <Row>
+            <Col xs={4}>
+              <ListItemIcon>
+                <Avatar className={classes.avatar}>{rsvp
+                    .email
+                    .substring(0, 1)
+                    .toUpperCase()
+              }</Avatar>
+              </ListItemIcon>
+            </Col>
+            <Col xs={4}>
+              <ListItemText
+                primary={rsvp.email}
+                secondary={this.state.status
+                ? 'Accepted'
+                : 'Rejected'}/>
+            </Col>
+            <Col xs={4}>
+              <ListItemSecondaryAction>
+                <Switch onChange={this.handleToggle} checked={this.state.status}/>
+              </ListItemSecondaryAction>
+            </Col>
+          </Row>
+        </Grid>
+      </ListItem>
     );
   }
 }
+ListItemComponent.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(ListItemComponent);

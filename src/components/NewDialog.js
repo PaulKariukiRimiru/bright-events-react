@@ -9,6 +9,9 @@ import Login from './Login';
 import Register from './Register';
 import { CircularProgress, Fade } from 'material-ui';
 import StepperComponent from '../components/StepperComponent';
+import NewListComponent from '../components/NewListComponent';
+import { DialogActions } from 'material-ui';
+import { Button } from 'material-ui';
 
 class NewDialog extends React.Component {
   state = {
@@ -71,7 +74,8 @@ class NewDialog extends React.Component {
       handleSubmit,
       fullScreen,
       title,
-      open
+      open,
+      closeDialog
     } = this.props;
     return (
       <div>
@@ -84,6 +88,36 @@ class NewDialog extends React.Component {
               steps={eventForm.length}
               handleSubmit={handleSubmit}/>
           </DialogContent>
+          <DialogActions>
+            <Button color='secondary' onClick={closeDialog}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
+
+  renderRsvps = () => {
+    const {
+      fullScreen,
+      title,
+      open,
+      rsvpList,
+      onToggleRsvpStatus,
+      closeDialog
+    } = this.props;
+    return (
+      <div>
+        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title}>
+          <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
+          <DialogContent>
+            <NewListComponent
+              rsvpList={rsvpList}
+              onToggleRsvpStatus={onToggleRsvpStatus}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button color='secondary' onClick={closeDialog}>Close</Button>
+          </DialogActions>
         </Dialog>
       </div>
     );
@@ -95,6 +129,8 @@ class NewDialog extends React.Component {
         return this.renderAccount();
       case 'createEvent':
         return this.renderCreateEvent();
+      case 'rsvpList':
+        return this.renderRsvps();
       default:
         return <div/>;
     }

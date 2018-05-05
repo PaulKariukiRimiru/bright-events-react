@@ -1,13 +1,13 @@
-import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import React, {Component} from 'react';
 
-import { Typography, SwipeableDrawer, Chip } from 'material-ui';
-import ExpansionPanel, { ExpansionPanelSummary, ExpansionPanelDetails } from 'material-ui/ExpansionPanel';
+import {Typography, SwipeableDrawer, Chip} from 'material-ui';
+import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'material-ui/ExpansionPanel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GridComponent from 'material-ui/Grid';
 import Account from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Grid } from 'react-flexbox-grid';
+import {Grid} from 'react-flexbox-grid';
 import Hidden from 'material-ui/Hidden';
 import FilterForm from '../components/FilterFormComponent';
 import GridCard from '../components/GridItemComponent';
@@ -25,13 +25,13 @@ import {
   userAttendanceChange,
   userDeleteRsvp
 } from '../actions/accountActions';
-import { dismissMessageAction } from '../actions';
+import {dismissMessageAction} from '../actions';
 import isObjectEmpty from 'is-empty-object';
 import jwt_decode from 'jwt-decode';
-import { TOKEN } from '../Constants/action_type';
+import {TOKEN} from '../Constants/action_type';
 import MyAppBar from '../components/AppBar';
-import { Button } from 'material-ui';
-import { blue } from 'material-ui/colors';
+import {Button} from 'material-ui';
+import {blue} from 'material-ui/colors';
 import AddIcon from '@material-ui/icons/Add';
 import NewDialog from '../components/NewDialog';
 import NotificationComponent from '../components/NotificationComponent';
@@ -48,15 +48,102 @@ export class NewHome extends Component {
     },
     filterSelection: [],
     view: 'account',
-    title: ''
+    displayed: 'allEvents',
+    title: '',
+    events: []
+  }
+
+  displayAllEvents = () => {
+    this.setState({
+      displayed: 'allEvents',
+      events: this.props.events
+    });
+  }
+
+  displayUserEvents = () => {
+    this.setState({
+      displayed: 'userEvents',
+      events: this.props.events.filter(event => event.host === this.props.user.id.toString())
+    });
+  }
+
+  displayUserRsvps = () => {
+    this.setState({
+      displayed: 'userRsvps',
+      events: this.props.userRsvps
+    });
+  }
+
+  displayRsvpsAttending = () => {
+    this.setState({
+      displayed: 'userRsvps',
+      events: this.props.userRsvps.filter(event => event.attendance)
+    });
+  }
+
+  displayRsvpsNotAttending = () => {
+    this.setState({
+      displayed: 'userRsvps',
+      events: this.props.userRsvps.filter(event => !event.attendance)
+    });
+  }
+
+  displayRsvpsRejected = () => {
+    this.setState({
+      displayed: 'userRsvps',
+      events: this.props.userRsvps.filter(event => !event.accepted)
+    });
+  }
+
+  displayRsvpsAccepted = () => {
+    this.setState({
+      displayed: 'userRsvps',
+      events: this.props.userRsvps.filter(event => event.accepted)
+    });
+  }
+
+  sortItemsToDisplay = (selection, isChecked) => {
+    switch (selection) {
+      case 'userEvents':
+        this.displayUserEvents();
+        break;
+      case 'userRsvps':
+        this.displayUserRsvps();
+        break;
+      case 'eventsAttending':
+        this.displayRsvpsAttending();
+        break;
+      case 'eventsNotAttending':
+        this.displayRsvpsNotAttending();
+        break;
+      case 'rsvpsConfirmed':
+        this.displayRsvpsAccepted();
+        break;
+      case 'rsvpsCanceled':
+        this.displayRsvpsRejected();
+        break;
+      default:
+        this.displayAllEvents();
+        break;
+    }
   }
 
   showAccountDialog = () => {
-    this.setState({ showDialog: true, view: 'account', title: '"Login or create an account"' });
+    this.setState({ showDialog: true, view: 'account', title: 'Login or create an account' });
   }
 
   showCreateEventDialog = () => {
     this.setState({ showDialog: true, view: 'createEvent', title: 'create event' });
+  }
+
+  showRsvpListDialog = () => {
+    this.setState({ showDialog: true, view: 'rsvpList', title: 'Event Reservation list' });
+  }
+
+  handleRsvpClick = (eventId) => {
+    this
+      .props
+      .rsvpEvent(eventId, this.props.user.email);
   }
 
   toggleDrawer = () => {
@@ -117,7 +204,7 @@ export class NewHome extends Component {
     this
       .props
       .fetchRsvps(id);
-    this.setState({ showDialog: true, view: 3 });
+    this.showRsvpListDialog();
   }
 
   onToggleRsvpStatus = (id, status, email) => {
@@ -132,7 +219,6 @@ export class NewHome extends Component {
 
   onFinish = (eventDetails) => {
     this.setState({ showDialog: false });
-    
     eventDetails.host = this.props.user.id
       ? this.props.user.id
       : jwt_decode(localStorage.getItem(TOKEN)).identity.id;
@@ -146,12 +232,6 @@ export class NewHome extends Component {
     this
       .props
       .changeAttendance({ event_id: eventId, attendance });
-  }
-
-  handleRsvpClick = (eventId) => {
-    this
-      .props
-      .rsvpEvent(eventId);
   }
 
   onChange = (event) => {
@@ -173,28 +253,31 @@ export class NewHome extends Component {
   }
 
   handleDialogClose = () => {
-    this.setState({ showDialog: false });
+    if (this.state.view !== 'rsvpList') {
+      this.setState({ showDialog: false });
+    }
   }
 
   componentWillMount() {
+    this.setState({
+      events: this.props.events
+    });
     this
       .props
       .getEvents();
+    this
+      .props
+      .getUserRsvps();
   }
 
   render() {
-    const {
-      events, user, fetching, message
-    } = this.props;
-    const {
-      filterSelection, showDialog, view, title
-    } = this.state;
+    const { user, fetching, message, rsvps } = this.props;
+    const { filterSelection, showDialog, view, title, events, displayed } = this.state;
     const fabStyle = {
       position: 'fixed',
       bottom: '24px',
       right: '16px'
     };
-
     const fields = [
       {
         description: 'Give the event a name',
@@ -227,19 +310,14 @@ export class NewHome extends Component {
       }
     ];
 
-    let totalEvents = [];
-    if (events && events.length) {
-      totalEvents = [
-        ...totalEvents,
-        ...events
-      ];
-    }
     return (
       <Grid fluid style={{
         padding: 0,
         margin: 0
       }}>
-        <MyAppBar openDrawer={this.toggleDrawer} showAccountDialog={this.showAccountDialog}/>
+        <MyAppBar
+          openDrawer={this.toggleDrawer}
+          showAccountDialog={this.showAccountDialog}/>
         <SwipeableDrawer
           open={this.state.drawerOpen}
           onOpen={this.toggleDrawer}
@@ -249,28 +327,21 @@ export class NewHome extends Component {
               <div
                 style={{
                 backgroundColor: blue[400],
-                height: 150
+                height: 100
               }}/>
-              <FilterForm/>
+              <FilterForm direction='row' sortItemsToDisplay={this.sortItemsToDisplay}/>
             </GridComponent>
           </div>
         </SwipeableDrawer>
-        < GridComponent container direction='column'>
+        < GridComponent container direction='row'>
           <Hidden mdDown>
-            <GridComponent item xs={0} sm={0} md={0} lg={12}>
-              <ExpansionPanel
-                style={{
-                margin: 8,
-                padding: 12
-              }}>
-                <ExpansionPanelSummary expandIcon={< ExpandMoreIcon />}>
+            <GridComponent item xs={0} sm={0} md={0} lg={3}>
+              <ExpansionPanel style={{ margin: 8, marginTop: 20 }}>
+                <ExpansionPanelSummary expandIcon={< ExpandMoreIcon />} style={{ margin: 8 }}>
                   <Typography variant="title" gutterBottom>Filters</Typography>
-                  <div style={{
-                    marginLeft: 16
-                  }}>
-                    {filterSelection && filterSelection.length
-                      ? filterSelection.map((selection, index) => {
-                      < Chip label = {
+                  <div style={{ marginLeft: 16 }}>
+                    { filterSelection && filterSelection.length
+                      ? filterSelection.map((selection, index) => { < Chip label = {
                           selection.name
                         } />;
                       })
@@ -279,12 +350,12 @@ export class NewHome extends Component {
                   </div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <FilterForm/>
+                  <FilterForm direction='column' sortItemsToDisplay={this.sortItemsToDisplay} />
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             </GridComponent>
           </Hidden>
-          <GridComponent item xs={12} sm={12} md={12} lg={12}>
+          <GridComponent item xs={12} sm={12} md={12} lg={9}>
             <GridComponent
               container
               spacing={24}
@@ -292,7 +363,7 @@ export class NewHome extends Component {
               style={{
               marginTop: 8
             }}>
-              {totalEvents.map((event, i) => (
+              {events.map((event, i) => (
                 <GridComponent item key={i} xs={12} sm={6} md={4} lg={3}>
                   <GridCard
                     handleAttendanceToggle={this.handleAttendanceToggle}
@@ -303,18 +374,20 @@ export class NewHome extends Component {
                     onRsvpRequest={this.onRsvpRequest}
                     handleRsvpClick={this.handleRsvpClick}
                     event={event}
-                    view={!isObjectEmpty(user) && event.host === user.id.toString()
-                    ? 1
-                    : 2}/>
+                    view = {
+                      !isObjectEmpty(user) && displayed.substr(displayed.length - 6) === 'Events'
+                        ? event.host === user.id.toString() ? 1 : 2 : 3
+                    }
+                    />
                 </GridComponent>
               ))
-            }
+}
             </GridComponent>
           </GridComponent>
           {message.status && <NotificationComponent
             handleDialogClose={this.handleDialogClose}
             message={message.message}/>
-        }
+}
         </GridComponent>
         <NewDialog
           open={showDialog}
@@ -325,14 +398,16 @@ export class NewHome extends Component {
           onChange={this.onChange}
           handleLogin={this.handleLoginFormSubmit}
           handleSubmit={this.onFinish}
-          handleRegister={this.handleRegistrationFormSubmit}/>
+          handleRegister={this.handleRegistrationFormSubmit}
+          onToggleRsvpStatus={this.onToggleRsvpStatus}
+          closeDialog={this.handleClose}
+          rsvpList={rsvps}/>
         <Button
           style={fabStyle}
           variant="fab"
           color="primary"
           aria-label="add"
-          onClick={this.showCreateEventDialog}
-          >
+          onClick={this.showCreateEventDialog}>
           <AddIcon/>
         </Button>
       </ Grid>
@@ -345,7 +420,7 @@ const mapStateToProps = (state, ownProps) => ({
   events: state.account.events,
   userRsvps: state.account.userRsvps,
   rsvps: state.account.rsvps,
-  fetching: state.transaction.activeCalls > 0,
+  fetching: state.calls.activeCalls > 0,
   message: state.transaction.message,
   displayed: state.transaction.message.status,
   history: ownProps.history
@@ -382,8 +457,8 @@ const mapDispatchToProps = dispatch => ({
   changeAttendance: (attendanceDetails) => {
     dispatch(userAttendanceChange(attendanceDetails));
   },
-  rsvpEvent: (eventId) => {
-    dispatch(eventRsvp(eventId, this.props.user.email));
+  rsvpEvent: (eventId, email) => {
+    dispatch(eventRsvp(eventId, email));
   },
   loginUser: (userDetails) => {
     dispatch(loginUser(userDetails));

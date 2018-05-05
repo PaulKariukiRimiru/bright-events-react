@@ -61,7 +61,7 @@ export default class StepperComponent extends Component {
         <Button primary='true' onClick={this.handleStepNext}>{step === this.props.steps
             ? 'Finish'
             : 'next'}</Button>
-        {thisStep > 0 && <Button label="back" disabled={step === 0} onClick={this.handleStepPrev}></Button>
+        {thisStep > 0 && <Button disabled={step === 0} onClick={this.handleStepPrev}>Back</Button>
         }
       </div>
     );

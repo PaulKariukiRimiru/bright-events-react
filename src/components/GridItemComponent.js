@@ -10,7 +10,8 @@ import {
   TextField,
   Checkbox,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Button
 } from 'material-ui';
 import Save from '@material-ui/icons/Save';
 import Ticket from '@material-ui/icons/PlusOne';
@@ -19,20 +20,30 @@ import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import { Row, Col, Grid } from 'react-flexbox-grid';
 import { blue } from 'material-ui/colors';
-
 export default class GridItemComponent extends Component {
   state = {
     selected: false,
-    editMode: false
+    editMode: false,
+    attendance: false
   }
 
   cardStyle = {
-    maxWidth: 260,
+    maxWidth: 220,
+    maxHeight: 280,
     marginLeft: 'auto',
     marginRight: 'auto'
   }
 
+  placeHolderStyle = {
+    height: 100,
+    backgroundColor: blue[200]
+  }
+
   handleFabClick = () => {}
+
+  componentDidMount() {
+    this.setState({ attendance: this.props.event.attendance });
+  }
 
   handleEventDelete = () => {
     this
@@ -81,6 +92,7 @@ export default class GridItemComponent extends Component {
   }
 
   onToggleAttendance = () => {
+    this.setState({ attendance: !this.state.attendance });
     this
       .props
       .handleAttendanceToggle(this.props.event.id, !this.props.event.attendance);
@@ -89,14 +101,10 @@ export default class GridItemComponent extends Component {
   renderDashboard() {
     const { event } = this.props;
     return (
-      <Card style={this.cardStyle}>
+      <Card style={{ ...this.cardStyle, maxHeight: 330 }}>
         <CardMedia>
           <div
-            style={{
-            height: 150,
-            backgroundImage: `url(${require('../images/guitar.jpg')})`,
-            backgroundSize: 'cover'
-          }}></div>
+            style={this.placeHolderStyle}></div>
         </CardMedia>
 
         <CardContent >
@@ -139,7 +147,7 @@ export default class GridItemComponent extends Component {
                 }}/>
               </div>
             : <div>
-              <Typography gutterBottom variant="display1" component="h2" noWrap={true}>
+              <Typography gutterBottom variant="display1" component="h2" noWrap={true} style={{ fontSize: 20 }}>
                 {event.name}
               </Typography>
               <Typography component='subheading'>
@@ -152,10 +160,10 @@ export default class GridItemComponent extends Component {
                 {event.time
                   ? new Date(event.time).toDateString()
                   : new Date(event.date).toDateString()
-}
+                }
               </Typography>
             </div>
-}
+          }
         </CardContent>
         <CardActions>
 
@@ -197,7 +205,7 @@ export default class GridItemComponent extends Component {
                 </IconButton>
               </Col>
             </Row>
-}
+          }
         </CardActions>
       </Card>
     );
@@ -209,33 +217,31 @@ export default class GridItemComponent extends Component {
       <Card style={this.cardStyle}>
         <CardMedia>
           <div
-            style={{
-            height: 100,
-            backgroundColor: blue[400]
-          }}/>
+            style={this.placeHolderStyle}/>
         </CardMedia>
         <CardContent >
 
-          <Typography gutterBottom variant="headline" component="h2" noWrap={true}>
+          <Typography variant="display1" component="h2" noWrap={true} style={{ fontSize: 20 }}>
             {event.name}
           </Typography>
           <Typography component="p">
-            Happening at {event.location} On {event.time
+            Happening at <br />{event.location} On <br/>{event.time
               ? new Date(event.time).toDateString()
               : new Date(event.date).toDateString()}
           </Typography>
         </CardContent>
         <CardActions>
-          <IconButton
+          <Button
             onClick={this.handleClick}
             style={{
             marginLeft: 'auto',
-            marginRight: 'auto'
+            marginRight: 'auto',
+            marginTop: 9,
+            marginBottom: 1
           }}
-            color='#FF3D00'
             aria-label='Reserve event'>
-            <Ticket/>
-          </IconButton>
+            Reserve event
+          </Button>
         </CardActions>
       </Card>
     );
@@ -243,19 +249,15 @@ export default class GridItemComponent extends Component {
 
   renderUserRsvps() {
     const { event } = this.props;
-
+    const { attendance } = this.state;
     return (
-      <Card style={this.cardStyle}>
+      <Card style={{maxWidth: 220}}>
         <CardMedia>
           <div
-            style={{
-            height: 150,
-            backgroundImage: `url(${require('../images/guitar.jpg')})`,
-            backgroundSize: 'cover'
-          }}></div>
+            style={this.placeHolderStyle}></div>
         </CardMedia>
         <CardContent >
-          <Typography gutterBottom variant="headline" component="h2" noWrap={true}>
+          <Typography variant="display1" component="h2" noWrap={true} style={{ fontSize: 20 }}>
             {event.name}
           </Typography>
           <Typography component='h5'>
@@ -265,42 +267,49 @@ export default class GridItemComponent extends Component {
             {event.category}
           </Typography>
           <Typography component="h6">
-            {event.time
+            {
+              event.time
               ? new Date(event.time).toDateString()
               : new Date(event.date).toDateString()
-}
+            }
           </Typography>
         </CardContent>
         <CardActions >
-          <Row>
-            <Col xs={12}>
-              <Checkbox
-                label={event.accepted
-                ? 'Reservation Accepted'
-                : 'Reservation Declined'}
-                disabled={true}/>
-            </ Col>
-          </ Row>
-          <Row middle="xs">
-            <Col xs={8}>
+          <Grid fluid>
+            <Row>
               <FormControlLabel
-                control={< Switch checked = {
-                event.attendance
-              }
-              onChange = {
-                this.onToggleAttendance
-              }
-              value = "attendance" />}
-                label={event.attendance
-                ? 'Coming'
-                : 'Not Going'}/>
-            </Col>
-            <Col xs={4}>
-              <IconButton onClick={this.handleRsvpDelete} aria-label='Delete rsvp'>
-                < Delete color="#FFAB91"/>
-              </IconButton>
-            </Col>
-          </Row>
+                control={
+                  <Checkbox
+                    checked={event.accepted}
+                    disabled={true}
+                  />
+                }
+                label = {
+                  event.accepted ?
+                  'Reservation Accepted' :
+                    'Reservation Declined'
+                }
+              />
+            </Row>
+            <Row>
+              <Col xs={8}>
+                <FormControlLabel
+                  control={< Switch checked = { attendance }
+                    onChange = {
+                      this.onToggleAttendance
+                    }
+                    value = "attendance" />}
+                  label={attendance
+                  ? 'Coming'
+                  : 'Not Going'}/>
+                </Col>
+                <Col xs={4}>
+                  <IconButton onClick={this.handleRsvpDelete} aria-label='Delete rsvp'>
+                    < Delete />
+                  </IconButton>
+                </Col>
+            </Row>
+          </Grid>
         </CardActions>
       </Card>
     );

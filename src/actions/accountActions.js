@@ -56,50 +56,60 @@ const userDeleteRsvpAction = payload => ({ type: USER_DELETE_RSVP, payload });
 
 export const userDeleteRsvp = payload => (dispatch) => {
   dispatch(fetchingAction(true));
-  axios({ 
-method: 'delete', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload
- }).then((resp) => {
-    dispatch(userDeleteRsvpAction(resp.data.payload));
-  }).catch((error) => {
-    if (error.response) {
-      return (dispatch(erroredAction(error.response.data.message)));
-    }
-    return (dispatch(erroredAction(error.message)));
-  });
+  axios({
+    method: 'delete', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload
+  })
+    .then((resp) => {
+      dispatch(userDeleteRsvpAction(resp.data.payload));
+    })
+    .then(() => dispatch(fetchedAction(true, 'Events fetched')))
+    .catch((error) => {
+      if (error.response) {
+        return (dispatch(erroredAction(error.response.data.message)));
+      }
+      return (dispatch(erroredAction(error.message)));
+    });
 };
 
 export const userAttendanceChange = payload => (dispatch) => {
   dispatch(fetchingAction(true));
-  axios({ 
-method: 'put', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload 
-}).then((resp) => {
-    dispatch(userRsvpAttendanceAction(resp.data.payload));
-  }).catch((error) => {
-    if (error.response) {
-      return (dispatch(erroredAction(error.response.data.message)));
-    }
-    return (dispatch(erroredAction(error.message)));
-  });
+  axios({
+    method: 'put', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload 
+  })
+    .then((resp) => {
+      dispatch(userRsvpAttendanceAction(resp.data.payload));
+    })
+    .then(() => dispatch(fetchedAction(true, 'Events fetched')))
+    .catch((error) => {
+      if (error.response) {
+        return (dispatch(erroredAction(error.response.data.message)));
+      }
+      return (dispatch(erroredAction(error.message)));
+    });
 };
 
 export const userRsvpsGet = () => (dispatch) => {
   dispatch(fetchingAction(true));
-  axios({ method: 'get', headers, url: `${BASE_URL}/api/v2/events/rsvp` }).then((resp) => {
-    dispatch(userRsvpsGetAction(resp.data.payload.events));
-  }).catch((error) => {
-    if (error.response) {
-      return (dispatch(erroredAction(error.response.data.message)));
-    }
-    return (dispatch(erroredAction(error.message)));
-  });
+  axios({ method: 'get', headers, url: `${BASE_URL}/api/v2/events/rsvp` })
+    .then((resp) => {
+      dispatch(userRsvpsGetAction(resp.data.payload.events));
+    })
+    .then(() => dispatch(fetchedAction(true, 'User reservations fetched')))
+    .catch((error) => {
+      if (error.response) {
+        return (dispatch(erroredAction(error.response.data.message)));
+      }
+      return (dispatch(erroredAction(error.message)));
+    });
 };
 
 export const eventSearch = (params = {}, body = {}) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
- method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers, params, body 
-})
+    method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers, params, body 
+  })
     .then(resp => (dispatch(eventSearchAction(resp.data.payload.event_list))))
+    .then(() => dispatch(fetchedAction(true, 'Events search successful')))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -120,6 +130,7 @@ export const eventFilter = body => (dispatch) => {
     body
   })
     .then(resp => (dispatch(eventSearchAction(resp.data.payload.event_list))))
+    .then(() => dispatch(fetchedAction(true, 'Events filtered')))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -132,6 +143,7 @@ export const eventRsvpGet = id => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers })
     .then(resp => (dispatch(eventRsvpAction(resp.data.payload))))
+    .then(() => dispatch(fetchedAction(true, 'Events reservations fetched')))
     .catch((error) => {
       if (error.response) {
         return (dispatch(rsvpGetFailed(error.response.data.message)));
@@ -141,10 +153,11 @@ export const eventRsvpGet = id => (dispatch) => {
 };
 
 export const eventEdit = (id, payload) => (dispatch) => {
-  axios({ 
-method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers 
-})
+  axios({
+    method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers 
+  })
     .then(resp => (dispatch(eventEditAction(resp.data.payload))))
+    .then(() => dispatch(fetchedAction(true, 'Events edited')))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -156,6 +169,7 @@ method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers
 export const eventDelete = eventId => (dispatch) => {
   axios({ method: 'delete', headers, url: `${BASE_URL}/api/v2/events/${eventId}` })
     .then(resp => (dispatch(eventDeleteAction(eventId))))
+    .then(() => dispatch(fetchedAction(true, 'Event deleted')))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -167,9 +181,10 @@ export const eventDelete = eventId => (dispatch) => {
 export const eventManageRsvp = (id, details) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
- method: 'put', headers, url: `${BASE_URL}/api/v2/event/${id}/rsvp`, data: details
- })
+    method: 'put', headers, url: `${BASE_URL}/api/v2/event/${id}/rsvp`, data: details
+  })
     .then(resp => (dispatch(eventManageRsvpAction(resp.data.payload))))
+    .then(() => dispatch(fetchedAction(true, 'success')))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -184,10 +199,11 @@ export const eventRsvp = (event, email) => {
   };
   return (dispatch) => {
     dispatch(fetchingAction(true));
-    axios({ 
+    axios({
       method: 'post', url: `${BASE_URL}/api/v2/event/${event}/rsvp`, data: clientDetails, headers
     })
       .then(resp => (dispatch(displayMessageAction({ status: true, message: 'event reserved successfully' }))))
+      .then(() => dispatch(fetchedAction(true, 'Reserved event')))
       .catch((error) => {
         if (error.response) {
           return (dispatch(erroredAction(error.response.data.message)));
@@ -224,16 +240,20 @@ export const eventPost = (payload) => {
   return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({
- method: 'post', url: `${BASE_URL}/api/v2/events`, headers, data: eventDetails
-}).then((resp) => {
-      eventDetails.id = resp.data.payload.event_id;
-      return (dispatch(eventsPostAction(eventDetails)));
-    }).then(() => (dispatch(fetchedAction(true, EVENT_ADDED_SUCCESSFULLY)))).catch((error) => {
-      if (error.response) {
-        return (dispatch(erroredAction(error.response.data.message)));
-      }
-      return (dispatch(erroredAction(error.message)));
-    });
+      method: 'post', url: `${BASE_URL}/api/v2/events`, headers, data: eventDetails
+    })
+      .then((resp) => {
+        eventDetails.id = resp.data.payload.event_id;
+        eventDetails.host = eventDetails.host.toString();
+        return (dispatch(eventsPostAction(eventDetails)));
+      })
+      .then(() => (dispatch(fetchedAction(true, EVENT_ADDED_SUCCESSFULLY))))
+      .catch((error) => {
+        if (error.response) {
+          return (dispatch(erroredAction(error.response.data.message)));
+        }
+        return (dispatch(erroredAction(error.message)));
+      });
   };
 };
 
@@ -247,16 +267,18 @@ export const registerUser = (payload) => {
   return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({
- method: 'post', url: `${BASE_URL}/api/v2/auth/register`, data: userDetails, headers
-}).then((resp) => {
-      message = REGISTER_SUCCESS_MESSAGE;
-      return (dispatch(fetchedAction(true, message)));
-    }).catch((error) => {
-      if (!error.response) {
-        return (dispatch(erroredAction(error.message)));
-      }
-      return (dispatch(erroredAction(error.response.data.message)));
-    });
+      method: 'post', url: `${BASE_URL}/api/v2/auth/register`, data: userDetails, headers
+    })
+      .then((resp) => {
+        message = REGISTER_SUCCESS_MESSAGE;
+        return (dispatch(fetchedAction(true, message)));
+      })
+      .catch((error) => {
+        if (!error.response) {
+          return (dispatch(erroredAction(error.message)));
+        }
+        return (dispatch(erroredAction(error.response.data.message)));
+      });
   };
 };
 
@@ -267,17 +289,19 @@ export const logoutUser = (payload, history) => {
   return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({
- method: 'post', url: `${BASE_URL}/api/v2/auth/logout`, headers, data
- }).then((resp) => {
-      localStorage.clear();
-      history.push('/');
-      return (dispatch(logoutAction(resp.data.payload)));
-    }).catch((error) => {
-      if (!error.response) {
-        return (dispatch(erroredAction(error.message)));
-      }
-      return (dispatch(erroredAction(error.response.data.message)));
-    });
+      method: 'post', url: `${BASE_URL}/api/v2/auth/logout`, headers, data
+    })
+      .then((resp) => {
+        localStorage.clear();
+        history.push('/');
+        return (dispatch(logoutAction(resp.data.payload)));
+      })
+      .catch((error) => {
+        if (!error.response) {
+          return (dispatch(erroredAction(error.message)));
+        }
+        return (dispatch(erroredAction(error.response.data.message)));
+      });
   };
 };
 
@@ -291,14 +315,17 @@ export const loginUser = (payload, history) => {
     dispatch(fetchingAction(true));
     axios({
       method: 'post', url: `${BASE_URL}/api/v2/auth/login`, header: headers, data: userDetails
-    }).then((resp) => {
-      message = LOGIN_SUCCESS_MESSAGE;
-      return (dispatch(loginAction(resp.data)));
-    }).then(() => dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE))).catch((error) => {
-      if (error.response) {
-        return (dispatch(erroredAction(error.response.data.message)));
-      }
-      return (dispatch(erroredAction(error.message)));
-    });
+    })
+      .then((resp) => {
+        message = LOGIN_SUCCESS_MESSAGE;
+        return (dispatch(loginAction(resp.data)));
+      })
+      .then(() => dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
+      .catch((error) => {
+        if (error.response) {
+          return (dispatch(erroredAction(error.response.data.message)));
+        }
+        return (dispatch(erroredAction(error.message)));
+      });
   };
 };

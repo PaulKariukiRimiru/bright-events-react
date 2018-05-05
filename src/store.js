@@ -11,7 +11,7 @@ const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['transaction']
+  blacklist: ['transaction', 'account.activeCalls']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
