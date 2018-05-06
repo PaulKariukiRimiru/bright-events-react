@@ -62,7 +62,6 @@ class NotificationComponent extends React.Component {
       return;
     }
     this.setState({ open: false });
-    this.props.handleDialogClose();
   };
 
   handleExited = () => {

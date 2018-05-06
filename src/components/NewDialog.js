@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import Dialog, {
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  withMobileDialog
+} from 'material-ui/Dialog';
 import { Tab, Tabs } from 'material-ui';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
@@ -21,6 +26,12 @@ class NewDialog extends React.Component {
   handleChange = (event, value) => {
     this.setState({ value });
   }
+  handleRegister = (userDetails) => {
+    this.props.handleRegister(userDetails);
+    this.forceUpdate(() => {
+      this.setState({ value: 0 });
+    });
+  }
 
   renderAccount = () => {
     const {
@@ -28,7 +39,6 @@ class NewDialog extends React.Component {
       open,
       title,
       handleLogin,
-      handleRegister,
       onChange,
       loading
     } = this.props;
@@ -49,7 +59,7 @@ class NewDialog extends React.Component {
             </Tabs>
             <SwipableViews index={value}>
               <Login handleLogin={handleLogin} onChange={onChange}/>
-              <Register handleRegister={handleRegister} onChange={onChange}/>
+              <Register handleRegister={this.handleRegister} onChange={onChange}/>
             </SwipableViews>
             <Fade
               in={loading}
@@ -123,6 +133,38 @@ class NewDialog extends React.Component {
     );
   }
 
+  renderConfirmation = () => {
+    const {
+      title,
+      description,
+      open,
+      yes,
+      no
+    } = this.props;
+    return (
+      <Dialog
+          open={open}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {description}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={no} color="primary">
+              Disagree
+            </Button>
+            <Button onClick={yes} color="primary">
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
+    );
+  }
+
   render() {
     switch (this.props.view) {
       case 'account':
@@ -131,6 +173,8 @@ class NewDialog extends React.Component {
         return this.renderCreateEvent();
       case 'rsvpList':
         return this.renderRsvps();
+      case 'confirmation':
+        return this.renderConfirmation();
       default:
         return <div/>;
     }

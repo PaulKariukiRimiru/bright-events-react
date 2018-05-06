@@ -84,11 +84,12 @@ export default class StepperComponent extends Component {
                   {item
                     .fields
                     .map((item, index) => (
-                        <Row middle="xs" key={index}>
+                        <Row middle='xs' key={index}>
                           <Col xs={6}>
                             {item.name === 'time'
                               ?
                               <TextField
+                                required
                                 name={item.name}
                                 refs={item.name}
                                 label={this.state.form[item.name]
@@ -101,6 +102,7 @@ export default class StepperComponent extends Component {
                                 onChange={this.onChange}
                               />
                               : <TextField
+                                  required
                                   label={this.state.form[item.name]
                                   ? this.state.form[item.name]
                                   : item.name}

@@ -71,7 +71,7 @@ export const userDeleteRsvp = payload => (dispatch) => {
     });
 };
 
-export const userAttendanceChange = payload => (dispatch) => {
+export const userAttendanceChange = (payload, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
     method: 'put', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload 
@@ -80,6 +80,7 @@ export const userAttendanceChange = payload => (dispatch) => {
       dispatch(userRsvpAttendanceAction(resp.data.payload));
     })
     .then(() => dispatch(fetchedAction(true, 'Events fetched')))
+    .then(() => callBack())
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -139,11 +140,12 @@ export const eventFilter = body => (dispatch) => {
     });
 };
 
-export const eventRsvpGet = id => (dispatch) => {
+export const eventRsvpGet = (id, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers })
     .then(resp => (dispatch(eventRsvpAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events reservations fetched')))
+    .then(() => callBack())
     .catch((error) => {
       if (error.response) {
         return (dispatch(rsvpGetFailed(error.response.data.message)));
@@ -213,13 +215,14 @@ export const eventRsvp = (event, email) => {
   };
 };
 
-export const eventsGet = (payload) => {
+export const eventsGet = (callBack) => {
   const message = '';
   return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({ url: `${BASE_URL}/api/v2/events`, method: 'get', headers })
       .then(resp => (dispatch(eventsGetAction(resp.data.payload))))
       .then(() => dispatch(fetchedAction(true, 'Events fetched')))
+      .then(() => callBack())
       .catch((error) => {
         if (error.response) {
           return (dispatch(erroredAction(error.response.data.message)));
@@ -257,7 +260,7 @@ export const eventPost = (payload) => {
   };
 };
 
-export const registerUser = (payload) => {
+export const registerUser = (payload, callBack) => {
   let message = '';
   const userDetails = {
     username: payload.username,
@@ -273,6 +276,7 @@ export const registerUser = (payload) => {
         message = REGISTER_SUCCESS_MESSAGE;
         return (dispatch(fetchedAction(true, message)));
       })
+      .then(() => callBack())
       .catch((error) => {
         if (!error.response) {
           return (dispatch(erroredAction(error.message)));
@@ -305,8 +309,7 @@ export const logoutUser = (payload, history) => {
   };
 };
 
-export const loginUser = (payload, history) => {
-  let message = '';
+export const loginUser = (payload, callBack) => {
   const userDetails = {
     email: payload.email,
     password: payload.password
@@ -317,10 +320,10 @@ export const loginUser = (payload, history) => {
       method: 'post', url: `${BASE_URL}/api/v2/auth/login`, header: headers, data: userDetails
     })
       .then((resp) => {
-        message = LOGIN_SUCCESS_MESSAGE;
         return (dispatch(loginAction(resp.data)));
       })
       .then(() => dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
+      .then(() => callBack())
       .catch((error) => {
         if (error.response) {
           return (dispatch(erroredAction(error.response.data.message)));

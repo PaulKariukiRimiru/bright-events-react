@@ -1,4 +1,4 @@
-import {FETCHING, FETCHED, ERRORED, RSVP_MANAGE_FAILED } from '../Constants/action_type';
+import { FETCHING, FETCHED, ERRORED, RSVP_MANAGE_FAILED } from '../Constants/action_type';
 import initialState from '../Constants/initialState';
 
 const CallsReducer = (state = initialState.activeCalls, action) => {

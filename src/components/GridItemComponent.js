@@ -20,11 +20,18 @@ import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import { Row, Col, Grid } from 'react-flexbox-grid';
 import { blue } from 'material-ui/colors';
+import Close from '@material-ui/icons/Close';
+import NewDialog from './NewDialog';
+
 export default class GridItemComponent extends Component {
   state = {
     selected: false,
     editMode: false,
-    attendance: false
+    attendance: false,
+    open: false,
+    title: '',
+    description: '',
+    actionType: ''
   }
 
   cardStyle = {
@@ -39,10 +46,10 @@ export default class GridItemComponent extends Component {
     backgroundColor: blue[200]
   }
 
-  handleFabClick = () => {}
-
-  componentDidMount() {
-    this.setState({ attendance: this.props.event.attendance });
+  handleEditClose = () => {
+    this.setState({
+      editMode: false
+    });
   }
 
   handleEventDelete = () => {
@@ -72,6 +79,24 @@ export default class GridItemComponent extends Component {
       .onEditSubmit(this.props.event.id);
   }
 
+  confirmDelete = () => {
+    this.setState({
+      open: true,
+      title: 'Confirm action',
+      actionType: 'delete',
+      description: 'Are you sure you want to delete this event?'
+    });
+  }
+
+  confirmEdit = () => {
+    this.setState({
+      open: true,
+      title: 'Confirm action',
+      actionType: 'edit',
+      description: 'Are you sure you want to edit this event?'
+    });
+  }
+
   handleClick = () => {
     if (localStorage.getItem(TOKEN)) {
       this.setState({ selected: true });
@@ -91,16 +116,24 @@ export default class GridItemComponent extends Component {
       .onRsvpRequest(this.props.event.id);
   }
 
-  onToggleAttendance = () => {
-    this.setState({ attendance: !this.state.attendance });
+  onToggleAttendance = (event, checked) => {
+    this.setState({ attendance: checked });
     this
       .props
       .handleAttendanceToggle(this.props.event.id, !this.props.event.attendance);
   }
 
+  handeDialogClose = () => {
+    this.setState({
+      open: false
+    });
+  }
+
   renderDashboard() {
     const { event } = this.props;
+    const { open, title, description, actionType } = this.state;
     return (
+      <div>
       <Card style={{ ...this.cardStyle, maxHeight: 330 }}>
         <CardMedia>
           <div
@@ -172,8 +205,13 @@ export default class GridItemComponent extends Component {
                 padding: 2
               }}>
                 <Col xs={4}>
-                  <IconButton color='#CE93D8' aria-label='save' onClick={this.handleEditSubmit}>
+                  <IconButton color='#CE93D8' aria-label='save' onClick={this.confirmEdit}>
                     <Save/>
+                  </IconButton>
+                </Col>
+                <Col xs={4}>
+                  <IconButton color='#CE93D8' aria-label='close' onClick={this.handleEditClose}>
+                    <Close/>
                   </IconButton>
                 </Col>
               </Row>
@@ -198,7 +236,7 @@ export default class GridItemComponent extends Component {
               </Col>
               <Col xs={4}>
                 <IconButton
-                  onClick={this.handleEventDelete}
+                  onClick={this.confirmDelete}
                   color="#FFAB91"
                   aria-label='Delete Event'>
                   <Delete/>
@@ -208,6 +246,15 @@ export default class GridItemComponent extends Component {
           }
         </CardActions>
       </Card>
+      <NewDialog
+        open={open}
+        view='confirmation'
+        title={title}
+        description={description}
+        yes={actionType === 'delete' ? this.handleRsvpDelete : this.handleEditSubmit }
+        no={this.handeDialogClose}
+      />
+      </div>
     );
   }
 
@@ -251,13 +298,13 @@ export default class GridItemComponent extends Component {
     const { event } = this.props;
     const { attendance } = this.state;
     return (
-      <Card style={{maxWidth: 220}}>
+      <Card style={{ maxWidth: 220 }}>
         <CardMedia>
           <div
             style={this.placeHolderStyle}></div>
         </CardMedia>
         <CardContent >
-          <Typography variant="display1" component="h2" noWrap={true} style={{ fontSize: 20 }}>
+          <Typography variant='display1' component='h2' noWrap={true} style={{ fontSize: 20 }}>
             {event.name}
           </Typography>
           <Typography component='h5'>
@@ -266,7 +313,7 @@ export default class GridItemComponent extends Component {
           <Typography component='h5'>
             {event.category}
           </Typography>
-          <Typography component="h6">
+          <Typography component='h6'>
             {
               event.time
               ? new Date(event.time).toDateString()
@@ -294,11 +341,11 @@ export default class GridItemComponent extends Component {
             <Row>
               <Col xs={8}>
                 <FormControlLabel
-                  control={< Switch checked = { attendance }
-                    onChange = {
-                      this.onToggleAttendance
-                    }
-                    value = "attendance" />}
+                  control={
+                    < Switch checked = { attendance }
+                      onChange = { this.onToggleAttendance }
+                      value = "attendance" />
+                  }
                   label={attendance
                   ? 'Coming'
                   : 'Not Going'}/>
@@ -315,7 +362,7 @@ export default class GridItemComponent extends Component {
     );
   }
 
-  render() {
+  render() {    
     switch (this.props.view) {
       case 1:
         return this.renderDashboard();
