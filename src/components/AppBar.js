@@ -9,6 +9,8 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Hidden from 'material-ui/Hidden';
+import isObjectEmpty from 'is-empty-object';
+import { white } from 'material-ui/colors';
 
 const styles = {
   menuButton: {
@@ -18,7 +20,7 @@ const styles = {
 };
 
 const MyAppBar = (props) => {
-  const {classes, openDrawer, showAccountDialog } = props;
+  const {classes, openDrawer, showAccountDialog, logout, user } = props;
   return (
     <AppBar position="static">
       <Toolbar>
@@ -34,16 +36,34 @@ const MyAppBar = (props) => {
         <Typography variant="title" color="inherit">
           Bright Events
         </Typography>
-        <IconButton
-          style={{
-          marginLeft: 'auto',
-          marginRight: 8
-        }}
-          color="inherit"
-          aria-label='Account options'
-          onClick={showAccountDialog}>
-          <AccountCircle />
-        </IconButton>
+        {
+          !isObjectEmpty(user) ? 
+          <div style={{
+                marginLeft: 'auto',
+                marginRight: 8
+              }}>
+            <Button
+              color="inherit"
+              aria-label='Account options'>
+              <AccountCircle style={{ marginRight: 4 }}/>
+              {user.username}
+            </Button>
+            <Button color='inherit' aria-label='Account options' onClick={logout}>
+              Logout
+            </Button>
+          </div> :
+          <IconButton
+              color='inherit'
+              aria-label='Account'
+              style={{
+                marginLeft: 'auto',
+                marginRight: 8
+              }}
+              onClick={showAccountDialog}>
+              <AccountCircle />
+          </IconButton>
+        }
+        
       </Toolbar>
     </AppBar>
   );

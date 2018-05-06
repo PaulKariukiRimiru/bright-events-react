@@ -12,6 +12,7 @@ import Hidden from 'material-ui/Hidden';
 import FilterForm from '../components/FilterFormComponent';
 import GridCard from '../components/GridItemComponent';
 import {
+  logoutUser,
   loginUser,
   registerUser,
   eventPost,
@@ -64,6 +65,12 @@ export class NewHome extends Component {
     events: [],
     location: '',
     category: ''
+  }
+
+  logout = () => {
+    this.props.logoutUser(this.props.user.id, () => {
+      localStorage.clear();
+    });
   }
 
   displayAllEvents = () => {
@@ -351,8 +358,10 @@ export class NewHome extends Component {
         margin: 0
       }}>
         <MyAppBar
+          user={user}
           openDrawer={this.toggleDrawer}
-          showAccountDialog={this.showAccountDialog}/>
+          showAccountDialog={this.showAccountDialog}
+          logout={this.logout}/>
         <SwipeableDrawer
           open={this.state.drawerOpen}
           onOpen={this.toggleDrawer}
@@ -516,6 +525,7 @@ export class NewHome extends Component {
           handleRegister={this.handleRegistrationFormSubmit}
           onToggleRsvpStatus={this.onToggleRsvpStatus}
           closeDialog={this.handleClose}
+          handleClose={this.handleClose}
           rsvpList={rsvps}/>
         <Button
           style={fabStyle}
@@ -580,6 +590,9 @@ const mapDispatchToProps = dispatch => ({
   },
   registerUser: (userDetails, callBack) => {
     dispatch(registerUser(userDetails, callBack));
+  },
+  logoutUser: (userId, callBack) => {
+    dispatch(logoutUser(userId, callBack));
   }
 
 });

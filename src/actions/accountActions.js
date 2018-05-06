@@ -286,7 +286,7 @@ export const registerUser = (payload, callBack) => {
   };
 };
 
-export const logoutUser = (payload, history) => {
+export const logoutUser = (payload, callBack) => {
   const data = {
     id: payload
   };
@@ -296,10 +296,9 @@ export const logoutUser = (payload, history) => {
       method: 'post', url: `${BASE_URL}/api/v2/auth/logout`, headers, data
     })
       .then((resp) => {
-        localStorage.clear();
-        history.push('/');
         return (dispatch(logoutAction(resp.data.payload)));
       })
+      .then(() => callBack())
       .catch((error) => {
         if (!error.response) {
           return (dispatch(erroredAction(error.message)));

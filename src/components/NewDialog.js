@@ -39,13 +39,14 @@ class NewDialog extends React.Component {
       open,
       title,
       handleLogin,
+      handleClose,
       onChange,
       loading
     } = this.props;
     const { value } = this.state;
     return (
       <div>
-        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title}>
+        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title} onClose={handleClose}>
           <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
           <DialogContent>
             <Tabs
