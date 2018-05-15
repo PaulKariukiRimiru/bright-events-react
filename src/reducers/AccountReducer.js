@@ -11,7 +11,8 @@ import {
   EVENT_SEARCH,
   USER_RSVPS_GET_SUCCESS,
   USER_RSVP_ATTENDANCE_CHANGE,
-  USER_DELETE_RSVP
+  USER_DELETE_RSVP,
+  LOGOUT_SUCCESS
 } from '../Constants/action_type';
 import initialState from '../Constants/initialState';
 import jwt_decode from 'jwt-decode';
@@ -29,8 +30,15 @@ const AccountReducer = (state = initialState, action) => {
           ...state.user,
           email: myUser.identity.email,
           username: myUser.identity.username,
-          id: myUser.identity.id
+          id: myUser.identity.id,
+          token: action.payload.payload.token
         }
+      };
+    case LOGOUT_SUCCESS:
+      localStorage.removeItem(TOKEN);
+      return {
+        ...state,
+        user: {}
       };
     case EVENT_POST_SUCCESS:
       return {

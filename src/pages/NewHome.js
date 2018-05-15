@@ -1,16 +1,15 @@
 import {connect} from 'react-redux';
+import {Grid} from 'react-flexbox-grid';
+import {Typography, SwipeableDrawer, Chip, CircularProgress } from 'material-ui';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'material-ui/ExpansionPanel';
+import GridComponent from 'material-ui/Grid';
+import Hidden from 'material-ui/Hidden';
 import React, {Component} from 'react';
 
-import {Typography, SwipeableDrawer, Chip} from 'material-ui';
-import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'material-ui/ExpansionPanel';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import GridComponent from 'material-ui/Grid';
-import Account from '@material-ui/icons/AccountCircle';
-import MenuIcon from '@material-ui/icons/Menu';
-import {Grid} from 'react-flexbox-grid';
-import Hidden from 'material-ui/Hidden';
 import FilterForm from '../components/FilterFormComponent';
 import GridCard from '../components/GridItemComponent';
+
 import {
   logoutUser,
   loginUser,
@@ -63,21 +62,29 @@ export class NewHome extends Component {
     displayed: 'allEvents',
     title: '',
     events: [],
-    location: '',
-    category: ''
+    location: [],
+    category: []
   }
 
   logout = () => {
-    this.props.logoutUser(this.props.user.id, () => {
-      localStorage.clear();
+    this.props.logoutUser(this.props.user.id, this.callBack);
+  }
+
+  sortFilterItems = () => {
+    this.setState({
+      location: [...new Set(this.state.location)],
+      category: [...new Set(this.state.category)],
     });
   }
 
   displayAllEvents = () => {
     this.setState({
       displayed: 'allEvents',
+      location: this.props.events.map((event, i) => event.location),
+      category: this.props.events.map((event, i) => event.category),
       events: this.props.events
     });
+    this.sortFilterItems();
   }
 
   displayUserEvents = () => {
@@ -163,7 +170,11 @@ export class NewHome extends Component {
   handleRsvpClick = (eventId) => {
     this
       .props
-      .rsvpEvent(eventId, this.props.user.email);
+      .rsvpEvent(eventId, this.props.user.email, () => {
+        this
+          .props
+          .getUserRsvps();
+      });
   }
 
   toggleDrawer = () => {
@@ -189,7 +200,7 @@ export class NewHome extends Component {
   onDeleteSubmit = (eventId) => {
     this
       .props
-      .deleteEvent(eventId);
+      .deleteEvent(eventId, this.callBack);
   }
 
   onRsvpDelete = (eventId) => {
@@ -216,16 +227,14 @@ export class NewHome extends Component {
       this
         .props
         .editEvent(id, this.state.editForm);
-      this.setState({ editForm: {} });
+      this.setState({ editForm: {}, showDialog: false });
     }
   }
 
   onRsvpRequest = (id) => {
     this
       .props
-      .fetchRsvps(id, () => {
-        this.showRsvpListDialog();
-      });
+      .fetchRsvps(id, this.callBack);
   }
 
   onToggleRsvpStatus = (id, status, email) => {
@@ -246,14 +255,14 @@ export class NewHome extends Component {
     eventDetails.token = localStorage.getItem(TOKEN);
     this
       .props
-      .createEvent(eventDetails);
+      .createEvent(eventDetails, this.callBack);
   }
 
   handleAttendanceToggle = (eventId, attendance) => {
     this
       .props
       .changeAttendance({ event_id: eventId, attendance }, () => {
-        this.forceUpdate();
+        this.displayUserRsvps();
       });
   }
 
@@ -286,34 +295,61 @@ export class NewHome extends Component {
   componentDidMount() {
     this
       .props
-      .getEvents(() => {
-        this
-          .props
-          .getUserRsvps();
-      });
+      .getEvents(this.callBack);
     this.displayAllEvents();
   }
 
-  locationSelect = (location) => (event) => {
+  locationSelect = location => (event) => {
     this.setState({
-      events: this.state.events.filter((event) => event.location === location)
+      events: this.state.events.filter(selectedEvent => selectedEvent.location === location)
     });
   }
 
-  categorySelect = (category) => (event) => {
+  categorySelect = category => (event) => {
     this.setState({
-      events: this.state.events.filter((event) => event.category === category)
+      events: this.state.events.filter(selectedEvent => selectedEvent.category === category)
     });
   }
 
   onSearchChange = (eventer) => {
     this.setState({
-      events: this.props.events.filter((event) => event.name.includes(eventer.target.value.toLowerCase()))
+      events: this.props.events.filter(selectedEvent => selectedEvent.name.includes(eventer.target.value.toLowerCase()))
     })
   }
 
+
+  callBack = (method) => {
+    console.log('>>>>>>>>>>', method);
+    
+    switch (method) {
+      case 'logout':
+        localStorage.clear();
+        this.props.history.push('/');
+        break;
+      case 'deleteEvent':
+        this.displayAllEvents();
+        break;
+      case 'requestRsvp':
+        this.showRsvpListDialog();
+        break;
+      case 'fetchEvents':
+        this.props.getUserRsvps();
+        break;
+      case 'createEvent':
+        this.displayAllEvents();
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
-    const { user, fetching, message, rsvps } = this.props;
+    const {
+      user,
+      fetching,
+      message,
+      rsvps
+    } = this.props;
     const { filterSelection, showDialog, view, title, events, displayed, location, category } = this.state;
     const fabStyle = {
       position: 'fixed',
@@ -362,6 +398,7 @@ export class NewHome extends Component {
           openDrawer={this.toggleDrawer}
           showAccountDialog={this.showAccountDialog}
           logout={this.logout}/>
+
         <SwipeableDrawer
           open={this.state.drawerOpen}
           onOpen={this.toggleDrawer}
@@ -425,7 +462,7 @@ export class NewHome extends Component {
                   <ExpansionPanelDetails>
                     <Grid container direction='column'>
                     <List>
-                      {events.map((event, index) => (
+                      { events.map((event, index) => (
                         <ListItem
                           key={index}
                           dense
@@ -481,6 +518,13 @@ export class NewHome extends Component {
             </GridComponent>
           </Hidden>
           <GridComponent item xs={12} sm={12} md={12} lg={9}>
+            {
+              fetching && < CircularProgress size = {
+                68
+              } style ={{
+                marginLeft: 'auto', marginRight: 'auto'
+              }}
+              />}
             <GridComponent
               container
               spacing={24}
@@ -509,8 +553,9 @@ export class NewHome extends Component {
             }
             </GridComponent>
           </GridComponent>
-          {message.status && <NotificationComponent
-            message={message.message}/>
+          {message.status &&
+            <NotificationComponent
+              message={message.message}/>
           }
         </GridComponent>
         <NewDialog
@@ -545,7 +590,7 @@ const mapStateToProps = (state, ownProps) => ({
   events: state.account.events,
   userRsvps: state.account.userRsvps,
   rsvps: state.account.rsvps,
-  fetching: state.calls.activeCalls > 0,
+  fetching: state.calls > 0,
   message: state.transaction.message,
   displayed: state.transaction.message.status,
   history: ownProps.history
@@ -561,8 +606,8 @@ const mapDispatchToProps = dispatch => ({
   dismissMessage: () => {
     dispatch(dismissMessageAction());
   },
-  deleteEvent: (eventId) => {
-    dispatch(eventDelete(eventId));
+  deleteEvent: (eventId, callBack) => {
+    dispatch(eventDelete(eventId, callBack));
   },
   deleteRsvp: (eventDetails) => {
     dispatch(userDeleteRsvp(eventDetails));
@@ -576,14 +621,14 @@ const mapDispatchToProps = dispatch => ({
   changeRsvpStatus: (id, statusDetails) => {
     dispatch(eventManageRsvp(id, statusDetails));
   },
-  createEvent: (eventDetails) => {
-    dispatch(eventPost(eventDetails));
+  createEvent: (eventDetails, callBack) => {
+    dispatch(eventPost(eventDetails, callBack));
   },
   changeAttendance: (attendanceDetails, callBack) => {
     dispatch(userAttendanceChange(attendanceDetails, callBack));
   },
-  rsvpEvent: (eventId, email) => {
-    dispatch(eventRsvp(eventId, email));
+  rsvpEvent: (eventId, email, callBack) => {
+    dispatch(eventRsvp(eventId, email, callBack));
   },
   loginUser: (userDetails, callBack) => {
     dispatch(loginUser(userDetails, callBack));

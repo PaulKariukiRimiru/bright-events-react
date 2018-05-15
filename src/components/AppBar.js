@@ -40,7 +40,7 @@ const MyAppBar = (props) => {
           !isObjectEmpty(user) ? 
           <div style={{
                 marginLeft: 'auto',
-                marginRight: 8
+                marginRight: 4
               }}>
             <Button
               color="inherit"
@@ -48,9 +48,11 @@ const MyAppBar = (props) => {
               <AccountCircle style={{ marginRight: 4 }}/>
               {user.username}
             </Button>
-            <Button color='inherit' aria-label='Account options' onClick={logout}>
-              Logout
-            </Button>
+            <Hidden mdDown>
+              <Button color='inherit' aria-label='Account options' onClick={logout}>
+                Logout
+              </Button>
+            </Hidden>
           </div> :
           <IconButton
               color='inherit'
@@ -63,7 +65,6 @@ const MyAppBar = (props) => {
               <AccountCircle />
           </IconButton>
         }
-        
       </Toolbar>
     </AppBar>
   );

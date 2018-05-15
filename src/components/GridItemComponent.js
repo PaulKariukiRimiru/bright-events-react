@@ -56,6 +56,9 @@ export default class GridItemComponent extends Component {
     this
       .props
       .onDeleteSubmit(this.props.event.id);
+    this.setState({
+      open: false
+    });
   }
 
   handleRsvpDelete = () => {
@@ -72,7 +75,8 @@ export default class GridItemComponent extends Component {
 
   handleEditSubmit = () => {
     this.setState({
-      editMode: !this.state.editMode
+      editMode: !this.state.editMode,
+      open: false
     });
     this
       .props
@@ -83,7 +87,7 @@ export default class GridItemComponent extends Component {
     this.setState({
       open: true,
       title: 'Confirm action',
-      actionType: 'delete',
+      actionType: 'deleteEvent',
       description: 'Are you sure you want to delete this event?'
     });
   }
@@ -92,7 +96,16 @@ export default class GridItemComponent extends Component {
     this.setState({
       open: true,
       title: 'Confirm action',
-      actionType: 'edit',
+      actionType: 'editEvent',
+      description: 'Are you sure you want to edit this event?'
+    });
+  }
+
+  confirmDeleteRsvp = () => {
+    this.setState({
+      open: true,
+      title: 'Confirm action',
+      actionType: 'editEvent',
       description: 'Are you sure you want to edit this event?'
     });
   }
@@ -251,7 +264,10 @@ export default class GridItemComponent extends Component {
         view='confirmation'
         title={title}
         description={description}
-        yes={actionType === 'delete' ? this.handleRsvpDelete : this.handleEditSubmit }
+        actionType={actionType}
+        deleteRsvp = {this.handleRsvpDelete}
+        editEvent = {this.handleEditSubmit}
+        deleteEvent = {this.handleEventDelete}
         no={this.handeDialogClose}
       />
       </div>
@@ -342,16 +358,16 @@ export default class GridItemComponent extends Component {
               <Col xs={8}>
                 <FormControlLabel
                   control={
-                    < Switch checked = { attendance }
+                    < Switch checked = { event.attendance }
                       onChange = { this.onToggleAttendance }
                       value = "attendance" />
                   }
-                  label={attendance
+                  label={ event.attendance
                   ? 'Coming'
                   : 'Not Going'}/>
                 </Col>
                 <Col xs={4}>
-                  <IconButton onClick={this.handleRsvpDelete} aria-label='Delete rsvp'>
+                  <IconButton onClick={this.confirmDeleteRsvp} aria-label='Delete rsvp'>
                     < Delete />
                   </IconButton>
                 </Col>

@@ -57,7 +57,7 @@ const userDeleteRsvpAction = payload => ({ type: USER_DELETE_RSVP, payload });
 export const userDeleteRsvp = payload => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
-    method: 'delete', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload
+    method: 'delete', url: `${BASE_URL}/api/v2/events/rsvp`, headers, data: payload
   })
     .then((resp) => {
       dispatch(userDeleteRsvpAction(resp.data.payload));
@@ -74,7 +74,7 @@ export const userDeleteRsvp = payload => (dispatch) => {
 export const userAttendanceChange = (payload, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
-    method: 'put', headers, url: `${BASE_URL}/api/v2/events/rsvp`, data: payload 
+    method: 'put', url: `${BASE_URL}/api/v2/events/rsvp`, headers, data: payload
   })
     .then((resp) => {
       dispatch(userRsvpAttendanceAction(resp.data.payload));
@@ -91,7 +91,7 @@ export const userAttendanceChange = (payload, callBack) => (dispatch) => {
 
 export const userRsvpsGet = () => (dispatch) => {
   dispatch(fetchingAction(true));
-  axios({ method: 'get', headers, url: `${BASE_URL}/api/v2/events/rsvp` })
+  axios({ method: 'get', url: `${BASE_URL}/api/v2/events/rsvp`, headers })
     .then((resp) => {
       dispatch(userRsvpsGetAction(resp.data.payload.events));
     })
@@ -145,7 +145,7 @@ export const eventRsvpGet = (id, callBack) => (dispatch) => {
   axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers })
     .then(resp => (dispatch(eventRsvpAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events reservations fetched')))
-    .then(() => callBack())
+    .then(() => callBack('requestRsvp'))
     .catch((error) => {
       if (error.response) {
         return (dispatch(rsvpGetFailed(error.response.data.message)));
@@ -156,7 +156,7 @@ export const eventRsvpGet = (id, callBack) => (dispatch) => {
 
 export const eventEdit = (id, payload) => (dispatch) => {
   axios({
-    method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers 
+    method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers
   })
     .then(resp => (dispatch(eventEditAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events edited')))
@@ -168,10 +168,11 @@ export const eventEdit = (id, payload) => (dispatch) => {
     });
 };
 
-export const eventDelete = eventId => (dispatch) => {
-  axios({ method: 'delete', headers, url: `${BASE_URL}/api/v2/events/${eventId}` })
+export const eventDelete = (eventId, callBack) => (dispatch) => {
+  axios({ method: 'delete', url: `${BASE_URL}/api/v2/events/${eventId}`, headers })
     .then(resp => (dispatch(eventDeleteAction(eventId))))
-    .then(() => dispatch(fetchedAction(true, 'Event deleted')))
+    .then(() => (dispatch(fetchedAction(true, 'Event deleted'))))
+    .then(() => callBack('deleteEvent'))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -183,7 +184,7 @@ export const eventDelete = eventId => (dispatch) => {
 export const eventManageRsvp = (id, details) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
-    method: 'put', headers, url: `${BASE_URL}/api/v2/event/${id}/rsvp`, data: details
+    method: 'put', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers, data: details
   })
     .then(resp => (dispatch(eventManageRsvpAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'success')))
@@ -195,7 +196,7 @@ export const eventManageRsvp = (id, details) => (dispatch) => {
     });
 };
 
-export const eventRsvp = (event, email) => {
+export const eventRsvp = (event, email, callBack) => {
   const clientDetails = {
     client_email: email
   };
@@ -206,6 +207,7 @@ export const eventRsvp = (event, email) => {
     })
       .then(resp => (dispatch(displayMessageAction({ status: true, message: 'event reserved successfully' }))))
       .then(() => dispatch(fetchedAction(true, 'Reserved event')))
+      .then(() => callBack('eventRsvp'))
       .catch((error) => {
         if (error.response) {
           return (dispatch(erroredAction(error.response.data.message)));
@@ -216,13 +218,12 @@ export const eventRsvp = (event, email) => {
 };
 
 export const eventsGet = (callBack) => {
-  const message = '';
   return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({ url: `${BASE_URL}/api/v2/events`, method: 'get', headers })
       .then(resp => (dispatch(eventsGetAction(resp.data.payload))))
       .then(() => dispatch(fetchedAction(true, 'Events fetched')))
-      .then(() => callBack())
+      .then(() => callBack('fetchEvents'))
       .catch((error) => {
         if (error.response) {
           return (dispatch(erroredAction(error.response.data.message)));
@@ -232,7 +233,7 @@ export const eventsGet = (callBack) => {
   };
 };
 
-export const eventPost = (payload) => {
+export const eventPost = (payload, callBack) => {
   const eventDetails = {
     name: payload.name,
     location: payload.location,
@@ -251,6 +252,7 @@ export const eventPost = (payload) => {
         return (dispatch(eventsPostAction(eventDetails)));
       })
       .then(() => (dispatch(fetchedAction(true, EVENT_ADDED_SUCCESSFULLY))))
+      .then(() => callBack('createEvent'))
       .catch((error) => {
         if (error.response) {
           return (dispatch(erroredAction(error.response.data.message)));
@@ -298,7 +300,7 @@ export const logoutUser = (payload, callBack) => {
       .then((resp) => {
         return (dispatch(logoutAction(resp.data.payload)));
       })
-      .then(() => callBack())
+      .then(() => callBack('logout'))
       .catch((error) => {
         if (!error.response) {
           return (dispatch(erroredAction(error.message)));
@@ -316,7 +318,7 @@ export const loginUser = (payload, callBack) => {
   return (dispatch) => {
     dispatch(fetchingAction(true));
     axios({
-      method: 'post', url: `${BASE_URL}/api/v2/auth/login`, header: headers, data: userDetails
+      method: 'post', url: `${BASE_URL}/api/v2/auth/login`, headers, data: userDetails
     })
       .then((resp) => {
         return (dispatch(loginAction(resp.data)));

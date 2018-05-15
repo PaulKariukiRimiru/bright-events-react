@@ -134,12 +134,30 @@ class NewDialog extends React.Component {
     );
   }
 
+  handleSubmit = () => {
+    const {
+      actionType, deleteEvent, editEvent, deleteRsvp
+    } = this.props;
+    switch (actionType) {
+      case 'deleteEvent':
+        deleteEvent();
+        break;
+      case 'editEvent':
+        editEvent();
+        break;
+      case 'deleteRsvp':
+        deleteRsvp();
+        break;
+      default:
+        break;
+    }
+  }
+
   renderConfirmation = () => {
     const {
       title,
       description,
       open,
-      yes,
       no
     } = this.props;
     return (
@@ -158,7 +176,7 @@ class NewDialog extends React.Component {
             <Button onClick={no} color="primary">
               Disagree
             </Button>
-            <Button onClick={yes} color="primary">
+            <Button onClick={this.handleSubmit} color="primary">
               Agree
             </Button>
           </DialogActions>
