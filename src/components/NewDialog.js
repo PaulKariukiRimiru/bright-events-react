@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog, {
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  withMobileDialog
-} from 'material-ui/Dialog';
-import { Tab, Tabs } from 'material-ui';
+import Button from '@material-ui/core/Button';
+import Dialog from 'material-ui/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import { Tab, Tabs } from '@material-ui/core';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import SwipableViews from 'react-swipeable-views';
 import Login from './Login';
 import Register from './Register';
-import { CircularProgress, Fade } from 'material-ui';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fade from '@material-ui/core/Fade';
 import StepperComponent from '../components/StepperComponent';
 import NewListComponent from '../components/NewListComponent';
-import { DialogActions } from 'material-ui';
-import { Button } from 'material-ui';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class NewDialog extends React.Component {
   state = {
@@ -36,7 +37,7 @@ class NewDialog extends React.Component {
   renderAccount = () => {
     const {
       fullScreen,
-      open,
+      openDialog,
       title,
       handleLogin,
       handleClose,
@@ -45,8 +46,12 @@ class NewDialog extends React.Component {
     } = this.props;
     const { value } = this.state;
     return (
-      <div>
-        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title} onClose={handleClose}>
+      <MuiThemeProvider>
+        <Dialog
+          fullScreen={fullScreen}
+          open={openDialog && true}
+          aria-labelledby={title}
+          onClose={handleClose}>
           <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
           <DialogContent>
             <Tabs
@@ -74,7 +79,7 @@ class NewDialog extends React.Component {
             </Fade>
           </DialogContent>
         </Dialog>
-      </div>
+      </MuiThemeProvider>
     );
   }
 
@@ -83,27 +88,31 @@ class NewDialog extends React.Component {
       eventForm,
       onChange,
       handleSubmit,
-      fullScreen,
       title,
-      open,
+      openDialog,
       closeDialog
     } = this.props;
     return (
-      <div>
-        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title}>
-          <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
-          <DialogContent>
+      <MuiThemeProvider>
+        <Dialog
+          title={title}
+          open={openDialog}
+          style={{
+            maxWidth: 500,
+            marginRight: 'auto',
+            marginLeft: 'auto'
+          }}
+          >
             <StepperComponent
               stepList={eventForm}
               onChange={onChange}
               steps={eventForm.length}
               handleSubmit={handleSubmit}/>
-          </DialogContent>
           <DialogActions>
             <Button color='secondary' onClick={closeDialog}>Close</Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </MuiThemeProvider>
     );
   }
 
@@ -117,7 +126,7 @@ class NewDialog extends React.Component {
       closeDialog
     } = this.props;
     return (
-      <div>
+      <MuiThemeProvider>
         <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title}>
           <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
           <DialogContent>
@@ -130,7 +139,7 @@ class NewDialog extends React.Component {
             <Button color='secondary' onClick={closeDialog}>Close</Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </MuiThemeProvider>
     );
   }
 
@@ -161,26 +170,28 @@ class NewDialog extends React.Component {
       no
     } = this.props;
     return (
-      <Dialog
-          open={open}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {description}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={no} color="primary">
-              Disagree
-            </Button>
-            <Button onClick={this.handleSubmit} color="primary">
-              Agree
-            </Button>
-          </DialogActions>
-        </Dialog>
+      <MuiThemeProvider>
+        <Dialog
+            open={open}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {description}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={no} color="primary">
+                Disagree
+              </Button>
+              <Button onClick={this.handleSubmit} color="primary">
+                Agree
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </MuiThemeProvider>
     );
   }
 

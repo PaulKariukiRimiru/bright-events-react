@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {Row, Col} from 'react-flexgrid';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
+import React, { Component } from 'react';
+import { Row, Col } from 'react-flexgrid';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 export default class Login extends Component {
   render() {

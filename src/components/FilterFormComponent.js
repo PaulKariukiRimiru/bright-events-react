@@ -1,12 +1,15 @@
-import { Checkbox } from 'material-ui';
-import { FormControl } from 'material-ui';
-import { FormControlLabel } from 'material-ui';
-import { FormGroup } from 'material-ui';
-import { FormHelperText } from 'material-ui';
-import { FormLabel } from 'material-ui';
+
+import {
+  Grid,
+  FormLabel,
+  FormGroup,
+  FormControlLabel,
+  FormControl,
+  Radio,
+  RadioGroup
+} from '@material-ui/core';
 import React, { Component } from 'react';
-import { Grid } from 'material-ui';
-import Radio, { RadioGroup } from 'material-ui/Radio';
+
 export default class FilterformComponent extends Component {
   state = {
     userEvents: false,
@@ -40,7 +43,6 @@ export default class FilterformComponent extends Component {
   };
 
   render() {
-    const { userEvents, userRsvps, eventsAttending, eventsNotAttending, rsvpCanceled, rsvpConfirmed } = this.state;
     return (
       <FormControl style={{
         padding: 12

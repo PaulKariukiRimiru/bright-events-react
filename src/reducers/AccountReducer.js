@@ -14,8 +14,9 @@ import {
   USER_DELETE_RSVP,
   LOGOUT_SUCCESS
 } from '../Constants/action_type';
+import jwtDecode from 'jwt-decode';
+
 import initialState from '../Constants/initialState';
-import jwt_decode from 'jwt-decode';
 
 let myUser = {};
 
@@ -23,7 +24,7 @@ const AccountReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESS:
       localStorage.setItem(TOKEN, action.payload.payload.token);
-      myUser = jwt_decode(action.payload.payload.token);
+      myUser = jwtDecode(action.payload.payload.token);
       return {
         ...state,
         user: {

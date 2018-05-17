@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-import { TOKEN } from '../Constants/action_type';
 import {
   Card,
   CardMedia,
@@ -12,15 +10,17 @@ import {
   Switch,
   FormControlLabel,
   Button
-} from 'material-ui';
+} from '@material-ui/core';
 import Save from '@material-ui/icons/Save';
-import Ticket from '@material-ui/icons/PlusOne';
 import RsvpList from '@material-ui/icons/Group';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import { Row, Col, Grid } from 'react-flexbox-grid';
-import { blue } from 'material-ui/colors';
+import { blue } from '@material-ui/core/colors';
 import Close from '@material-ui/icons/Close';
+
+import React, { Component } from 'react';
+import { TOKEN } from '../Constants/action_type';
 import NewDialog from './NewDialog';
 
 export default class GridItemComponent extends Component {
@@ -144,7 +144,9 @@ export default class GridItemComponent extends Component {
 
   renderDashboard() {
     const { event } = this.props;
-    const { open, title, description, actionType } = this.state;
+    const {
+      open, title, description, actionType
+    } = this.state;
     return (
       <div>
       <Card style={{ ...this.cardStyle, maxHeight: 330 }}>
@@ -312,7 +314,6 @@ export default class GridItemComponent extends Component {
 
   renderUserRsvps() {
     const { event } = this.props;
-    const { attendance } = this.state;
     return (
       <Card style={{ maxWidth: 220 }}>
         <CardMedia>
@@ -378,7 +379,7 @@ export default class GridItemComponent extends Component {
     );
   }
 
-  render() {    
+  render() {
     switch (this.props.view) {
       case 1:
         return this.renderDashboard();

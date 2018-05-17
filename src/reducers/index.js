@@ -1,12 +1,11 @@
 import { combineReducers } from 'redux';
-
-import account from './AccountReducer';
-import transaction from './TransactionReducer';
-import calls from './CallsReducer';
-
-import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import storage from 'redux-persist/lib/storage';
+
+import account from './AccountReducer';
+import calls from './CallsReducer';
+import transaction from './TransactionReducer';
 
 const accountConfig = {
   key: 'auth',

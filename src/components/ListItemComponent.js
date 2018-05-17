@@ -1,10 +1,10 @@
-import { blue } from 'material-ui/colors';
-import { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader } from 'material-ui/List';
-import { withStyles } from 'material-ui/styles';
-import Avatar from 'material-ui/Avatar';
+import { blue } from '@material-ui/core/colors';
+import { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core/List';
+import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Switch from 'material-ui/Switch';
+import Switch from '@material-ui/core/Switch';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 const styles = theme => ({

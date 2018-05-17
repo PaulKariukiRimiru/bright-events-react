@@ -1,4 +1,4 @@
-import GridList from 'material-ui/GridList';
+import GridList from '@material-ui/core/GridList';
 import React, { Component } from 'react';
 
 import GridItemComponent from './GridItemComponent';

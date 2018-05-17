@@ -4,7 +4,7 @@ import initialState from '../Constants/initialState';
 const CallsReducer = (state = initialState.activeCalls, action) => {
   if (action.type === FETCHING) {
     return state + 1;
-} else if (action.type === FETCHED || action.type === ERRORED || action.type === RSVP_MANAGE_FAILED || action.type === LOGOUT_SUCCESS) {
+  } else if (action.type === FETCHED || action.type === ERRORED || action.type === RSVP_MANAGE_FAILED || action.type === LOGOUT_SUCCESS) {
     return state - 1;
   }
   return state;

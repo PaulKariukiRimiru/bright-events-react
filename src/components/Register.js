@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import { Row, Col } from 'react-flexgrid';
 
 export default class Register extends Component {

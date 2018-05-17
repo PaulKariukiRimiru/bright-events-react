@@ -1,11 +1,6 @@
-import {connect} from 'react-redux';
-import {Grid} from 'react-flexbox-grid';
-import {Typography, SwipeableDrawer, Chip, CircularProgress } from 'material-ui';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'material-ui/ExpansionPanel';
-import GridComponent from 'material-ui/Grid';
-import Hidden from 'material-ui/Hidden';
-import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { Grid } from 'react-flexbox-grid';
+import React, { Component } from 'react';
 
 import FilterForm from '../components/FilterFormComponent';
 import GridCard from '../components/GridItemComponent';
@@ -25,27 +20,39 @@ import {
   userAttendanceChange,
   userDeleteRsvp
 } from '../actions/accountActions';
-import {dismissMessageAction} from '../actions';
+
+import { dismissMessageAction } from '../actions';
 import isObjectEmpty from 'is-empty-object';
-import jwt_decode from 'jwt-decode';
-import {TOKEN} from '../Constants/action_type';
+import jwtDecode from 'jwt-decode';
+import { TOKEN } from '../Constants/action_type';
 import MyAppBar from '../components/AppBar';
-import {Button} from 'material-ui';
-import {blue} from 'material-ui/colors';
+import { blue } from '@material-ui/core/colors';
 import AddIcon from '@material-ui/icons/Add';
 import NewDialog from '../components/NewDialog';
 import NotificationComponent from '../components/NotificationComponent';
-import { Paper } from 'material-ui';
-import { InputAdornment } from 'material-ui/Input';
-import TextField from 'material-ui/TextField';
+import TextField from '@material-ui/core/TextField';
 import Search from '@material-ui/icons/Search';
 import Location from '@material-ui/icons/PinDrop';
 import Category from '@material-ui/icons/Sort';
-import List, {
+import GridComponent from '@material-ui/core/Grid';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {
+  Typography,
+  SwipeableDrawer,
+  Chip,
+  CircularProgress,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Hidden,
+  InputAdornment,
+  Paper,
+  Button,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
-} from 'material-ui/List';
+} from '@material-ui/core';
 
 export class NewHome extends Component {
   state = {
@@ -251,7 +258,7 @@ export class NewHome extends Component {
     this.setState({ showDialog: false });
     eventDetails.host = this.props.user.id
       ? this.props.user.id
-      : jwt_decode(localStorage.getItem(TOKEN)).identity.id;
+      : jwtDecode(localStorage.getItem(TOKEN)).identity.id;
     eventDetails.token = localStorage.getItem(TOKEN);
     this
       .props
@@ -314,13 +321,11 @@ export class NewHome extends Component {
   onSearchChange = (eventer) => {
     this.setState({
       events: this.props.events.filter(selectedEvent => selectedEvent.name.includes(eventer.target.value.toLowerCase()))
-    })
+    });
   }
 
 
   callBack = (method) => {
-    console.log('>>>>>>>>>>', method);
-    
     switch (method) {
       case 'logout':
         localStorage.clear();
@@ -350,7 +355,9 @@ export class NewHome extends Component {
       message,
       rsvps
     } = this.props;
-    const { filterSelection, showDialog, view, title, events, displayed, location, category } = this.state;
+    const {
+      filterSelection, showDialog, view, title, events, displayed,
+    } = this.state;
     const fabStyle = {
       position: 'fixed',
       bottom: '24px',
@@ -441,7 +448,8 @@ export class NewHome extends Component {
                     <Typography gutterBottom variant="display1" component="h2" noWrap={true} style={{ fontSize: 18 }}>Filters</Typography>
                     <div style={{ marginLeft: 16 }}>
                       { filterSelection && filterSelection.length
-                        ? filterSelection.map((selection, index) => { < Chip label = {
+                        ? filterSelection.map((selection, index) => {
+                          < Chip label = {
                             selection.name
                           } />;
                         })
@@ -492,7 +500,7 @@ export class NewHome extends Component {
                       component="h2" noWrap={true} style={{ fontSize: 18 }}>Location</Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <Grid container direction='column'>
+                    <GridComponent container direction='column'>
                     <List>
                       {events.map((event, index) => (
                         <ListItem
@@ -511,7 +519,7 @@ export class NewHome extends Component {
                       }
                     </List>
                     <Button primary='true' onClick={this.displayAllEvents}>Reset</Button>
-                    </Grid>
+                    </GridComponent>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               </GridComponent>
@@ -559,7 +567,11 @@ export class NewHome extends Component {
           }
         </GridComponent>
         <NewDialog
-          open={showDialog}
+          style={{
+            marginLeft: 'auto',
+            marginRight: 'auto'
+          }}
+          openDialog={showDialog}
           view={view}
           title={title}
           eventForm={fields}

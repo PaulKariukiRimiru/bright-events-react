@@ -6,8 +6,7 @@ import {
   Button,
   Grid,
   Toolbar
-} from 'material-ui';
-import { blue } from 'material-ui/colors';
+} from '@material-ui/core';
 import Down from '@material-ui/icons/KeyboardArrowDown';
 import NewDialog from '../components/NewDialog';
 import {
@@ -17,6 +16,7 @@ import {
 } from '../actions/accountActions';
 import { dismissMessageAction } from '../actions';
 import NotificationComponent from '../components/NotificationComponent';
+
 class NewLandingPage extends Component {
   state = {
     userDetails: {},
@@ -66,6 +66,16 @@ class NewLandingPage extends Component {
     const imageFive = `url(${require('../images/party.jpg')})`;
     return (
       <Grid container direction='column' spacing={0} style={{backgroundColor: '#FFE347'}}>
+        <NewDialog
+            view='account'
+            openDialog={showDialog}
+            title='Login or create new Account'
+            onChange={this.onChangeListener}
+            handleLogin={this.handleLoginFormSubmit}
+            handleRegister={this.handleRegistrationFormSubmit}
+            loading={fetching}
+            handleClose={this.handleDialogClose}
+          />
         <Grid item>
           <Toolbar style={{ width: '100%' }}>
             < Button style = {
@@ -80,14 +90,16 @@ class NewLandingPage extends Component {
         </Grid>
         <Grid item >
           <Parallax ref="parallax" pages={5} style={{ margin: 0, padding: 0, width: '100%' }}>
-            <Parallax.Layer offset={0.6} speed={-0.04} style={{ backgroundImage: imageThree, backgroundSize: 'cover'}} />
+            <Parallax.Layer offset={0.6} speed={-0.04} style={{ backgroundImage: imageThree, backgroundSize: 'cover' }} />
             <Parallax.Layer offset={1.5} speed={-0.04} style={{ backgroundImage: imageFive, backgroundSize: 'cover' }}/>
             <Parallax.Layer offset={2.5} speed={-0.04} style={{ backgroundImage: imageOne, backgroundSize: 'cover' }}/>
             <Parallax.Layer offset={3.5} speed={-0.04} style={{ backgroundImage: imageFour, backgroundSize: 'cover' }}/>
             <Parallax.Layer
               offset={0}
               speed={0.5}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'}}>
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
+                }}>
               <Grid container direction='column'>
                 <Typography
                   variant='display3'
@@ -122,7 +134,9 @@ class NewLandingPage extends Component {
               onClick = {
                 () => this.refs.parallax.scrollTo(2)
               }
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347' }}>
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
+              }}>
               <Grid container direction='row' alignItems='center' justify='center'>
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                   < Typography
@@ -139,7 +153,9 @@ class NewLandingPage extends Component {
               onClick = {
                 () => this.refs.parallax.scrollTo(3)
               }
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347' }}>
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
+                }}>
               <Grid container direction='row' alignItems='center' justify='center'>
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                   < Typography
@@ -157,7 +173,9 @@ class NewLandingPage extends Component {
               onClick = {
                 () => this.refs.parallax.scrollTo(4)
               }
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347' }}>
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
+                }}>
               <Grid container direction='row' alignItems='center' justify='center'>
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                   < Typography
@@ -172,7 +190,9 @@ class NewLandingPage extends Component {
             <Parallax.Layer
               offset={4}
               speed={0.5}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347' }}>
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
+                }}>
               <Grid container justify='center' alignItems='center' direction='column'>
                 <Grid item>
                   <Typography
@@ -195,16 +215,6 @@ class NewLandingPage extends Component {
         {message.status && <NotificationComponent
             message={message.message}/>
           }
-        <NewDialog
-          view='account'
-          open={showDialog}
-          title='Login or create new Account'
-          onChange={this.onChangeListener}
-          handleLogin={this.handleLoginFormSubmit}
-          handleRegister={this.handleRegistrationFormSubmit}
-          loading={fetching}
-          handleClose={this.handleDialogClose}
-        />
       </Grid>
     );
   }
@@ -230,5 +240,5 @@ const mapDispatchToProps = dispatch => ({
   dismissMessage: () => {
     dispatch(dismissMessageAction());
   },
-})
+});
 export default connect(mapStateToProps, mapDispatchToProps)(NewLandingPage);

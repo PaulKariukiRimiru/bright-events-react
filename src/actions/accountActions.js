@@ -107,7 +107,7 @@ export const userRsvpsGet = () => (dispatch) => {
 export const eventSearch = (params = {}, body = {}) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
-    method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers, params, body 
+    method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers, params, body
   })
     .then(resp => (dispatch(eventSearchAction(resp.data.payload.event_list))))
     .then(() => dispatch(fetchedAction(true, 'Events search successful')))
@@ -217,20 +217,18 @@ export const eventRsvp = (event, email, callBack) => {
   };
 };
 
-export const eventsGet = (callBack) => {
-  return (dispatch) => {
-    dispatch(fetchingAction(true));
-    axios({ url: `${BASE_URL}/api/v2/events`, method: 'get', headers })
-      .then(resp => (dispatch(eventsGetAction(resp.data.payload))))
-      .then(() => dispatch(fetchedAction(true, 'Events fetched')))
-      .then(() => callBack('fetchEvents'))
-      .catch((error) => {
-        if (error.response) {
-          return (dispatch(erroredAction(error.response.data.message)));
-        }
-        return (dispatch(erroredAction(error.message)));
-      });
-  };
+export const eventsGet = callBack => (dispatch) => {
+  dispatch(fetchingAction(true));
+  axios({ url: `${BASE_URL}/api/v2/events`, method: 'get', headers })
+    .then(resp => (dispatch(eventsGetAction(resp.data.payload))))
+    .then(() => dispatch(fetchedAction(true, 'Events fetched')))
+    .then(() => callBack('fetchEvents'))
+    .catch((error) => {
+      if (error.response) {
+        return (dispatch(erroredAction(error.response.data.message)));
+      }
+      return (dispatch(erroredAction(error.message)));
+    });
 };
 
 export const eventPost = (payload, callBack) => {
@@ -297,9 +295,7 @@ export const logoutUser = (payload, callBack) => {
     axios({
       method: 'post', url: `${BASE_URL}/api/v2/auth/logout`, headers, data
     })
-      .then((resp) => {
-        return (dispatch(logoutAction(resp.data.payload)));
-      })
+      .then(resp => (dispatch(logoutAction(resp.data.payload))))
       .then(() => callBack('logout'))
       .catch((error) => {
         if (!error.response) {
@@ -320,9 +316,7 @@ export const loginUser = (payload, callBack) => {
     axios({
       method: 'post', url: `${BASE_URL}/api/v2/auth/login`, headers, data: userDetails
     })
-      .then((resp) => {
-        return (dispatch(loginAction(resp.data)));
-      })
+      .then(resp => (dispatch(loginAction(resp.data))))
       .then(() => dispatch(fetchedAction(true, LOGIN_SUCCESS_MESSAGE)))
       .then(() => callBack())
       .catch((error) => {

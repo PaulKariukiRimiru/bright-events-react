@@ -1,5 +1,5 @@
-import { List } from 'material-ui/List';
-import { Subheader } from 'material-ui';
+import { List } from '@material-ui/core/List';
+import { Subheader } from '@material-ui/core';
 import React, { Component } from 'react';
 
 import ListItemComponent from './ListItemComponent';

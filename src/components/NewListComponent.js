@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import List, { ListSubheader } from 'material-ui/List';
-import Switch from 'material-ui/Switch';
-import Avatar from 'material-ui/Avatar';
-import { blue } from 'material-ui/colors';
+import { withStyles } from '@material-ui/core/styles';
+import List, { ListSubheader } from '@material-ui/core/List';
+import { blue } from '@material-ui/core/colors';
 import ListItem from './ListItemComponent';
 
 const styles = theme => ({

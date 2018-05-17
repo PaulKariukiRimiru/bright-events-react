@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper';
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Button,
+  TextField
+} from '@material-ui/core';
 
-import Button from 'material-ui/Button';
 import { Row, Col } from 'react-flexbox-grid';
-import TextField from 'material-ui/TextField';
 
 export default class StepperComponent extends Component {
   state = {
@@ -37,7 +42,7 @@ export default class StepperComponent extends Component {
   };
 
   handleStepNext = () => {
-    let { step, end } = this.state;
+    let { step } = this.state;
     this.setState({
       step: step += 1,
       end: step >= this.props.steps
@@ -54,7 +59,7 @@ export default class StepperComponent extends Component {
   };
 
   renderNavigators(thisStep) {
-    const { step, end } = this.state;
+    const { step } = this.state;
 
     return (
       <div>
@@ -83,17 +88,17 @@ export default class StepperComponent extends Component {
                 <StepContent>
                   {item
                     .fields
-                    .map((item, index) => (
-                        <Row middle='xs' key={index}>
+                    .map((event, i) => (
+                        <Row middle='xs' key={i}>
                           <Col xs={6}>
-                            {item.name === 'time'
+                            {event.name === 'time'
                               ?
                               <TextField
                                 required
-                                name={item.name}
-                                refs={item.name}
-                                label={this.state.form[item.name]
-                                  ? this.state.form[item.name]
+                                name={event.name}
+                                refs={event.name}
+                                label={this.state.form[event.name]
+                                  ? this.state.form[event.name]
                                   : '' }
                                 type='date'
                                 InputLabelProps={{
@@ -103,13 +108,13 @@ export default class StepperComponent extends Component {
                               />
                               : <TextField
                                   required
-                                  label={this.state.form[item.name]
-                                  ? this.state.form[item.name]
-                                  : item.name}
-                                  refs={item.name}
-                                  name={item.name}
-                                  placeholder={this.state.form[item.name]
-                                  ? this.state.form[item.name]
+                                  label={this.state.form[event.name]
+                                  ? this.state.form[event.name]
+                                  : event.name}
+                                  refs={event.name}
+                                  name={event.name}
+                                  placeholder={this.state.form[event.name]
+                                  ? this.state.form[event.name]
                                   : '' }
                                   onChange={this.onChange}/>
                             }
