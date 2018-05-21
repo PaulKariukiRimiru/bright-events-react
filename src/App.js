@@ -48,7 +48,6 @@ class App extends Component {
   }
 
   onFilterSubmit = () => {
-    console.log(this.state);
     this
       .props
       .dispatch(eventFilter(this.state.searchform));
@@ -61,9 +60,8 @@ class App extends Component {
   }
 
   render() {
-
     return (
-      <div className="App" >
+      <div className="App" style={{ overflowX: 'hidden', margin: 0, padding: 0 }}>
         {this.props.children}
       </div>
     );

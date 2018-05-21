@@ -590,7 +590,7 @@ export class NewHome extends Component {
         <Button
           style={fabStyle}
           variant="fab"
-          color="primary"
+          color="secondary"
           aria-label="add"
           onClick={this.showCreateEventDialog}>
           <AddIcon/>

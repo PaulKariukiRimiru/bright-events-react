@@ -3,9 +3,9 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
+import { afterEach } from 'mocha';
 
 import { NewLandingPage } from '../pages/NewLandingPage';
-import { afterEach } from 'mocha';
 
 const setUp = (isMount) => {
   const minProps = {
@@ -23,11 +23,11 @@ const setUp = (isMount) => {
 describe('Component : Landing Page', () => {
   describe('Render tests', () => {
     const wrapper = setUp(true);
-    it('Renders a container Grid', () => {
-      expect(wrapper.find({ container: true }).length).to.be.greaterThan(0, 'grid container missing');
+    it('Renders a container GridComponent', () => {
+      expect(wrapper.find({ container: true }).length).to.be.greaterThan(0, 'GridComponent container missing');
     });
-    it('Renders Grid items', () => {
-      expect(wrapper.find({ item: true }).length).to.be.greaterThan(0, 'there are no grid items');
+    it('Renders GridComponent items', () => {
+      expect(wrapper.find({ item: true }).length).to.be.greaterThan(0, 'there are no GridComponent items');
     });
     it('Renders a Dialog Component', () => {
       expect(wrapper.find('NewDialog').exists()).to.be.equal(true, 'cannot find dialog');

@@ -16,7 +16,6 @@ import RsvpList from '@material-ui/icons/Group';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import { Row, Col, Grid } from 'react-flexbox-grid';
-import { blue } from '@material-ui/core/colors';
 import Close from '@material-ui/icons/Close';
 
 import React, { Component } from 'react';
@@ -43,7 +42,7 @@ export default class GridItemComponent extends Component {
 
   placeHolderStyle = {
     height: 100,
-    backgroundColor: blue[200]
+    backgroundColor: '#6d6d6d'
   }
 
   handleEditClose = () => {

@@ -23,7 +23,7 @@ const MyAppBar = (props) => {
     classes, openDrawer, showAccountDialog, logout, user
   } = props;
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ backgroundColor: '#6d6d6d' }}>
       <Toolbar>
         <Hidden lgUp>
           <IconButton

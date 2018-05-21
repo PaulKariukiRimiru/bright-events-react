@@ -4,9 +4,11 @@ import Parallax from 'react-springy-parallax';
 import {
   Typography,
   Button,
-  Grid,
-  Toolbar
+  Toolbar,
+  Paper
 } from '@material-ui/core';
+import GridComponent from '@material-ui/core/Grid';
+import { Grid } from 'react-flexbox-grid';
 import Down from '@material-ui/icons/KeyboardArrowDown';
 import NewDialog from '../components/NewDialog';
 import {
@@ -60,161 +62,183 @@ export class NewLandingPage extends Component {
   render() {
     const { showDialog } = this.state;
     const { message, fetching } = this.props;
-    const imageOne = `url(${require('../images/audienceone.jpg')})`;
+    const imageOne = `url(${require('../images/barImage.jpg')})`;
+    const imageTwo = `url(${require('../images/djimage.jpg')})`;
     const imageThree = `url(${require('../images/mdrink.jpg')})`;
-    const imageFour = `url(${require('../images/kid.jpg')})`;
     const imageFive = `url(${require('../images/party.jpg')})`;
     return (
-      <Grid container direction='column' spacing={0} style={{backgroundColor: '#FFE347'}}>
-        <NewDialog
-            view='account'
-            openDialog={showDialog}
-            title='Login or create new Account'
-            onChange={this.onChangeListener}
-            handleLogin={this.handleLoginFormSubmit}
-            handleRegister={this.handleRegistrationFormSubmit}
-            loading={fetching}
-            handleClose={this.handleDialogClose}
-          />
-        <Grid item>
-          <Toolbar style={{ width: '100%' }}>
-            < Button style = {
-              {
-                marginLeft: 'auto',
-                marginRight: 16,
+      <Grid fluid style={{ margin: 0, padding: 0 }}>
+        <GridComponent container direction='column' spacing={0} style={{ backgroundColor: '#424242' }}>
+          <NewDialog
+              view='account'
+              openDialog={showDialog}
+              title='Login or create new Account'
+              onChange={this.onChangeListener}
+              handleLogin={this.handleLoginFormSubmit}
+              handleRegister={this.handleRegistrationFormSubmit}
+              loading={fetching}
+              handleClose={this.handleDialogClose}
+            />
+          <GridComponent item>
+            <Toolbar style={{ width: '100%', color: '#ffffff' }}>
+              <Button style = {
+                {
+                  marginLeft: 'auto',
+                  marginRight: 16,
+                }
               }
+              onClick={this.showAccountDialog}
+              color = "inherit" > Login / Register </Button>
+            </Toolbar>
+          </GridComponent>
+          <GridComponent item >
+            <Parallax ref="parallax" pages={5} style={{ margin: 0, padding: 0, width: '100%' }}>
+              <Parallax.Layer offset={0.6} speed={-0.04} style={{ backgroundImage: imageTwo, backgroundSize: 'cover' }} />
+              <Parallax.Layer offset={1.5} speed={-0.04} style={{ backgroundImage: imageFive, backgroundSize: 'cover' }}/>
+              <Parallax.Layer offset={2.5} speed={-0.04} style={{ backgroundImage: imageOne, backgroundSize: 'cover' }}/>
+              <Parallax.Layer offset={3.5} speed={-0.04} style={{ backgroundImage: imageTwo, backgroundSize: 'cover' }}/>
+              <Parallax.Layer
+                offset={0}
+                speed={0.5}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundImage: imageThree,
+                  backgroundSize: 'cover'
+                  }}>
+                <GridComponent container direction='column'>
+                  <Paper style={{
+                    maxWidth: 600,
+                    maxHeight: 600,
+                    marginRight: 'auto',
+                    marginLeft: 'auto',
+                    padding: 16,
+                    backgroundColor: '#424242',
+                    opacity: '0.8'
+                  }} classes='rounded'>
+                  <GridComponent container alignItems='center' direction='column'>
+                    <Typography
+                      variant='display3'
+                      align='center'
+                      style={{ marginBottom: 24, marginTop: 24, color: '#e0e0e0' }}
+                      color='#ffffff'>
+                      Hey there!
+                    </Typography>
+                    <Typography
+                      variant='subheading'
+                      align='center'
+                      color='#e0e0e0'
+                      style={{ color: '#e0e0e0' }}>
+                      Welcome to Bright Events
+                    </Typography>
+                    <Button variant="fab" color="secondary" aria-label="add" style={
+                        {
+                          marginTop: 24,
+                          marginBottom: 24,
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                        }
+                      }
+                      onClick = {
+                        () => this.refs.parallax.scrollTo(1)
+                      }
+                      >
+                      <Down />
+                    </Button>
+                    </GridComponent>
+                  </Paper>
+                </GridComponent>
+              </Parallax.Layer>
+              <Parallax.Layer
+                offset={1}
+                speed={1}
+                onClick = {
+                  () => this.refs.parallax.scrollTo(2)
+                }
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#424242'
+                }}>
+                <GridComponent container direction='row' alignItems='center' justify='center'>
+                  <GridComponent item xs={12} sm={12} md={12} lg={12}>
+                    < Typography
+                      variant = 'headline'
+                      align = 'center' >
+                      The future of event creation and management systems.
+                    </Typography>
+                  </GridComponent>
+                </GridComponent>
+              </Parallax.Layer>
+              <Parallax.Layer
+                offset={2}
+                speed={0.5}
+                onClick = {
+                  () => this.refs.parallax.scrollTo(3)
+                }
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#424242'
+                  }}>
+                <GridComponent container direction='row' alignItems='center' justify='center'>
+                  <GridComponent item xs={12} sm={12} md={12} lg={12}>
+                    < Typography
+                      variant = 'headline'
+                      align = 'center' >
+                      Create events with ease <br/>using our fully adaptable site.
+                      This ensures wherever you <br />
+                      on whatever device your experience remains the same
+                    </Typography>
+                  </GridComponent>
+                </GridComponent>
+              </Parallax.Layer>
+              <Parallax.Layer
+                offset={3}
+                speed={1}
+                onClick = {
+                  () => this.refs.parallax.scrollTo(4)
+                }
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#424242'
+                  }}>
+                <GridComponent container direction='row' alignItems='center' justify='center'>
+                  <GridComponent item xs={12} sm={12} md={12} lg={12}>
+                    < Typography
+                      variant = 'headline'
+                      align = 'center' >
+                      Our systems are made to make you feel at home
+                      while you manage < br />your events and reservations all at a single point
+                    </Typography>
+                  </GridComponent>
+                </GridComponent>
+              </Parallax.Layer>
+              <Parallax.Layer
+                offset={4}
+                speed={0.5}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#424242'
+                  }}>
+                <GridComponent container justify='center' alignItems='center' direction='column'>
+                  <GridComponent item>
+                    <Typography
+                      align='center'
+                      variant='display1'>
+                      Okay, Lets break it down,<br />
+                      We are the difference between Tickets still available and TOTALY SOLD OUT!!<br/>
+                      Sign up now and let us show you
+                    </Typography>
+                  </GridComponent>
+                  <GridComponent item>
+                  <Button color='secondary' variant='raised' size="large" style={{ marginTop: 48 }} onClick={this.showAccountDialog}>
+                    GET ME IN
+                  </Button>
+                  </GridComponent>
+                </GridComponent>
+              </Parallax.Layer>
+            </Parallax>
+          </GridComponent>
+          {message.status && <NotificationComponent
+              message={message.message}/>
             }
-            onClick={this.showAccountDialog}
-            color = "inherit" > Login / Register </Button>
-          </Toolbar>
-        </Grid>
-        <Grid item >
-          <Parallax ref="parallax" pages={5} style={{ margin: 0, padding: 0, width: '100%' }}>
-            <Parallax.Layer offset={0.6} speed={-0.04} style={{ backgroundImage: imageThree, backgroundSize: 'cover' }} />
-            <Parallax.Layer offset={1.5} speed={-0.04} style={{ backgroundImage: imageFive, backgroundSize: 'cover' }}/>
-            <Parallax.Layer offset={2.5} speed={-0.04} style={{ backgroundImage: imageOne, backgroundSize: 'cover' }}/>
-            <Parallax.Layer offset={3.5} speed={-0.04} style={{ backgroundImage: imageFour, backgroundSize: 'cover' }}/>
-            <Parallax.Layer
-              offset={0}
-              speed={0.5}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
-                }}>
-              <Grid container direction='column'>
-                <Typography
-                  variant='display3'
-                  align='center'
-                  style={{ marginBottom: 24 }}
-                  color='#ff6e40'>
-                  Hey there!
-                </Typography>
-                <Typography
-                  variant='subheading'
-                  align='center'>
-                  Welcome to Bright Events
-                </Typography>
-                <Button variant="fab" color="secondary" aria-label="add" style={
-                    {
-                      marginTop: 24,
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }
-                  }
-                  onClick = {
-                    () => this.refs.parallax.scrollTo(1)
-                  }
-                  >
-                  <Down />
-                </Button>
-              </Grid>
-            </Parallax.Layer>
-            <Parallax.Layer
-              offset={1}
-              speed={1}
-              onClick = {
-                () => this.refs.parallax.scrollTo(2)
-              }
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
-              }}>
-              <Grid container direction='row' alignItems='center' justify='center'>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  < Typography
-                    variant = 'headline'
-                    align = 'center' >
-                    The future of event creation and management systems.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Parallax.Layer>
-            <Parallax.Layer
-              offset={2}
-              speed={0.5}
-              onClick = {
-                () => this.refs.parallax.scrollTo(3)
-              }
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
-                }}>
-              <Grid container direction='row' alignItems='center' justify='center'>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  < Typography
-                    variant = 'headline'
-                    align = 'center' >
-                    Create events with ease <br/>using our fully adaptable site. This ensures wherever you <br />
-                    on whatever device your experience remains the same
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Parallax.Layer>
-            <Parallax.Layer
-              offset={3}
-              speed={1}
-              onClick = {
-                () => this.refs.parallax.scrollTo(4)
-              }
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
-                }}>
-              <Grid container direction='row' alignItems='center' justify='center'>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  < Typography
-                    variant = 'headline'
-                    align = 'center' >
-                    Our systems are made to make you feel at home
-                    while you manage < br />your events and reservations all at a single point
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Parallax.Layer>
-            <Parallax.Layer
-              offset={4}
-              speed={0.5}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFE347'
-                }}>
-              <Grid container justify='center' alignItems='center' direction='column'>
-                <Grid item>
-                  <Typography
-                    align='center'
-                    variant='display1'>
-                    Okay, Lets break it down,<br />
-                    We are the difference between Tickets still available and TOTALY SOLD OUT!!<br/>
-                    Sign up now and let us show you
-                  </Typography>
-                </Grid>
-                <Grid item>
-                <Button color='secondary' variant='raised' size="large" style={{ marginTop: 48 }} onClick={this.showAccountDialog}>
-                  GET ME IN
-                </Button>
-                </Grid>
-              </Grid>
-            </Parallax.Layer>
-          </Parallax>
-        </Grid>
-        {message.status && <NotificationComponent
-            message={message.message}/>
-          }
+        </GridComponent>
       </Grid>
     );
   }

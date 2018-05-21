@@ -49,6 +49,10 @@ class NewDialog extends React.Component {
     return (
       <MuiThemeProvider>
         <Dialog
+          style={{
+            maxWidth: 500,
+            margin: 'auto'
+          }}
           fullScreen={fullScreen}
           open={openDialog && true}
           aria-labelledby={title}
@@ -128,7 +132,10 @@ class NewDialog extends React.Component {
     } = this.props;
     return (
       <MuiThemeProvider>
-        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title}>
+        <Dialog fullScreen={fullScreen} open={open} aria-labelledby={title} style={{
+            maxWidth: 500,
+            margin: 'auto'
+          }}>
           <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
           <DialogContent>
             <NewListComponent
@@ -176,6 +183,10 @@ class NewDialog extends React.Component {
             open={open}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            style={{
+              maxWidth: 500,
+              margin: 'auto'
+            }}
           >
             <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
             <DialogContent>
