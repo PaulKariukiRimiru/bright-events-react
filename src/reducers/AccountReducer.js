@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode';
 import {
   LOGIN_SUCCESS,
   EVENT_POST_SUCCESS,
@@ -14,7 +15,6 @@ import {
   USER_DELETE_RSVP,
   LOGOUT_SUCCESS
 } from '../Constants/action_type';
-import jwtDecode from 'jwt-decode';
 
 import initialState from '../Constants/initialState';
 

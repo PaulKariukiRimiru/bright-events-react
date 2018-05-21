@@ -9,16 +9,15 @@ import App from './App';
 import newHome from './pages/NewHome';
 import newLanding from './pages/NewLandingPage';
 import registerServiceWorker from './registerServiceWorker';
-import { TOKEN } from './Constants/action_type';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const state = store.getState();
   return (
-    <Route {...rest} render={(props) => (
+    <Route {...rest} render={props => (
         state.account.user.token
           ? <Component {...props} />
           : <Redirect to='/' />
-      )} 
+      )}
       />
   );
 };

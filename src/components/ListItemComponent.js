@@ -3,7 +3,7 @@ import { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Switch from '@material-ui/core/Switch';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 

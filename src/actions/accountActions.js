@@ -1,5 +1,4 @@
 import axios from 'axios';
-import React from 'react';
 
 import { fetchingAction, fetchedAction, erroredAction, displayMessageAction } from '../actions/index';
 import { REGISTER_SUCCESS_MESSAGE, LOGIN_SUCCESS_MESSAGE, EVENT_ADDED_SUCCESSFULLY } from '../Constants/messages';

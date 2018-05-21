@@ -1,6 +1,33 @@
+import { blue } from '@material-ui/core/colors';
 import { connect } from 'react-redux';
 import { Grid } from 'react-flexbox-grid';
+import AddIcon from '@material-ui/icons/Add';
+import Category from '@material-ui/icons/Sort';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import GridComponent from '@material-ui/core/Grid';
+import isObjectEmpty from 'is-empty-object';
+import jwtDecode from 'jwt-decode';
+import Location from '@material-ui/icons/PinDrop';
+import {
+  TextField,
+  Typography,
+  SwipeableDrawer,
+  Chip,
+  CircularProgress,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Hidden,
+  InputAdornment,
+  Paper,
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
 import React, { Component } from 'react';
+import Search from '@material-ui/icons/Search';
 
 import FilterForm from '../components/FilterFormComponent';
 import GridCard from '../components/GridItemComponent';
@@ -22,37 +49,12 @@ import {
 } from '../actions/accountActions';
 
 import { dismissMessageAction } from '../actions';
-import isObjectEmpty from 'is-empty-object';
-import jwtDecode from 'jwt-decode';
+
 import { TOKEN } from '../Constants/action_type';
 import MyAppBar from '../components/AppBar';
-import { blue } from '@material-ui/core/colors';
-import AddIcon from '@material-ui/icons/Add';
+
 import NewDialog from '../components/NewDialog';
 import NotificationComponent from '../components/NotificationComponent';
-import TextField from '@material-ui/core/TextField';
-import Search from '@material-ui/icons/Search';
-import Location from '@material-ui/icons/PinDrop';
-import Category from '@material-ui/icons/Sort';
-import GridComponent from '@material-ui/core/Grid';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {
-  Typography,
-  SwipeableDrawer,
-  Chip,
-  CircularProgress,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Hidden,
-  InputAdornment,
-  Paper,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
 
 export class NewHome extends Component {
   state = {
@@ -318,9 +320,10 @@ export class NewHome extends Component {
     });
   }
 
-  onSearchChange = (eventer) => {
+  onSearchChange = (evnt) => {
+    const { events } = this.props;
     this.setState({
-      events: this.props.events.filter(selectedEvent => selectedEvent.name.includes(eventer.target.value.toLowerCase()))
+      events: events.filter(myEvent => myEvent.name.includes(evnt.target.value.toLowerCase()))
     });
   }
 
@@ -448,11 +451,11 @@ export class NewHome extends Component {
                     <Typography gutterBottom variant="display1" component="h2" noWrap={true} style={{ fontSize: 18 }}>Filters</Typography>
                     <div style={{ marginLeft: 16 }}>
                       { filterSelection && filterSelection.length
-                        ? filterSelection.map((selection, index) => {
+                        ? filterSelection.map((selection, index) => (
                           < Chip label = {
                             selection.name
-                          } />;
-                        })
+                          } />
+                        ))
                         : <div/>
                       }
                     </div>

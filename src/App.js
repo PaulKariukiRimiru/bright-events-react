@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { myTheme } from './styles/presentationalStyles';
 import { TOKEN } from './Constants/action_type';
 import { logoutUser, eventSearch, eventFilter } from './actions/accountActions';
 import jwt_decode from 'jwt-decode';
 
-const myBgImage = `url(${require('./images/sample.png')})`;
 
 class App extends Component {
   constructor() {
@@ -65,8 +61,6 @@ class App extends Component {
   }
 
   render() {
-    const { user } = this.props;
-    const { search, locations, category } = this.state;
 
     return (
       <div className="App" >
@@ -77,9 +71,13 @@ class App extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  return ({ 
-  user: state.account.user, history: ownProps.history, events: state.account.events, userEvents: state.account.userEvents, location: ownProps.location
- });
+  return ({
+    user: state.account.user,
+    history: ownProps.history,
+    events: state.account.events,
+    userEvents: state.account.userEvents,
+    location: ownProps.location
+  });
 }
 
 export default connect(mapStateToProps)(App);

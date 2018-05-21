@@ -1,23 +1,24 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Tab, Tabs } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from 'material-ui/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import { Tab, Tabs } from '@material-ui/core';
+import Fade from '@material-ui/core/Fade';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
+import PropTypes from 'prop-types';
+import React from 'react';
 import SwipableViews from 'react-swipeable-views';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+
 import Login from './Login';
-import Register from './Register';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Fade from '@material-ui/core/Fade';
-import StepperComponent from '../components/StepperComponent';
 import NewListComponent from '../components/NewListComponent';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Register from './Register';
+import StepperComponent from '../components/StepperComponent';
 
 class NewDialog extends React.Component {
   state = {

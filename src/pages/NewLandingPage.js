@@ -17,7 +17,7 @@ import {
 import { dismissMessageAction } from '../actions';
 import NotificationComponent from '../components/NotificationComponent';
 
-class NewLandingPage extends Component {
+export class NewLandingPage extends Component {
   state = {
     userDetails: {},
     showDialog: false
@@ -35,7 +35,7 @@ class NewLandingPage extends Component {
     return this.setState(myStateCopy);
   }
 
-  handleRegistrationFormSubmit = (event) => {
+  handleRegistrationFormSubmit = () => {
     this
       .props
       .registerUser(this.state.userDetails, () => {

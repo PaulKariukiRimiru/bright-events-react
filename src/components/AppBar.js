@@ -10,7 +10,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Hidden from '@material-ui/core/Hidden';
 import isObjectEmpty from 'is-empty-object';
-import { white } from '@material-ui/core/colors';
 
 const styles = {
   menuButton: {
