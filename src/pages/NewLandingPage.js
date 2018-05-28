@@ -18,25 +18,43 @@ import {
 } from '../actions/accountActions';
 import { dismissMessageAction } from '../actions';
 import NotificationComponent from '../components/NotificationComponent';
-
+/**
+ * Landing page Container component
+ * @export
+ * @class NewLandingPage
+ * @extends Component
+ */
 export class NewLandingPage extends Component {
   state = {
     userDetails: {},
     showDialog: false
   }
-
+  /**
+   * handles the display of the login/register dialog
+   * @memberof NewLandingPage
+   * @returns {undefined}
+   */
   showAccountDialog = () => {
     this.setState({
       showDialog: true
     });
   }
-
+  /**
+   * handles the population of the login/register form on the state
+   * @memberof NewLandingPage
+   * @param {Object} event
+   * @returns {undefined}
+   */
   onChangeListener = (event) => {
     const myStateCopy = this.state;
     myStateCopy.userDetails[event.target.name] = event.target.value;
     return this.setState(myStateCopy);
   }
-
+  /**
+   * handles the dispatch of the registration action
+   * @memberof NewLandingPage
+   * @returns {undefined}
+   */
   handleRegistrationFormSubmit = () => {
     this
       .props
@@ -44,8 +62,12 @@ export class NewLandingPage extends Component {
         this.showAccountDialog();
       });
   }
-
-  handleLoginFormSubmit = (event) => {
+  /**
+   * handles the dispatch of the login action
+   * @memberof NewLandingPage
+   * @returns {undefined}
+   */
+  handleLoginFormSubmit = () => {
     this
       .props
       .loginUser(this.state.userDetails, () => {
@@ -53,6 +75,11 @@ export class NewLandingPage extends Component {
         this.props.history.push('/home');
       });
   }
+  /**
+   * handles the closing of the login/register dialog
+   * @memberof NewLandingPage
+   * @returns {undefined}
+   */
   handleDialogClose = () => {
     this.setState({
       showDialog: false
@@ -69,9 +96,10 @@ export class NewLandingPage extends Component {
     return (
       <Grid fluid style={{ margin: 0, padding: 0 }}>
         <GridComponent container direction='column' spacing={0} style={{ backgroundColor: '#424242' }}>
+          {showDialog &&
           <NewDialog
               view='account'
-              openDialog={showDialog}
+              open={showDialog}
               title='Login or create new Account'
               onChange={this.onChangeListener}
               handleLogin={this.handleLoginFormSubmit}
@@ -79,6 +107,7 @@ export class NewLandingPage extends Component {
               loading={fetching}
               handleClose={this.handleDialogClose}
             />
+            }
           <GridComponent item>
             <Toolbar style={{ width: '100%', color: '#ffffff' }}>
               <Button style = {
@@ -116,7 +145,7 @@ export class NewLandingPage extends Component {
                     padding: 16,
                     backgroundColor: '#424242',
                     opacity: '0.8'
-                  }} classes='rounded'>
+                  }} >
                   <GridComponent container alignItems='center' direction='column'>
                     <Typography
                       variant='display3'

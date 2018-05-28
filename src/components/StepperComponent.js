@@ -9,7 +9,12 @@ import {
 } from '@material-ui/core';
 
 import { Row, Col } from 'react-flexbox-grid';
-
+/**
+ * Stepper presentational component
+ * @export
+ * @class StepperComponent
+ * @extends Component
+ */
 export default class StepperComponent extends Component {
   state = {
     step: 0,
@@ -22,13 +27,23 @@ export default class StepperComponent extends Component {
       host: ''
     }
   };
-
+  /**
+   * handles submition of the form
+   * @memberof StepperComponent
+   * @returns {undefined}
+   */
   handleSubmit = () => {
     this
       .props
       .handleSubmit(this.state.form);
   }
-
+  /**
+   * handles the population of the form
+   * @memberof StepperComponent
+   * @param {Object} event
+   * @param {Date} date
+   * @returns {undefined}
+   */
   onChange = (event, date) => {
     const myStateCopy = this.state;
     if (event) {
@@ -40,7 +55,11 @@ export default class StepperComponent extends Component {
     }
     return this.setState(myStateCopy);
   };
-
+  /**
+   * handles navigation to next step
+   * @memberof StepperComponent
+   * @returns {undefined}
+   */
   handleStepNext = () => {
     let { step } = this.state;
     this.setState({
@@ -48,7 +67,11 @@ export default class StepperComponent extends Component {
       end: step >= this.props.steps
     });
   };
-
+  /**
+   * handles navigation to previous step
+   * @memberof StepperComponent
+   * @returns {undefined}
+   */
   handleStepPrev = () => {
     const { step } = this.state;
     if (step > 0) {
@@ -57,7 +80,12 @@ export default class StepperComponent extends Component {
       });
     }
   };
-
+  /**
+   * handles the rendering of navigators for foward and backward navigation
+   * @memberof StepperComponent
+   * @param {Integer} thisStep
+   * @returns {Node} div
+   */
   renderNavigators(thisStep) {
     const { step } = this.state;
 

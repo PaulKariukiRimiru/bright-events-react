@@ -219,12 +219,12 @@ export default class GridItemComponent extends Component {
                 padding: 2
               }}>
                 <Col xs={4}>
-                  <IconButton color='#CE93D8' aria-label='save' onClick={this.confirmEdit}>
+                  <IconButton aria-label='save' onClick={this.confirmEdit}>
                     <Save/>
                   </IconButton>
                 </Col>
                 <Col xs={4}>
-                  <IconButton color='#CE93D8' aria-label='close' onClick={this.handleEditClose}>
+                  <IconButton aria-label='close' onClick={this.handleEditClose}>
                     <Close/>
                   </IconButton>
                 </Col>
@@ -235,7 +235,6 @@ export default class GridItemComponent extends Component {
               <Col xs={4}>
                 <IconButton
                   onClick={this.handleRsvpRequest}
-                  color="#FFF59"
                   aria-label='Reservation list'>
                   <RsvpList/>
                 </IconButton>
@@ -243,7 +242,6 @@ export default class GridItemComponent extends Component {
               <Col xs={4}>
                 <IconButton
                   onClick={this.handleEventEdit}
-                  color="#CE93D8"
                   aria-label='Edit Event'>
                   <Edit/>
                 </IconButton>
@@ -251,7 +249,6 @@ export default class GridItemComponent extends Component {
               <Col xs={4}>
                 <IconButton
                   onClick={this.confirmDelete}
-                  color="#FFAB91"
                   aria-label='Delete Event'>
                   <Delete/>
                 </IconButton>
@@ -260,6 +257,7 @@ export default class GridItemComponent extends Component {
           }
         </CardActions>
       </Card>
+      { open &&
       <NewDialog
         open={open}
         view='confirmation'
@@ -271,6 +269,7 @@ export default class GridItemComponent extends Component {
         deleteEvent = {this.handleEventDelete}
         no={this.handeDialogClose}
       />
+      }
       </div>
     );
   }

@@ -153,12 +153,13 @@ export const eventRsvpGet = (id, callBack) => (dispatch) => {
     });
 };
 
-export const eventEdit = (id, payload) => (dispatch) => {
+export const eventEdit = (id, payload, callBack) => (dispatch) => {
   axios({
     method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers
   })
     .then(resp => (dispatch(eventEditAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events edited')))
+    .then(() => callBack('editEvent'))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));

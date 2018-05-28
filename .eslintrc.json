@@ -32,7 +32,7 @@
       "require": {
         "FunctionDeclaration": false,
         "MethodDefinition": false,
-        "ClassDeclaration": false
+        "ClassDeclaration": true
       }
     }]
   }

@@ -16,13 +16,20 @@ const setUp = (isMount) => {
     registerUser: (userDetails, callBack) => {}
   };
   if (isMount) {
-    return mount(<NewLandingPage {...minProps} />);
+    const wrapper = mount(<NewLandingPage {...minProps} />);
+    wrapper.setState({
+      showDialog: false
+    });
+    return wrapper;
   }
   return shallow(<NewLandingPage {...minProps} />);
 };
 describe('Component : Landing Page', () => {
   describe('Render tests', () => {
     const wrapper = setUp(true);
+    wrapper.setState({
+      showDialog: true
+    });
     it('Renders a container GridComponent', () => {
       expect(wrapper.find({ container: true }).length).to.be.greaterThan(0, 'GridComponent container missing');
     });
@@ -30,6 +37,9 @@ describe('Component : Landing Page', () => {
       expect(wrapper.find({ item: true }).length).to.be.greaterThan(0, 'there are no GridComponent items');
     });
     it('Renders a Dialog Component', () => {
+      wrapper.setState({
+        showDialog: true
+      });
       expect(wrapper.find('NewDialog').exists()).to.be.equal(true, 'cannot find dialog');
     });
     it('Renders a Notification component', () => {
@@ -57,21 +67,22 @@ describe('Component : Landing Page', () => {
       wrapper.unmount();
     });
     it('displays account dialog on click', () => {
-      expect(wrapper.find('NewDialog').prop('openDialog')).to.be.equal(false);
+      expect(wrapper.state().showDialog).to.be.equal(false);
       const button = wrapper.find('button');
       button.first().simulate('click');
-      expect(wrapper.find('NewDialog').prop('openDialog')).to.be.equal(true);
+      expect(wrapper.find('NewDialog').prop('open')).to.be.equal(true);
     });
     it('closes dialog', () => {
       const instance = wrapper.instance();
       const closeDiag = spy(instance, 'handleDialogClose');
-      expect(wrapper.find('NewDialog').prop('openDialog')).to.be.equal(false);
       const button = wrapper.find('button');
+
+      expect(wrapper.state().showDialog).to.be.equal(false);
       button.first().simulate('click');
-      expect(wrapper.find('NewDialog').prop('openDialog')).to.be.equal(true);
+      expect(wrapper.find('NewDialog').prop('open')).to.be.equal(true);
       instance.handleDialogClose();
       expect(closeDiag.calledOnce);
-      expect(wrapper.find('NewDialog').prop('openDialog')).to.be.equal(true);
+      expect(wrapper.find('NewDialog').prop('open')).to.be.equal(true);
     });
     it('register called with correct data', () => {
       wrapper.setState({

@@ -9,7 +9,12 @@ import {
   RadioGroup
 } from '@material-ui/core';
 import React, { Component } from 'react';
-
+/**
+ * Foliter Form presentational container
+ * @export
+ * @class FilterformComponent
+ * @extends Component
+ */
 export default class FilterformComponent extends Component {
   state = {
     userEvents: false,
@@ -21,7 +26,13 @@ export default class FilterformComponent extends Component {
     rsvpCanceled: false,
     value: ''
   }
-
+  /**
+   * handles the check change on the radio buttons
+   * @memberof FilterformComponent
+   * @param {Object} event
+   * @param {Boolean} isChecked
+   * @returns {undefined}
+   */
   onCheckChange = (event, isChecked) => {
     const {
       sortItemsToDisplay
@@ -33,7 +44,12 @@ export default class FilterformComponent extends Component {
     });
     sortItemsToDisplay(event.target.id, isChecked);
   }
-
+  /**
+   * handles the population  of the sort by name form
+   * @memberof FilterformComponent
+   * @param {Object} event
+   * @returns {undefined}
+   */
   handleChange = (event) => {
     const {
       sortItemsToDisplay

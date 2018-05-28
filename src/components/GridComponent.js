@@ -2,7 +2,12 @@ import GridList from '@material-ui/core/GridList';
 import React, { Component } from 'react';
 
 import GridItemComponent from './GridItemComponent';
-
+/**
+ * Grid List Presentational component
+ * @export
+ * @class GridComponent
+ * @extends Component
+ */
 export default class GridComponent extends Component {
   render() {
     const {

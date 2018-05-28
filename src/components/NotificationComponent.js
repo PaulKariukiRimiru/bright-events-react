@@ -83,7 +83,7 @@ class NotificationComponent extends React.Component {
           autoHideDuration={3000}
           onClose={this.handleClose}
           onExited={this.handleExited}
-          SnackbarContentProps={{
+          snackbarcontentprops={{
           'aria-describedby': 'message-id'
           }}
           message={<span id = "message-id" > {message} </span>}

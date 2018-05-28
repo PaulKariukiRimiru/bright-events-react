@@ -56,6 +56,12 @@ import MyAppBar from '../components/AppBar';
 import NewDialog from '../components/NewDialog';
 import NotificationComponent from '../components/NotificationComponent';
 
+/**
+ * Home Container component
+ * @export
+ * @class NewHome
+ * @extends Component
+ */
 export class NewHome extends Component {
   state = {
     drawerOpen: false,
@@ -78,14 +84,22 @@ export class NewHome extends Component {
   logout = () => {
     this.props.logoutUser(this.props.user.id, this.callBack);
   }
-
+  /**
+   * sets filter items for location and category
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   sortFilterItems = () => {
     this.setState({
       location: [...new Set(this.state.location)],
       category: [...new Set(this.state.category)],
     });
   }
-
+  /**
+   * displays all events
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayAllEvents = () => {
     this.setState({
       displayed: 'allEvents',
@@ -95,49 +109,78 @@ export class NewHome extends Component {
     });
     this.sortFilterItems();
   }
-
+  /**
+   * Displays only the current users events
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayUserEvents = () => {
     this.setState({
       displayed: 'userEvents',
       events: this.props.events.filter(event => event.host === this.props.user.id.toString())
     });
   }
-
+  /**
+   * Displayes the current users reservations
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayUserRsvps = () => {
     this.setState({
       displayed: 'userRsvps',
       events: this.props.userRsvps
     });
   }
-
+  /**
+   * Displayes only the rsvps that the user is willing to attend
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayRsvpsAttending = () => {
     this.setState({
       displayed: 'userRsvps',
       events: this.props.userRsvps.filter(event => event.attendance && event.accepted)
     });
   }
-
+  /**
+   *  Displayes the events that the user is not willing to attend
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayRsvpsNotAttending = () => {
     this.setState({
       displayed: 'userRsvps',
       events: this.props.userRsvps.filter(event => !event.attendance || !event.accepted)
     });
   }
-
+  /**
+   * Displayes the reservations that have been canceled by the host
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayRsvpsRejected = () => {
     this.setState({
       displayed: 'userRsvps',
       events: this.props.userRsvps.filter(event => !event.accepted)
     });
   }
-
+  /**
+   * Displays the reservations that have been accepted by the host
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   displayRsvpsAccepted = () => {
     this.setState({
       displayed: 'userRsvps',
       events: this.props.userRsvps.filter(event => event.accepted)
     });
   }
-
+  /**
+   * Sorts the events to display according to the selection passed
+   * @memberof NewHome
+   * @param {String} selection
+   * @returns {undefined}
+   */
   sortItemsToDisplay = (selection) => {
     switch (selection) {
       case 'userEvents':
@@ -163,19 +206,36 @@ export class NewHome extends Component {
         break;
     }
   }
-
+  /**
+   * Shows the a dialog to allow login and registration
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   showAccountDialog = () => {
     this.setState({ showDialog: true, view: 'account', title: 'Login or create an account' });
   }
-
+  /**
+   * Shows the dialog that allows creation of events
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   showCreateEventDialog = () => {
     this.setState({ showDialog: true, view: 'createEvent', title: 'create event' });
   }
-
+  /**
+   * Shows dialog that displayes the number of people who have reserved an event
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   showRsvpListDialog = () => {
     this.setState({ showDialog: true, view: 'rsvpList', title: 'Event Reservation list' });
   }
-
+  /**
+   * handles the reservation of an event
+   * @memberof NewHome
+   * @param {Integer} eventId
+   * @returns {undefined}
+   */
   handleRsvpClick = (eventId) => {
     this
       .props
@@ -185,39 +245,70 @@ export class NewHome extends Component {
           .getUserRsvps();
       });
   }
-
+  /**
+   * handles the opening and closing of the drawer
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   toggleDrawer = () => {
     this.setState({
       drawerOpen: !this.state.drawerOpen
     });
   }
-
+  /** handles the dismissing of a message
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   handleRequestClose = () => {
     this
       .props
       .dismissMessage();
   }
-
+  /**
+   * handles opening of the create event dialog
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   handleFabClick = () => {
     this.setState({ showDialog: true, view: 1 });
   }
-
+  /**
+   * handles the closing of a dialog
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   handleClose = () => {
     this.setState({ showDialog: false });
   }
-
+  /**
+   * handles the dispatch of a delete event action
+   * @memberof NewHome
+   * @param {Integer} eventId
+   * @returns {undefined}
+   */
   onDeleteSubmit = (eventId) => {
     this
       .props
       .deleteEvent(eventId, this.callBack);
   }
-
+  /**
+   * handles the dispatch of a reservation delete action
+   * @memberof NewHome
+   * @param {Integer} eventId
+   * @returns {undefined}
+   */
   onRsvpDelete = (eventId) => {
     this
       .props
       .deleteRsvp({ event_id: eventId });
   }
-
+  /**
+   * handles the dispatch of an event edit form on change event
+   * @memberof NewHome
+   * @param {Object} event
+   * @param {Object} date
+   * @returns {undefined}
+   */
   onEditChange = (event, date) => {
     const myStateCopy = this.state;
     if (event) {
@@ -230,22 +321,39 @@ export class NewHome extends Component {
 
     return this.setState(myStateCopy);
   }
-
+  /**
+   * handles the dispatch of an event edit action
+   * @memberof NewHome
+   * @param {Integer} id
+   * @returns {undefined}
+   */
   onEditSubmit = (id) => {
     if (!isObjectEmpty(this.state.editForm)) {
       this
         .props
-        .editEvent(id, this.state.editForm);
+        .editEvent(id, this.state.editForm, this.callBack);
       this.setState({ editForm: {}, showDialog: false });
     }
   }
-
+  /**
+   * handles the dispatch of a reservations fetch action
+   * @memberof NewHome
+   * @param {Integer} id
+   * @returns {undefined}
+   */
   onRsvpRequest = (id) => {
     this
       .props
       .fetchRsvps(id, this.callBack);
   }
-
+  /**
+   * handles the changing of the users reservation status
+   * @memberof NewHome
+   * @param {Integer} id
+   * @param {Boolean} status
+   * @param {String} email
+   * @returns {undefined}
+   */
   onToggleRsvpStatus = (id, status, email) => {
     const details = {
       accept_status: status,
@@ -255,7 +363,12 @@ export class NewHome extends Component {
       .props
       .changeRsvpStatus(id, details);
   }
-
+  /**
+   * handles the dispatch of an event creation action
+   * @memberof NewHome
+   * @param {Object} eventDetails
+   * @returns {undefined}
+   */
   onFinish = (eventDetails) => {
     this.setState({ showDialog: false });
     eventDetails.host = this.props.user.id
@@ -266,7 +379,13 @@ export class NewHome extends Component {
       .props
       .createEvent(eventDetails, this.callBack);
   }
-
+  /**
+   * handles the the dispatch of an event attendance change action
+   * @memberof NewHome
+   * @param {Integer} eventId
+   * @param {Boolean} attendance
+   * @returns {undefined}
+   */
   handleAttendanceToggle = (eventId, attendance) => {
     this
       .props
@@ -274,13 +393,23 @@ export class NewHome extends Component {
         this.displayUserRsvps();
       });
   }
-
+  /**
+   * handles the population of the event creation object
+   * @memberof NewHome
+   * @param {Object} event
+   * @returns {undefined}
+   */
   onChange = (event) => {
     const myStateCopy = this.state;
     myStateCopy.form[event.target.name] = event.target.value;
     return this.setState(myStateCopy);
   }
-
+  /**
+   * handles the dispatch of a registration action
+   * @memberof NewHome
+   * @param {Object} event
+   * @returns {undefined}
+   */
   handleRegistrationFormSubmit = (event) => {
     this
       .props
@@ -288,7 +417,12 @@ export class NewHome extends Component {
         this.showAccountDialog();
       });
   }
-
+  /**
+   * handles the dispatch of a login action
+   * @memberof NewHome
+   * @param {Object} event
+   * @returns {undefined}
+   */
   handleLoginFormSubmit = (event) => {
     this
       .props
@@ -296,7 +430,11 @@ export class NewHome extends Component {
         this.handleDialogClose();
       });
   }
-
+  /**
+   * handles the closing of a dialog
+   * @memberof NewHome
+   * @returns {undefined}
+   */
   handleDialogClose = () => {
     this.setState({ showDialog: false });
   }
@@ -307,19 +445,34 @@ export class NewHome extends Component {
       .getEvents(this.callBack);
     this.displayAllEvents();
   }
-
+  /**
+   * handles the selection of a location and filters the events according to that location
+   * @memberof NewHome
+   * @param {String} location
+   * @returns {undefined}
+   */
   locationSelect = location => (event) => {
     this.setState({
       events: this.state.events.filter(selectedEvent => selectedEvent.location === location)
     });
   }
-
+  /**
+   * handles the selection of a category and filters the events according to that category
+   * @memberof NewHome
+   * @param {String} category
+   * @returns {undefined}
+   */
   categorySelect = category => (event) => {
     this.setState({
       events: this.state.events.filter(selectedEvent => selectedEvent.category === category)
     });
   }
-
+  /**
+   * handles the searching of a category by name
+   * @memberof NewHome
+   * @param {Object} evnt
+   * @returns {undefined}
+   */
   onSearchChange = (evnt) => {
     const { events } = this.props;
     this.setState({
@@ -327,7 +480,12 @@ export class NewHome extends Component {
     });
   }
 
-
+  /**
+   * handles the execution of callback function according to the registered options
+   * @memberof NewHome
+   * @param {String} method
+   * @returns {undefined}
+   */
   callBack = (method) => {
     switch (method) {
       case 'logout':
@@ -346,6 +504,9 @@ export class NewHome extends Component {
       case 'createEvent':
         this.displayAllEvents();
         break;
+      case 'editEvent':
+        this.displayUserEvents();
+        break;
       default:
         break;
     }
@@ -359,7 +520,7 @@ export class NewHome extends Component {
       rsvps
     } = this.props;
     const {
-      filterSelection, showDialog, view, title, events, displayed,
+      filterSelection, showDialog, view, title, events, displayed, drawerOpen
     } = this.state;
     const fabStyle = {
       position: 'fixed',
@@ -409,21 +570,23 @@ export class NewHome extends Component {
           showAccountDialog={this.showAccountDialog}
           logout={this.logout}/>
 
-        <SwipeableDrawer
-          open={this.state.drawerOpen}
-          onOpen={this.toggleDrawer}
-          onClose={this.toggleDrawer}>
-          <div>
-            <GridComponent container direction='row' justify='flex-start'>
-              <div
-                style={{
-                backgroundColor: blue[400],
-                height: 100
-              }}/>
-              <FilterForm direction='row' sortItemsToDisplay={this.sortItemsToDisplay}/>
-            </GridComponent>
-          </div>
-        </SwipeableDrawer>
+        { drawerOpen &&
+          <SwipeableDrawer
+            open={drawerOpen}
+            onOpen={this.toggleDrawer}
+            onClose={this.toggleDrawer}>
+            <div>
+              <GridComponent container direction='row' justify='flex-start'>
+                <div
+                  style={{
+                  backgroundColor: blue[400],
+                  height: 100
+                }}/>
+                <FilterForm direction='row' sortItemsToDisplay={this.sortItemsToDisplay}/>
+              </GridComponent>
+            </div>
+          </SwipeableDrawer>
+        }
         < GridComponent container direction='row'>
           <Hidden mdDown>
             <GridComponent container direction='column' xs={0} sm={0} md={0} lg={3}>
@@ -471,7 +634,7 @@ export class NewHome extends Component {
                     <Typography gutterBottom variant="display1" component="h2" noWrap={true} style={{ fontSize: 18 }}>Category</Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <Grid container direction='column'>
+                    <GridComponent container direction='column'>
                     <List>
                       { events.map((event, index) => (
                         <ListItem
@@ -490,7 +653,7 @@ export class NewHome extends Component {
                       }
                     </List>
                     <Button primary='true' onClick={this.displayAllEvents}>Reset</Button>
-                    </Grid>
+                    </GridComponent>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               </GridComponent>
@@ -530,7 +693,7 @@ export class NewHome extends Component {
           </Hidden>
           <GridComponent item xs={12} sm={12} md={12} lg={9}>
             {
-              fetching && < CircularProgress size = {
+              fetching && <CircularProgress size = {
                 68
               } style ={{
                 marginLeft: 'auto', marginRight: 'auto'
@@ -569,24 +732,24 @@ export class NewHome extends Component {
               message={message.message}/>
           }
         </GridComponent>
+        { showDialog &&
         <NewDialog
           style={{
             marginLeft: 'auto',
             marginRight: 'auto'
           }}
-          openDialog={showDialog}
+          open={showDialog}
           view={view}
           title={title}
           eventForm={fields}
           loading={fetching}
           onChange={this.onChange}
-          handleLogin={this.handleLoginFormSubmit}
           handleSubmit={this.onFinish}
-          handleRegister={this.handleRegistrationFormSubmit}
           onToggleRsvpStatus={this.onToggleRsvpStatus}
           closeDialog={this.handleClose}
           handleClose={this.handleClose}
           rsvpList={rsvps}/>
+        }
         <Button
           style={fabStyle}
           variant="fab"
@@ -627,8 +790,8 @@ const mapDispatchToProps = dispatch => ({
   deleteRsvp: (eventDetails) => {
     dispatch(userDeleteRsvp(eventDetails));
   },
-  editEvent: (id, eventDetails) => {
-    dispatch(eventEdit(id, eventDetails));
+  editEvent: (id, eventDetails, callBack) => {
+    dispatch(eventEdit(id, eventDetails, callBack));
   },
   fetchRsvps: (id, callBack) => {
     dispatch(eventRsvpGet(id, callBack));

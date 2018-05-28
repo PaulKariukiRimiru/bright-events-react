@@ -14,7 +14,11 @@ const styles = theme => ({
     backgroundColor: blue[200]
   },
 });
-
+/**
+ * Switch list Presentational component
+ * @class SwitchListSecondary
+ * @extends React.Component
+ */
 class SwitchListSecondary extends React.Component {
   state = {
     status: true

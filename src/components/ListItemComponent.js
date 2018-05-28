@@ -14,7 +14,11 @@ const styles = theme => ({
   }
 });
 
-
+/**
+ * List item presentational component
+ * @class ListItemComponent
+ * @extends Component
+ */
 class ListItemComponent extends Component {
   state = {
     status: true

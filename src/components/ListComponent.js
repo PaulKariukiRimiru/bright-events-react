@@ -3,7 +3,12 @@ import { Subheader } from '@material-ui/core';
 import React, { Component } from 'react';
 
 import ListItemComponent from './ListItemComponent';
-
+/**
+ * List presentational component
+ * @export
+ * @class ListComponent
+ * @extends Component
+ */
 export default class ListComponent extends Component {
   render() {
     return (

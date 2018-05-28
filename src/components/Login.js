@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-flexgrid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
+/**
+ * Login form presentational component
+ * @export
+ * @class Login
+ * @extends Component
+ */
 export default class Login extends Component {
   render() {
     const { onChange, handleLogin } = this.props;
