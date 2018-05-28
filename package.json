@@ -52,7 +52,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "test": "nyc --reporter=html --reporter=text mocha -w --require ignore-styles --require mock-local-storage --compilers js:babel-core/register --no-deprecation --colors --require ./setUpTest.js ./src/**/*.test.js || true",
+    "test": "nyc --reporter=html --reporter=text mocha --require ignore-styles --require mock-local-storage --compilers js:babel-core/register --no-deprecation --colors --require ./setUpTest.js ./src/**/*.test.js || true",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "prod": "NODE_ENV=production node server.js"
   },
