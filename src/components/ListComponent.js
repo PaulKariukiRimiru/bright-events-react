@@ -1,24 +1,31 @@
+import { List } from '@material-ui/core/List';
+import { Subheader } from '@material-ui/core';
 import React, { Component } from 'react';
-import List from 'material-ui/List';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import ListItem from './ListItem';
+
+import ListItemComponent from './ListItemComponent';
+/**
+ * List presentational component
+ * @export
+ * @class ListComponent
+ * @extends Component
+ */
 export default class ListComponent extends Component {
-    
-    render() {
-        return (
-            <MuiThemeProvider>
-                
-                <div >
-                    <List >
-
-                        {this.props.itemList.map((item, index) => {
-                            return(<ListItem key={index}>item</ListItem>);
-                        })}
-
-                    </List>
-                    
-                </div>
-            </MuiThemeProvider>
-        )
-    }
+  render() {
+    return (
+      <div >
+        <List >
+          <Subheader>
+            Users attending
+          </Subheader>
+          {this
+            .props
+            .rsvpList
+            .map((rsvp, index) => (<ListItemComponent
+              key={index}
+              rsvp={rsvp}
+              onToggleRsvpStatus={this.props.onToggleRsvpStatus}/>))}
+        </List>
+      </div>
+    );
+  }
 }

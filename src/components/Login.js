@@ -1,59 +1,73 @@
-import React, { Component } from 'react'
-import {Row, Col} from 'react-flexgrid';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
+import React, { Component } from 'react';
+import { Row, Col } from 'react-flexgrid';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+/**
+ * Login form presentational component
+ * @export
+ * @class Login
+ * @extends Component
+ */
 export default class Login extends Component {
-    
-    render() {
+  render() {
+    const { onChange, handleLogin } = this.props;
+    const divStyle = {
+      margin: 12,
+      marginTop: 24
+    };
 
-        const mainStyle = {
-            width : '75%'
-        }
-
-        const divStyle = {
-            margin : 12,
-            marginTop : 50
-        }
-
-
-        return (
-            <MuiThemeProvider style={mainStyle}>
-                <Row center="xs">
-                    <Col xs="6">
-                        <form>
-                            <Row middle="xs">
-                                <Col xs="6">
-                                    <TextField 
-                                        floatingLabelText="Email"
-                                        refs="emailField"
-                                        name="email"
-                                        style={divStyle}/>
-                                </Col>
-                            </Row>
-                            <Row middle="xs">
-                                <Col xs="6">
-                                    <TextField
-                                        floatingLabelText="Password"
-                                        refs="passwordField"
-                                        name="password"
-                                        style={divStyle}/>
-                                </Col>
-                            </Row>
-                            <Row center="xs">
-                                <Col xs="4">
-                                    <RaisedButton name="submit" 
-                                        onClick={this.clickHandler} 
-                                        primary={true} 
-                                        label="Login"
-                                        style={divStyle}/>
-                                </Col>
-                            </Row>
-                        </form>
-                    </Col>
-                </Row>
-            </MuiThemeProvider>
-        )
-    }
+    return (
+      <Row center="xs">
+      <Col xs={12}>
+      <form onSubmit={handleLogin}>
+        <Row center="xs">
+          <Col xs={12}>
+            <div>
+              <Row middle="xs">
+                <Col xs={10}>
+                  <TextField
+                    required
+                    id="email"
+                    label="email"
+                    type="email"
+                    name='email'
+                    autoComplete="current-email"
+                    margin="normal"
+                    style={divStyle}
+                    onChange={onChange}/>
+                </Col>
+              </Row>
+              <Row middle="xs">
+                <Col xs={10}>
+                  <TextField
+                    required
+                    id="password"
+                    label="password"
+                    type="password"
+                    name='password'
+                    margin="normal"
+                    style={divStyle}
+                    onChange={onChange}/>
+                </Col>
+              </Row>
+              <Row center='xs'>
+                <Col xs={8}>
+                  <Button
+                    name="submit"
+                    type="submit"
+                    variant="raised"
+                    color="secondary"
+                    style={{
+                    marginTop: 40
+                  }}>Login</Button>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+      </form>
+      </Col>
+      </Row>
+    );
+  }
 }
