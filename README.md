@@ -8,8 +8,6 @@ Bright events provides a platform for event organizers to create and manage diff
 ## Getting Started
 
 To start development
-    
-    * Create a virtual environment in your project  folder
 
     * Use https://github.com/PaulKariukiRimiru/bright-events-react.git to clone the repository
 
