@@ -92,8 +92,10 @@ export class NewHome extends Component {
    * @returns {undefined}
    */
   sortFilterItems = () => {
-    const unqLocation = location => [...new Set(this.state.location)];
-    const unqCategory = category => [...new Set(this.state.category)];
+    const { location, category } = this.state;
+
+    const unqCategory = category.filter(cat => location.includes(cat));
+    const unqLocation = location.filter(loc => category.includes(loc));
     this.setState({
       location: unqLocation,
       category: unqCategory,
@@ -503,6 +505,7 @@ export class NewHome extends Component {
     switch (method) {
       case 'logout':
         localStorage.clear();
+        window.location.reload(true);
         this.props.history.push('/');
         break;
       case 'deleteEvent':

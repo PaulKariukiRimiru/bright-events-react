@@ -267,7 +267,8 @@ export class NewLandingPage extends Component {
                         color: '#fff'
                       }} >
                       Okay, Lets break it down,<br />
-                      We are the difference between Tickets still available and TOTALY SOLD OUT!!<br/>
+                      We are the difference between Tickets still
+                      available and TOTALY SOLD OUT!!<br/>
                       Sign up now and lets take your event experience to the next level
                     </Typography>
                   </GridComponent>

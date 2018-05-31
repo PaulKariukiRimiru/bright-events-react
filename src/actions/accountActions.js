@@ -112,8 +112,9 @@ const userDeleteRsvpAction = payload => ({ type: USER_DELETE_RSVP, payload });
  */
 export const userDeleteRsvp = (payload, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({
-    method: 'delete', url: `${BASE_URL}/api/v2/events/rsvp`, headers, data: payload
+    method: 'delete', url: `${BASE_URL}/api/v2/events/rsvp`, headers: newHeader, data: payload
   })
     .then((resp) => {
       dispatch(userDeleteRsvpAction(resp.data.payload));
@@ -135,8 +136,9 @@ export const userDeleteRsvp = (payload, callBack) => (dispatch) => {
  */
 export const userAttendanceChange = (payload, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({
-    method: 'put', url: `${BASE_URL}/api/v2/events/rsvp`, headers, data: payload
+    method: 'put', url: `${BASE_URL}/api/v2/events/rsvp`, headers: newHeader, data: payload
   })
     .then((resp) => {
       dispatch(userRsvpAttendanceAction(resp.data.payload));
@@ -156,7 +158,8 @@ export const userAttendanceChange = (payload, callBack) => (dispatch) => {
  */
 export const userRsvpsGet = () => (dispatch) => {
   dispatch(fetchingAction(true));
-  axios({ method: 'get', url: `${BASE_URL}/api/v2/events/rsvp`, headers })
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
+  axios({ method: 'get', url: `${BASE_URL}/api/v2/events/rsvp`, headers: newHeader })
     .then((resp) => {
       dispatch(userRsvpsGetAction(resp.data.payload.events));
     })
@@ -176,8 +179,9 @@ export const userRsvpsGet = () => (dispatch) => {
  */
 export const eventSearch = (params = {}, body = {}) => (dispatch) => {
   dispatch(fetchingAction(true));
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({
-    method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers, params, body
+    method: 'get', url: `${BASE_URL}/api/v2/events/search`, headers: newHeader, params, body
   })
     .then(resp => (dispatch(eventSearchAction(resp.data.payload.event_list))))
     .then(() => dispatch(fetchedAction(true, 'Events search successful')))
@@ -195,13 +199,14 @@ export const eventSearch = (params = {}, body = {}) => (dispatch) => {
  */
 export const eventFilter = body => (dispatch) => {
   dispatch(fetchingAction(true));
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({
     method: 'get',
     url: `${BASE_URL}/api/v2/events/search`,
     params: {
       q: body.q
     },
-    headers,
+    headers: newHeader,
     body
   })
     .then(resp => (dispatch(eventSearchAction(resp.data.payload.event_list))))
@@ -221,6 +226,7 @@ export const eventFilter = body => (dispatch) => {
  */
 export const eventRsvpGet = (id, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers })
     .then(resp => (dispatch(eventRsvpAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events reservations fetched')))
@@ -240,8 +246,9 @@ export const eventRsvpGet = (id, callBack) => (dispatch) => {
  * @return {Function} dispatch
  */
 export const eventEdit = (id, payload, callBack) => (dispatch) => {
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({
-    method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers
+    method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers: newHeader
   })
     .then(resp => (dispatch(eventEditAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events edited')))
@@ -260,7 +267,8 @@ export const eventEdit = (id, payload, callBack) => (dispatch) => {
  * @return {Function} dispatch
  */
 export const eventDelete = (eventId, callBack) => (dispatch) => {
-  axios({ method: 'delete', url: `${BASE_URL}/api/v2/events/${eventId}`, headers })
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
+  axios({ method: 'delete', url: `${BASE_URL}/api/v2/events/${eventId}`, headers: newHeader })
     .then(resp => (dispatch(eventDeleteAction(eventId))))
     .then(() => (dispatch(fetchedAction(true, 'Event deleted'))))
     .then(() => callBack('deleteEvent'))
@@ -279,8 +287,9 @@ export const eventDelete = (eventId, callBack) => (dispatch) => {
  */
 export const eventManageRsvp = (id, details) => (dispatch) => {
   dispatch(fetchingAction(true));
+  const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
   axios({
-    method: 'put', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers, data: details
+    method: 'put', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers: newHeader, data: details
   })
     .then(resp => (dispatch(eventManageRsvpAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'success')))
@@ -304,8 +313,9 @@ export const eventRsvp = (event, email, callBack) => {
   };
   return (dispatch) => {
     dispatch(fetchingAction(true));
+    const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
     axios({
-      method: 'post', url: `${BASE_URL}/api/v2/event/${event}/rsvp`, data: clientDetails, headers
+      method: 'post', url: `${BASE_URL}/api/v2/event/${event}/rsvp`, data: clientDetails, headers: newHeader
     })
       .then(resp => (dispatch(displayMessageAction({ status: true, message: 'event reserved successfully' }))))
       .then(() => dispatch(fetchedAction(true, 'Reserved event')))
@@ -352,8 +362,9 @@ export const eventPost = (payload, callBack) => {
   };
   return (dispatch) => {
     dispatch(fetchingAction(true));
+    const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
     axios({
-      method: 'post', url: `${BASE_URL}/api/v2/events`, headers, data: eventDetails
+      method: 'post', url: `${BASE_URL}/api/v2/events`, headers: newHeader, data: eventDetails
     })
       .then((resp) => {
         eventDetails.id = resp.data.payload.event_id;
@@ -413,8 +424,9 @@ export const logoutUser = (payload, callBack) => {
   };
   return (dispatch) => {
     dispatch(fetchingAction(true));
+    const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
     axios({
-      method: 'post', url: `${BASE_URL}/api/v2/auth/logout`, headers, data
+      method: 'post', url: `${BASE_URL}/api/v2/auth/logout`, headers: newHeader, data
     })
       .then(resp => (dispatch(logoutAction(resp.data.payload))))
       .then(() => callBack('logout'))

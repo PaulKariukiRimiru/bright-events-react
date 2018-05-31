@@ -90,6 +90,7 @@ export default class StepperComponent extends Component {
    * handles the rendering of navigators for foward and backward navigation
    * @memberof StepperComponent
    * @param {Integer} thisStep
+   * @param {String} name
    * @returns {Node} div
    */
   renderNavigators(thisStep, name) {
@@ -127,10 +128,10 @@ export default class StepperComponent extends Component {
             .map((item, index) => {
               const props = {};
               const labelProps = {};
-              if (this.isSkipped(item.fields[0].name)) {
+              if (this.isSkipped(item.fields[0].name) && index === step) {
                 labelProps.optional = (
                   <Typography variant="caption" color="error">
-                    Sorry you cannot leave this field empty
+                    This field is required
                   </Typography>
                 );
                 labelProps.error = true;

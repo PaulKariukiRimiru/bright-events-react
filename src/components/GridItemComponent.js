@@ -53,11 +53,6 @@ export default class GridItemComponent extends Component {
     height: 100,
     backgroundColor: '#6d6d6d'
   }
-  componentDidMount() {
-    console.log('====================================');
-    console.log(this.props.isReserved);
-    console.log('====================================');
-  }
   /**
    * handles the toggle of edit mode on component
    * @memberof GridItemComponent

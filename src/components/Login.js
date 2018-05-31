@@ -17,7 +17,8 @@ export default class Login extends Component {
     };
 
     return (
-
+      <Row center="xs">
+      <Col xs={12}>
       <form onSubmit={handleLogin}>
         <Row center="xs">
           <Col xs={12}>
@@ -65,6 +66,8 @@ export default class Login extends Component {
           </Col>
         </Row>
       </form>
+      </Col>
+      </Row>
     );
   }
 }
