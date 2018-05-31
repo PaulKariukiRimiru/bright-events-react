@@ -25,6 +25,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Grow
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import Search from '@material-ui/icons/Search';
@@ -78,7 +79,8 @@ export class NewHome extends Component {
     title: '',
     events: [],
     location: [],
-    category: []
+    category: [],
+    eventIds: []
   }
 
   logout = () => {
@@ -90,9 +92,11 @@ export class NewHome extends Component {
    * @returns {undefined}
    */
   sortFilterItems = () => {
+    const unqLocation = location => [...new Set(this.state.location)];
+    const unqCategory = category => [...new Set(this.state.category)];
     this.setState({
-      location: [...new Set(this.state.location)],
-      category: [...new Set(this.state.category)],
+      location: unqLocation,
+      category: unqCategory,
     });
   }
   /**
@@ -300,7 +304,7 @@ export class NewHome extends Component {
   onRsvpDelete = (eventId) => {
     this
       .props
-      .deleteRsvp({ event_id: eventId });
+      .deleteRsvp({ event_id: eventId }, this.callBack);
   }
   /**
    * handles the dispatch of an event edit form on change event
@@ -402,10 +406,10 @@ export class NewHome extends Component {
   onChange = (event) => {
     const myStateCopy = this.state;
     myStateCopy.form[event.target.name] = event.target.value;
-    return this.setState(myStateCopy);
+    this.setState(myStateCopy);
   }
   /**
-   * handles the dispatch of a registration action
+   * Handles the dispatch of a registration action
    * @memberof NewHome
    * @param {Object} event
    * @returns {undefined}
@@ -417,8 +421,9 @@ export class NewHome extends Component {
         this.showAccountDialog();
       });
   }
+
   /**
-   * handles the dispatch of a login action
+   * Handles the dispatch of a login action
    * @memberof NewHome
    * @param {Object} event
    * @returns {undefined}
@@ -430,8 +435,9 @@ export class NewHome extends Component {
         this.handleDialogClose();
       });
   }
+
   /**
-   * handles the closing of a dialog
+   * Handles the closing of a dialog
    * @memberof NewHome
    * @returns {undefined}
    */
@@ -445,8 +451,13 @@ export class NewHome extends Component {
       .getEvents(this.callBack);
     this.displayAllEvents();
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ eventIds: this.props.userRsvps.map((event, i) => event.id) });
+  }
+
   /**
-   * handles the selection of a location and filters the events according to that location
+   * Handles the selection of a location and filters the events according to that location
    * @memberof NewHome
    * @param {String} location
    * @returns {undefined}
@@ -456,6 +467,7 @@ export class NewHome extends Component {
       events: this.state.events.filter(selectedEvent => selectedEvent.location === location)
     });
   }
+
   /**
    * handles the selection of a category and filters the events according to that category
    * @memberof NewHome
@@ -467,6 +479,7 @@ export class NewHome extends Component {
       events: this.state.events.filter(selectedEvent => selectedEvent.category === category)
     });
   }
+
   /**
    * handles the searching of a category by name
    * @memberof NewHome
@@ -507,6 +520,10 @@ export class NewHome extends Component {
       case 'editEvent':
         this.displayUserEvents();
         break;
+      case 'deleteRsvp':
+        console.log('called');
+        this.sortItemsToDisplay('userRsvps');
+        break;
       default:
         break;
     }
@@ -520,7 +537,7 @@ export class NewHome extends Component {
       rsvps
     } = this.props;
     const {
-      filterSelection, showDialog, view, title, events, displayed, drawerOpen
+      filterSelection, showDialog, view, title, events, displayed, drawerOpen, eventIds
     } = this.state;
     const fabStyle = {
       position: 'fixed',
@@ -707,22 +724,26 @@ export class NewHome extends Component {
               marginTop: 8
             }}>
               {events.map((event, i) => (
-                <GridComponent item key={i} xs={12} sm={6} md={4} lg={3}>
-                  <GridCard
-                    handleAttendanceToggle={this.handleAttendanceToggle}
-                    onEditChange={this.onEditChange}
-                    onEditSubmit={this.onEditSubmit}
-                    onDeleteSubmit={this.onDeleteSubmit}
-                    onRsvpDelete={this.onRsvpDelete}
-                    onRsvpRequest={this.onRsvpRequest}
-                    handleRsvpClick={this.handleRsvpClick}
-                    event={event}
-                    view = {
-                      !isObjectEmpty(user) && displayed.substr(displayed.length - 6) === 'Events'
-                        ? event.host === user.id.toString() ? 1 : 2 : 3
-                    }
-                    />
-                </GridComponent>
+                <Grow in={true} timeout={1000}>
+                  <GridComponent item key={i} xs={12} sm={6} md={4} lg={3}>
+                    <GridCard
+                      handleAttendanceToggle={this.handleAttendanceToggle}
+                      onEditChange={this.onEditChange}
+                      onEditSubmit={this.onEditSubmit}
+                      onDeleteSubmit={this.onDeleteSubmit}
+                      onRsvpDelete={this.onRsvpDelete}
+                      onRsvpRequest={this.onRsvpRequest}
+                      handleRsvpClick={this.handleRsvpClick}
+                      isReserved={eventIds.indexOf(event.id) > -1}
+                      event={event}
+                      eventsIds={this.eventIds}
+                      view = {
+                        !isObjectEmpty(user) && displayed.substr(displayed.length - 6) === 'Events'
+                          ? event.host === user.id.toString() ? 1 : 2 : 3
+                      }
+                      />
+                  </GridComponent>
+                </Grow>
               ))
             }
             </GridComponent>
@@ -787,8 +808,8 @@ const mapDispatchToProps = dispatch => ({
   deleteEvent: (eventId, callBack) => {
     dispatch(eventDelete(eventId, callBack));
   },
-  deleteRsvp: (eventDetails) => {
-    dispatch(userDeleteRsvp(eventDetails));
+  deleteRsvp: (eventDetails, callBack) => {
+    dispatch(userDeleteRsvp(eventDetails, callBack));
   },
   editEvent: (id, eventDetails, callBack) => {
     dispatch(eventEdit(id, eventDetails, callBack));

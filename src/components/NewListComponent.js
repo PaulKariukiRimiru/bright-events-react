@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import List, { ListSubheader } from '@material-ui/core/List';
+import { List, ListSubheader } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 import ListItem from './ListItemComponent';
 

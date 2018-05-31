@@ -17,6 +17,7 @@ export default class Register extends Component {
     };
 
     return (
+        <form onSubmit={handleRegister}>
             <Row center="xs">
                 <Col xs={8}>
                     <div >
@@ -66,7 +67,6 @@ export default class Register extends Component {
                                 <Button
                                     name="submit"
                                     type="submit"
-                                    onClick={handleRegister}
                                     variant="raised"
                                     color="secondary"
                                     style={{
@@ -77,6 +77,7 @@ export default class Register extends Component {
                     </div>
                 </Col>
             </Row>
+            </form>
     );
   }
 }

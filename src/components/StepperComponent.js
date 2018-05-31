@@ -5,7 +5,8 @@ import {
   StepLabel,
   StepContent,
   Button,
-  TextField
+  TextField,
+  Typography
 } from '@material-ui/core';
 
 import { Row, Col } from 'react-flexbox-grid';
@@ -58,14 +59,19 @@ export default class StepperComponent extends Component {
   /**
    * handles navigation to next step
    * @memberof StepperComponent
+   * @param {String} presentName
    * @returns {undefined}
    */
-  handleStepNext = () => {
+  handleStepNext = presentName => () => {
     let { step } = this.state;
-    this.setState({
-      step: step += 1,
-      end: step >= this.props.steps
-    });
+    const { form } = this.state;
+    if (!this.isSkipped(presentName)) {
+      this.setState({
+        skipped: false,
+        step: step += 1,
+        end: step >= this.props.steps
+      });
+    }
   };
   /**
    * handles navigation to previous step
@@ -86,12 +92,11 @@ export default class StepperComponent extends Component {
    * @param {Integer} thisStep
    * @returns {Node} div
    */
-  renderNavigators(thisStep) {
+  renderNavigators(thisStep, name) {
     const { step } = this.state;
-
     return (
       <div>
-        <Button primary='true' onClick={this.handleStepNext}>{step === this.props.steps
+        <Button primary='true' onClick={this.handleStepNext(name)}>{step === this.props.steps
             ? 'Finish'
             : 'next'}</Button>
         {thisStep > 0 && <Button disabled={step === 0} onClick={this.handleStepPrev}>Back</Button>
@@ -99,8 +104,17 @@ export default class StepperComponent extends Component {
       </div>
     );
   }
+
+  isSkipped = (presentName) => {
+    const { form } = this.state;
+    if (form[presentName] === '') {
+      return true;
+    }
+    return false;
+  }
+
   render() {
-    const { step, end } = this.state;
+    const { step, end, skipped } = this.state;
     return (
       <div style={{
         maxWidth: 380,
@@ -110,9 +124,21 @@ export default class StepperComponent extends Component {
           {this
             .props
             .stepList
-            .map((item, index) => (
-              <Step key={index}>
-                <StepLabel>{item.description}</StepLabel>
+            .map((item, index) => {
+              const props = {};
+              const labelProps = {};
+              if (this.isSkipped(item.fields[0].name)) {
+                labelProps.optional = (
+                  <Typography variant="caption" color="error">
+                    Sorry you cannot leave this field empty
+                  </Typography>
+                );
+                labelProps.error = true;
+                props.completed = false;
+              }
+              return (
+              <Step key={item} {...props}>
+                <StepLabel {...labelProps}>{item.description}</StepLabel>
                 <StepContent>
                   {item
                     .fields
@@ -149,10 +175,11 @@ export default class StepperComponent extends Component {
                           </Col>
                         </Row>
                       ))}
-                  {this.renderNavigators(index)}
+                  {this.renderNavigators(index, item.fields[0].name)}
                 </StepContent>
               </Step>
-            ))}
+              );
+            })}
         </Stepper>
         {end && (
           <Row middle='xs' style={{

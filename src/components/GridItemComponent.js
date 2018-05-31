@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Card,
   CardMedia,
   CardContent,
@@ -18,10 +19,18 @@ import Delete from '@material-ui/icons/Delete';
 import { Row, Col, Grid } from 'react-flexbox-grid';
 import Close from '@material-ui/icons/Close';
 
+import AccountCheck from 'mdi-material-ui/AccountCheck';
 import React, { Component } from 'react';
 import { TOKEN } from '../Constants/action_type';
 import NewDialog from './NewDialog';
 
+
+/**
+ * Grid item presentational component
+ * @export
+ * @class GridItemComponent
+ * @extends Component
+ */
 export default class GridItemComponent extends Component {
   state = {
     selected: false,
@@ -44,13 +53,26 @@ export default class GridItemComponent extends Component {
     height: 100,
     backgroundColor: '#6d6d6d'
   }
-
+  componentDidMount() {
+    console.log('====================================');
+    console.log(this.props.isReserved);
+    console.log('====================================');
+  }
+  /**
+   * handles the toggle of edit mode on component
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleEditClose = () => {
     this.setState({
       editMode: false
     });
   }
-
+  /**
+   * handles event deletion
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleEventDelete = () => {
     this
       .props
@@ -59,19 +81,34 @@ export default class GridItemComponent extends Component {
       open: false
     });
   }
-
+  /**
+   * handles rsvp deletion
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleRsvpDelete = () => {
     this
       .props
       .onRsvpDelete(this.props.event.id);
+    this.setState({
+      open: false
+    });
   }
-
+  /**
+   * toggles event editmode
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleEventEdit = () => {
     this.setState({
       editMode: !this.state.editMode
     });
   }
-
+  /**
+   * handles event edit
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleEditSubmit = () => {
     this.setState({
       editMode: !this.state.editMode,
@@ -81,7 +118,11 @@ export default class GridItemComponent extends Component {
       .props
       .onEditSubmit(this.props.event.id);
   }
-
+  /**
+   * handles event delete confirmation
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   confirmDelete = () => {
     this.setState({
       open: true,
@@ -90,7 +131,11 @@ export default class GridItemComponent extends Component {
       description: 'Are you sure you want to delete this event?'
     });
   }
-
+  /**
+   * handles event edit confirmation
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   confirmEdit = () => {
     this.setState({
       open: true,
@@ -99,16 +144,24 @@ export default class GridItemComponent extends Component {
       description: 'Are you sure you want to edit this event?'
     });
   }
-
+  /**
+   * handles rsvp delete confirmation
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   confirmDeleteRsvp = () => {
     this.setState({
       open: true,
       title: 'Confirm action',
-      actionType: 'editEvent',
-      description: 'Are you sure you want to edit this event?'
+      actionType: 'deleteRsvp',
+      description: 'Are you sure you want to delete this reservation?'
     });
   }
-
+  /**
+   * handles rsvp request
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleClick = () => {
     if (localStorage.getItem(TOKEN)) {
       this.setState({ selected: true });
@@ -121,26 +174,44 @@ export default class GridItemComponent extends Component {
         .handleMessage('please login first to reserve an event');
     }
   }
-
+  /**
+   * handles rsvp request
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handleRsvpRequest = () => {
     this
       .props
       .onRsvpRequest(this.props.event.id);
   }
-
+  /**
+   * handles toggle attendance submition
+   * @memberof GridItemComponent
+   * @param {Object} event
+   * @param {Boolean} checked
+   * @returns {void}
+   */
   onToggleAttendance = (event, checked) => {
     this.setState({ attendance: checked });
     this
       .props
       .handleAttendanceToggle(this.props.event.id, !this.props.event.attendance);
   }
-
+  /**
+   * handles closing of confirmation dialog
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   handeDialogClose = () => {
     this.setState({
       open: false
     });
   }
-
+  /**
+   * Renders dashboard components
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   renderDashboard() {
     const { event } = this.props;
     const {
@@ -273,14 +344,40 @@ export default class GridItemComponent extends Component {
       </div>
     );
   }
-
+  /**
+   * Renders general events components
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   renderHome() {
-    const { event } = this.props;
+    const { event, isReserved } = this.props;
     return (
       <Card style={this.cardStyle}>
         <CardMedia>
           <div
-            style={this.placeHolderStyle}/>
+            style={this.placeHolderStyle}>
+            {isReserved &&
+            <div>
+              <Avatar style={{
+                    height: 75,
+                    width: 75,
+                    color: '#FF9671',
+                    margin: 'auto',
+                    backgroundColor: 'inherit'
+                  }}>
+                <AccountCheck
+                />
+              </Avatar>
+              <Typography
+                style={{
+                  textAlign: 'center',
+                  color: '#FF9671'
+                }}
+                variant='caption'
+                >you already reserved this event </Typography>
+            </div>
+            }
+          </div>
         </CardMedia>
         <CardContent >
 
@@ -296,6 +393,7 @@ export default class GridItemComponent extends Component {
         <CardActions>
           <Button
             onClick={this.handleClick}
+            disabled={isReserved}
             style={{
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -309,71 +407,93 @@ export default class GridItemComponent extends Component {
       </Card>
     );
   }
-
+  /**
+   * renders users Rsvps
+   * @memberof GridItemComponent
+   * @returns {void}
+   */
   renderUserRsvps() {
     const { event } = this.props;
+    const {
+      open, title, description, actionType
+    } = this.state;
     return (
-      <Card style={{ maxWidth: 220 }}>
-        <CardMedia>
-          <div
-            style={this.placeHolderStyle}></div>
-        </CardMedia>
-        <CardContent >
-          <Typography variant='display1' component='h2' noWrap={true} style={{ fontSize: 20 }}>
-            {event.name}
-          </Typography>
-          <Typography component='h5'>
-            {event.location}
-          </Typography>
-          <Typography component='h5'>
-            {event.category}
-          </Typography>
-          <Typography component='h6'>
-            {
-              event.time
-              ? new Date(event.time).toDateString()
-              : new Date(event.date).toDateString()
-            }
-          </Typography>
-        </CardContent>
-        <CardActions >
-          <Grid fluid>
-            <Row>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={event.accepted}
-                    disabled={true}
-                  />
-                }
-                label = {
-                  event.accepted ?
-                  'Reservation Accepted' :
-                    'Reservation Declined'
-                }
-              />
-            </Row>
-            <Row>
-              <Col xs={8}>
+      <div>
+        <Card style={{ maxWidth: 220 }}>
+          <CardMedia>
+            <div
+              style={this.placeHolderStyle}></div>
+          </CardMedia>
+          <CardContent >
+            <Typography variant='display1' component='h2' noWrap={true} style={{ fontSize: 20 }}>
+              {event.name}
+            </Typography>
+            <Typography component='h5'>
+              {event.location}
+            </Typography>
+            <Typography component='h5'>
+              {event.category}
+            </Typography>
+            <Typography component='h6'>
+              {
+                event.time
+                ? new Date(event.time).toDateString()
+                : new Date(event.date).toDateString()
+              }
+            </Typography>
+          </CardContent>
+          <CardActions >
+            <Grid fluid>
+              <Row>
                 <FormControlLabel
                   control={
-                    < Switch checked = { event.attendance }
-                      onChange = { this.onToggleAttendance }
-                      value = "attendance" />
+                    <Checkbox
+                      checked={event.accepted}
+                      disabled={true}
+                    />
                   }
-                  label={ event.attendance
-                  ? 'Coming'
-                  : 'Not Going'}/>
-                </Col>
-                <Col xs={4}>
-                  <IconButton onClick={this.confirmDeleteRsvp} aria-label='Delete rsvp'>
-                    < Delete />
-                  </IconButton>
-                </Col>
-            </Row>
-          </Grid>
-        </CardActions>
-      </Card>
+                  label = {
+                    event.accepted ?
+                    'Reservation Accepted' :
+                      'Reservation Declined'
+                  }
+                />
+              </Row>
+              <Row>
+                <Col xs={8}>
+                  <FormControlLabel
+                    control={
+                      < Switch checked = { event.attendance }
+                        onChange = { this.onToggleAttendance }
+                        value = "attendance" />
+                    }
+                    label={ event.attendance
+                    ? 'Coming'
+                    : 'Not Going'}/>
+                  </Col>
+                  <Col xs={4}>
+                    <IconButton onClick={this.confirmDeleteRsvp} aria-label='Delete rsvp'>
+                      < Delete />
+                    </IconButton>
+                  </Col>
+              </Row>
+            </Grid>
+          </CardActions>
+        </Card>
+        { open &&
+          <NewDialog
+            open={open}
+            view='confirmation'
+            title={title}
+            description={description}
+            actionType={actionType}
+            deleteRsvp = {this.handleRsvpDelete}
+            editEvent = {this.handleEditSubmit}
+            deleteEvent = {this.handleEventDelete}
+            no={this.handeDialogClose}
+          />
+        }
+      </div>
     );
   }
 

@@ -5,7 +5,7 @@
   "homepage": "http://PaulKariukiRimiru.github.io/bright-events-react",
   "dependencies": {
     "@material-ui/core": "^1.0.0-rc.1",
-    "@material-ui/icons": "^1.0.0-rc.0",
+    "@material-ui/icons": "^1.1.0",
     "axios": "^0.18.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.2.0",
     "jwt-decode": "^2.2.0",
     "material-ui": "^0.20.1",
+    "mdi-material-ui": "^5.1.0",
     "npm": "^6.0.0",
     "postcss": "^6.0.21",
     "postcss-loader": "^2.1.3",

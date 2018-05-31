@@ -53,9 +53,11 @@ export class NewLandingPage extends Component {
   /**
    * handles the dispatch of the registration action
    * @memberof NewLandingPage
+   * @param {Object} event
    * @returns {undefined}
    */
-  handleRegistrationFormSubmit = () => {
+  handleRegistrationFormSubmit = (event) => {
+    event.preventDefault();
     this
       .props
       .registerUser(this.state.userDetails, () => {
@@ -65,9 +67,11 @@ export class NewLandingPage extends Component {
   /**
    * handles the dispatch of the login action
    * @memberof NewLandingPage
+   * @param {Object} event
    * @returns {undefined}
    */
-  handleLoginFormSubmit = () => {
+  handleLoginFormSubmit = (event) => {
+    event.preventDefault();
     this
       .props
       .loginUser(this.state.userDetails, () => {
@@ -191,8 +195,11 @@ export class NewLandingPage extends Component {
                 <GridComponent container direction='row' alignItems='center' justify='center'>
                   <GridComponent item xs={12} sm={12} md={12} lg={12}>
                     < Typography
-                      variant = 'headline'
-                      align = 'center' >
+                      variant = 'display1'
+                      align = 'center'
+                      style={{
+                        color: '#fff'
+                      }} >
                       The future of event creation and management systems.
                     </Typography>
                   </GridComponent>
@@ -210,8 +217,11 @@ export class NewLandingPage extends Component {
                 <GridComponent container direction='row' alignItems='center' justify='center'>
                   <GridComponent item xs={12} sm={12} md={12} lg={12}>
                     < Typography
-                      variant = 'headline'
-                      align = 'center' >
+                      variant = 'display1'
+                      align = 'center'
+                      style={{
+                        color: '#fff'
+                      }} >
                       Create events with ease <br/>using our fully adaptable site.
                       This ensures wherever you <br />
                       on whatever device your experience remains the same
@@ -231,8 +241,11 @@ export class NewLandingPage extends Component {
                 <GridComponent container direction='row' alignItems='center' justify='center'>
                   <GridComponent item xs={12} sm={12} md={12} lg={12}>
                     < Typography
-                      variant = 'headline'
-                      align = 'center' >
+                      variant = 'display1'
+                      align = 'center'
+                      style={{
+                        color: '#fff'
+                      }} >
                       Our systems are made to make you feel at home
                       while you manage < br />your events and reservations all at a single point
                     </Typography>
@@ -249,10 +262,13 @@ export class NewLandingPage extends Component {
                   <GridComponent item>
                     <Typography
                       align='center'
-                      variant='display1'>
+                      variant='display1'
+                      style={{
+                        color: '#fff'
+                      }} >
                       Okay, Lets break it down,<br />
                       We are the difference between Tickets still available and TOTALY SOLD OUT!!<br/>
-                      Sign up now and let us show you
+                      Sign up now and lets take your event experience to the next level
                     </Typography>
                   </GridComponent>
                   <GridComponent item>

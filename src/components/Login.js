@@ -17,52 +17,54 @@ export default class Login extends Component {
     };
 
     return (
-      <Row center="xs">
-        <Col xs={12}>
-          <div>
-            <Row middle="xs">
-              <Col xs={10}>
-                <TextField
-                  required
-                  id="email"
-                  label="email"
-                  type="email"
-                  name='email'
-                  autoComplete="current-email"
-                  margin="normal"
-                  style={divStyle}
-                  onChange={onChange}/>
-              </Col>
-            </Row>
-            <Row middle="xs">
-              <Col xs={10}>
-                <TextField
-                  required
-                  id="password"
-                  label="password"
-                  type="password"
-                  name='password'
-                  margin="normal"
-                  style={divStyle}
-                  onChange={onChange}/>
-              </Col>
-            </Row>
-            <Row center='xs'>
-              <Col xs={8}>
-                <Button
-                  name="submit"
-                  type="submit"
-                  variant="raised"
-                  color="secondary"
-                  onClick={handleLogin}
-                  style={{
-                  marginTop: 40
-                }}>Login</Button>
-              </Col>
-            </Row>
-          </div>
-        </Col>
-      </Row>
+
+      <form onSubmit={handleLogin}>
+        <Row center="xs">
+          <Col xs={12}>
+            <div>
+              <Row middle="xs">
+                <Col xs={10}>
+                  <TextField
+                    required
+                    id="email"
+                    label="email"
+                    type="email"
+                    name='email'
+                    autoComplete="current-email"
+                    margin="normal"
+                    style={divStyle}
+                    onChange={onChange}/>
+                </Col>
+              </Row>
+              <Row middle="xs">
+                <Col xs={10}>
+                  <TextField
+                    required
+                    id="password"
+                    label="password"
+                    type="password"
+                    name='password'
+                    margin="normal"
+                    style={divStyle}
+                    onChange={onChange}/>
+                </Col>
+              </Row>
+              <Row center='xs'>
+                <Col xs={8}>
+                  <Button
+                    name="submit"
+                    type="submit"
+                    variant="raised"
+                    color="secondary"
+                    style={{
+                    marginTop: 40
+                  }}>Login</Button>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+      </form>
     );
   }
 }

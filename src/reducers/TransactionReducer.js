@@ -15,7 +15,12 @@ const initialState = {
     message: ''
   }
 };
-
+/**
+ * transaction reducer handles the transaction of active calls
+ * @param  {any} [state=initialState]
+ * @param  {any} action
+ * @return {Object} state
+ */
 const TransacionReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCHING:

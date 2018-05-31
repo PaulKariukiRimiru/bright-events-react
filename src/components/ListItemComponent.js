@@ -1,5 +1,5 @@
 import { blue } from '@material-ui/core/colors';
-import { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core/List';
+import { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';

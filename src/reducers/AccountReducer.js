@@ -19,7 +19,12 @@ import {
 import initialState from '../Constants/initialState';
 
 let myUser = {};
-
+/**
+ * account reducer handles user and events manipulation in the store
+ * @param  {any} [state=initialState]
+ * @param  {any} action
+ * @return {Object} state
+ */
 const AccountReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESS:

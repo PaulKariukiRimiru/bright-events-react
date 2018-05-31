@@ -26,34 +26,91 @@ const headers = {
   Accept: 'application/json',
   Authorization: localStorage.getItem(TOKEN) && `Bearer ${localStorage.getItem(TOKEN)}`
 };
-
+/**
+ * login action
+ * @param  {any} payload
+ * @return {void}
+ */
 const loginAction = payload => ({ type: LOGIN_SUCCESS, payload });
-
+/**
+ * logout action
+ * @param  {any} payload
+ * @return {void}
+ */
 const logoutAction = payload => ({ type: LOGOUT_SUCCESS, payload });
-
+/**
+ * events creation action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventsPostAction = payload => ({ type: EVENT_POST_SUCCESS, payload });
-
+/**
+ * events fetch action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventsGetAction = payload => ({ type: EVENT_GET_SUCCESS, payload });
-
+/**
+ * events reserve action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventRsvpAction = payload => ({ type: RSVP_GET_SUCCESS, payload });
-
+/**
+ * reservation status change action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventManageRsvpAction = payload => ({ type: RSVP_MANAGE_SUCCESS, payload });
-
+/**
+ * events deletion action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventDeleteAction = payload => ({ type: DELETE_EVENT_SUCCESS, payload });
-
+/**
+ * Events edit action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventEditAction = payload => ({ type: EDIT_EVENT_SUCCESS, payload });
-
+/**
+ * reservation fetch failed action
+ * @param  {any} payload
+ * @return {void}
+ */
 const rsvpGetFailed = payload => ({ type: RSVP_MANAGE_FAILED });
-
+/**
+ * events search action
+ * @param  {any} payload
+ * @return {void}
+ */
 const eventSearchAction = payload => ({ type: EVENT_SEARCH, payload });
-
+/**
+ * user reservation fetch action
+ * @param  {any} payload
+ * @return {void}
+ */
 const userRsvpsGetAction = payload => ({ type: USER_RSVPS_GET_SUCCESS, payload });
-
+/**
+ * user reservation attendance change action
+ * @param  {any} payload
+ * @return {void}
+ */
 const userRsvpAttendanceAction = payload => ({ type: USER_RSVP_ATTENDANCE_CHANGE, payload });
-
+/**
+ * user delete reservation action
+ * @param  {any} payload
+ * @return {void}
+ */
 const userDeleteRsvpAction = payload => ({ type: USER_DELETE_RSVP, payload });
-
-export const userDeleteRsvp = payload => (dispatch) => {
+/**
+ * user reservation delete thunk
+ * @param  {any} payload
+ * @param {Function} callBack
+ * @return {Function} dispatch
+ */
+export const userDeleteRsvp = (payload, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
     method: 'delete', url: `${BASE_URL}/api/v2/events/rsvp`, headers, data: payload
@@ -62,6 +119,7 @@ export const userDeleteRsvp = payload => (dispatch) => {
       dispatch(userDeleteRsvpAction(resp.data.payload));
     })
     .then(() => dispatch(fetchedAction(true, 'Events fetched')))
+    .then(() => callBack('deleteRsvp'))
     .catch((error) => {
       if (error.response) {
         return (dispatch(erroredAction(error.response.data.message)));
@@ -69,7 +127,12 @@ export const userDeleteRsvp = payload => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * user attendance change thunk
+ * @param  {any} payload
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const userAttendanceChange = (payload, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
@@ -87,7 +150,10 @@ export const userAttendanceChange = (payload, callBack) => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * user reservations fetch thunk
+ * @return {Function} dispatch
+ */
 export const userRsvpsGet = () => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({ method: 'get', url: `${BASE_URL}/api/v2/events/rsvp`, headers })
@@ -102,7 +168,12 @@ export const userRsvpsGet = () => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * user events search thunk
+ * @param  {any} [params={}]
+ * @param  {any} [body={}]
+ * @return {Function} dispatch
+ */
 export const eventSearch = (params = {}, body = {}) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
@@ -117,7 +188,11 @@ export const eventSearch = (params = {}, body = {}) => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * events filter thunk
+ * @param  {any} body
+ * @return {void}
+ */
 export const eventFilter = body => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
@@ -138,7 +213,12 @@ export const eventFilter = body => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * events reservation fetch thunk
+ * @param  {any} id
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const eventRsvpGet = (id, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers })
@@ -152,7 +232,13 @@ export const eventRsvpGet = (id, callBack) => (dispatch) => {
       return (dispatch(rsvpGetFailed(error.message)));
     });
 };
-
+/**
+ * events edit thunk
+ * @param  {any} id
+ * @param  {any} payload
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const eventEdit = (id, payload, callBack) => (dispatch) => {
   axios({
     method: 'put', url: `${BASE_URL}/api/v2/events/${id}`, data: payload, headers
@@ -167,7 +253,12 @@ export const eventEdit = (id, payload, callBack) => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * events deletion thunk
+ * @param  {any} eventId
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const eventDelete = (eventId, callBack) => (dispatch) => {
   axios({ method: 'delete', url: `${BASE_URL}/api/v2/events/${eventId}`, headers })
     .then(resp => (dispatch(eventDeleteAction(eventId))))
@@ -180,7 +271,12 @@ export const eventDelete = (eventId, callBack) => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * events reservation status change thunk
+ * @param  {any} id
+ * @param  {any} details
+ * @return {Function} dispatch
+ */
 export const eventManageRsvp = (id, details) => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({
@@ -195,7 +291,13 @@ export const eventManageRsvp = (id, details) => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * events reservation thunk
+ * @param  {any} event
+ * @param  {any} email
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const eventRsvp = (event, email, callBack) => {
   const clientDetails = {
     client_email: email
@@ -216,7 +318,11 @@ export const eventRsvp = (event, email, callBack) => {
       });
   };
 };
-
+/**
+ * events fetch thunk
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const eventsGet = callBack => (dispatch) => {
   dispatch(fetchingAction(true));
   axios({ url: `${BASE_URL}/api/v2/events`, method: 'get', headers })
@@ -230,7 +336,12 @@ export const eventsGet = callBack => (dispatch) => {
       return (dispatch(erroredAction(error.message)));
     });
 };
-
+/**
+ * events creation thunk
+ * @param  {any} payload
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const eventPost = (payload, callBack) => {
   const eventDetails = {
     name: payload.name,
@@ -259,7 +370,12 @@ export const eventPost = (payload, callBack) => {
       });
   };
 };
-
+/**
+ * user registration thunk
+ * @param  {any} payload
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const registerUser = (payload, callBack) => {
   let message = '';
   const userDetails = {
@@ -285,7 +401,12 @@ export const registerUser = (payload, callBack) => {
       });
   };
 };
-
+/**
+ * user logout thunk
+ * @param  {any} payload
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const logoutUser = (payload, callBack) => {
   const data = {
     id: payload
@@ -305,7 +426,12 @@ export const logoutUser = (payload, callBack) => {
       });
   };
 };
-
+/**
+ * login user thunk
+ * @param  {any} payload
+ * @param  {Function} callBack
+ * @return {Function} dispatch
+ */
 export const loginUser = (payload, callBack) => {
   const userDetails = {
     email: payload.email,
