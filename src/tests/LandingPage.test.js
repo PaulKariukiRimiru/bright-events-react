@@ -97,7 +97,8 @@ describe('Component : Landing Page', () => {
       });
       const propsReg = wrapper.prop('registerUser');
       const instance = wrapper.instance();
-      instance.handleRegistrationFormSubmit();
+      const preventDefault = () => {};
+      instance.handleRegistrationFormSubmit({ preventDefault });
       expect(propsReg.calledOnceWith({
         username: 'test',
         email: 'test@email.com',
@@ -116,7 +117,8 @@ describe('Component : Landing Page', () => {
       });
       const propsReg = wrapper.prop('loginUser');
       const instance = wrapper.instance();
-      instance.handleLoginFormSubmit();
+      const preventDefault = () => {};
+      instance.handleLoginFormSubmit({ preventDefault });
       expect(propsReg.calledOnceWith({
         email: 'test@email.com',
         password: 'Abc123!'
