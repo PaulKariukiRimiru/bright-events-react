@@ -94,8 +94,8 @@ export class NewHome extends Component {
   sortFilterItems = () => {
     const { location, category } = this.state;
 
-    const unqCategory = category.filter(cat => location.includes(cat));
-    const unqLocation = location.filter(loc => category.includes(loc));
+    const unqCategory = category.filter(cat => category.includes(cat));
+    const unqLocation = location.filter(loc => location.includes(loc));
     this.setState({
       location: unqLocation,
       category: unqCategory,
@@ -524,7 +524,6 @@ export class NewHome extends Component {
         this.displayUserEvents();
         break;
       case 'deleteRsvp':
-        console.log('called');
         this.sortItemsToDisplay('userRsvps');
         break;
       default:

@@ -227,7 +227,7 @@ export const eventFilter = body => (dispatch) => {
 export const eventRsvpGet = (id, callBack) => (dispatch) => {
   dispatch(fetchingAction(true));
   const newHeader = { ...headers, Authorization: `Bearer ${localStorage.getItem(TOKEN)}` };
-  axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers })
+  axios({ method: 'get', url: `${BASE_URL}/api/v2/event/${id}/rsvp`, headers: newHeader })
     .then(resp => (dispatch(eventRsvpAction(resp.data.payload))))
     .then(() => dispatch(fetchedAction(true, 'Events reservations fetched')))
     .then(() => callBack('requestRsvp'))

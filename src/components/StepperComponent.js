@@ -64,7 +64,6 @@ export default class StepperComponent extends Component {
    */
   handleStepNext = presentName => () => {
     let { step } = this.state;
-    const { form } = this.state;
     if (!this.isSkipped(presentName)) {
       this.setState({
         skipped: false,
@@ -115,7 +114,7 @@ export default class StepperComponent extends Component {
   }
 
   render() {
-    const { step, end, skipped } = this.state;
+    const { step, end } = this.state;
     return (
       <div style={{
         maxWidth: 380,
